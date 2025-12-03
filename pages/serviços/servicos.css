@@ -1,44 +1,54 @@
-/* 1. CONFIGURAÇÕES GLOBAIS DA PÁGINA */
-@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap");
+/* ============================================= */
+/* ARQUIVO: servicos.css (DESIGN PREMIUM) */
+/* Estilos específicos da Página de Serviços */
+/* ============================================= */
 
-:root {
-  --cor-fundo-pagina: #050505; /* Preto quase absoluto */
-  --cor-card-fundo: #121212; /* Cinza bem escuro para cards */
-  --cor-borda-suave: #333333; /* Bordas discretas */
-  --cor-destaque: #f5a623; /* Laranja/Dourado da marca */
-  --cor-destaque-brilho: rgba(245, 166, 35, 0.3); /* Brilho do laranja */
-  --cor-texto-principal: #ffffff;
-  --cor-texto-secundario: #a0a0a0;
-  --fonte-principal: "Figtree", sans-serif;
-}
+/* Importa a fonte Poppins para garantir consistência com a Home */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
 
-body {
-  background-color: var(--cor-fundo-pagina);
-  font-family: var(--fonte-principal);
-  color: var(--cor-texto-principal);
-  margin: 0;
-}
-
-/* Ajuste para o container principal */
+/* 1. CONFIGURAÇÕES GERAIS DA PÁGINA */
 .container-servicos {
-  max-width: 1280px;
+  max-width: 1400px; /* Largura maior para ficar imersivo */
   margin: 0 auto;
   padding: 40px 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Títulos das Seções */
+.container-servicos h2 {
+  font-size: 36px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: var(--cor-texto-principal);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.descricao-secao {
+  font-size: 16px;
+  color: var(--cor-texto-secundario);
+  text-align: center;
+  margin-bottom: 60px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ============================================= */
-/* 2. HERO E FILTROS (VISUAL NOVO) */
+/* 2. HERO E BARRA DE FILTROS */
 /* ============================================= */
 
 .secao-busca-filtros {
   text-align: center;
-  padding: 80px 0 60px 0;
-  /* Um fundo sutil radial para destacar o topo */
+  padding: 60px 0 40px 0;
+  /* Fundo sutil radial para destacar o topo */
   background: radial-gradient(
     circle at center top,
     #1a1a1a 0%,
-    var(--cor-fundo-pagina) 70%
+    transparent 70%
   );
+  margin-bottom: 40px;
 }
 
 .texto-chamada h1 {
@@ -46,121 +56,107 @@ body {
   font-weight: 700;
   line-height: 1.2;
   margin-bottom: 20px;
-  letter-spacing: -1px;
+  color: var(--cor-texto-principal);
 }
 
 .texto-chamada .destaque {
-  color: var(--cor-destaque);
-  /* Pequeno brilho no texto */
-  text-shadow: 0 0 15px rgba(245, 166, 35, 0.4);
+  color: var(--cor-primaria); /* Laranja */
+  text-shadow: 0 0 20px rgba(201, 107, 42, 0.3); /* Brilho suave */
 }
 
 .texto-chamada p {
   font-size: 18px;
   color: var(--cor-texto-secundario);
-  max-width: 600px;
-  margin: 0 auto;
 }
 
-/* Barra de Filtros Estilizada */
+/* Botões de Filtro (Estilo Pílula) */
 .container-filtros {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   margin-top: 40px;
 }
 
 .filtro-btn {
   background-color: transparent;
-  border: 1px solid var(--cor-borda-suave);
+  border: 1px solid #333;
   color: var(--cor-texto-secundario);
-  padding: 12px 24px;
-  border-radius: 100px; /* Formato de pílula */
+  padding: 10px 24px;
+  border-radius: 50px; /* Redondo */
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: var(--fonte-principal);
+  font-family: "Poppins", sans-serif;
 }
 
 .filtro-btn:hover {
-  border-color: var(--cor-destaque);
+  border-color: var(--cor-primaria);
   color: var(--cor-texto-principal);
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: rgba(201, 107, 42, 0.1);
 }
 
 .filtro-btn.ativo {
-  background-color: var(--cor-destaque);
-  color: #000; /* Texto preto para contraste no laranja */
-  border-color: var(--cor-destaque);
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-principal);
+  border-color: var(--cor-primaria);
   font-weight: 700;
-  box-shadow: 0 0 15px var(--cor-destaque-brilho);
+  box-shadow: 0 0 15px rgba(201, 107, 42, 0.4);
 }
 
 /* ============================================= */
-/* 3. GRID DE SERVIÇOS (CARDS PREMIUM) */
+/* 3. GRELHA DE SERVIÇOS (CARDS) */
 /* ============================================= */
-
-.secao-selecao-servico {
-  padding-bottom: 80px;
-}
-
-.secao-selecao-servico h2 {
-  text-align: center;
-  font-size: 32px;
-  margin-bottom: 10px;
-}
-
-.descricao-secao {
-  text-align: center;
-  color: var(--cor-texto-secundario);
-  margin-bottom: 50px;
-}
 
 .grid-servicos {
   display: grid;
+  /* Cards responsivos que não ficam muito pequenos */
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 30px;
+  padding-bottom: 60px;
 }
 
 .cartao-servico {
-  background-color: var(--cor-card-fundo);
-  border: 1px solid var(--cor-borda-suave);
-  border-radius: 20px; /* Cantos mais arredondados */
+  background-color: var(--cor-fundo-secundario); /* #0f0f10 */
+  border: 1px solid #222;
+  border-radius: 16px;
   padding: 40px;
   display: flex;
   flex-direction: column;
   position: relative;
+  transition: all 0.3s ease;
   overflow: hidden;
-  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Efeito de Hover no Card */
 .cartao-servico:hover {
-  transform: translateY(-10px); /* Sobe levemente */
-  border-color: var(--cor-destaque);
-  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8);
+  transform: translateY(-5px);
+  border-color: var(--cor-primaria);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-/* Ícone do Serviço */
+/* Ícone Grande */
 .cartao-servico i.ph-fill {
-  font-size: 42px;
-  color: var(--cor-destaque);
-  margin-bottom: 20px;
-  /* Fundo circular sutil atrás do ícone */
-  background: rgba(245, 166, 35, 0.1);
-  width: 80px;
-  height: 80px;
+  font-size: 48px;
+  color: var(--cor-primaria);
+  margin-bottom: 25px;
+  /* Círculo suave atrás do ícone */
+  background: rgba(201, 107, 42, 0.1);
+  width: 90px;
+  height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+.cartao-servico:hover i.ph-fill {
+  transform: scale(1.1); /* Ícone cresce no hover */
 }
 
 .cartao-servico h3 {
   font-size: 24px;
-  font-weight: 700;
   margin-bottom: 15px;
   color: var(--cor-texto-principal);
 }
@@ -172,12 +168,12 @@ body {
   margin-bottom: 30px;
 }
 
-/* Lista de Benefícios */
+/* Lista de Itens */
 .lista-itens-pacote {
   list-style: none;
   padding: 0;
   margin: 0 0 30px 0;
-  flex-grow: 1; /* Empurra o preço/botão para baixo */
+  flex-grow: 1; /* Empurra o preço para baixo */
 }
 
 .lista-itens-pacote li {
@@ -190,110 +186,231 @@ body {
 }
 
 .lista-itens-pacote li i {
-  color: var(--cor-destaque);
-  font-size: 16px;
+  color: var(--cor-primaria);
+  font-size: 18px;
+  background: none;
+  width: auto;
+  height: auto;
+  margin: 0;
 }
 
-/* Preço e Botão */
+/* Preço */
 .preco-servico {
   display: block;
-  font-size: 18px;
+  font-size: 20px;
   color: var(--cor-texto-principal);
-  margin-bottom: 15px;
-  font-weight: 600;
+  margin-bottom: 20px;
+  font-weight: 700;
 }
 
+/* Botão de Agendar (Estilo Premium) */
 .botao-agendar {
   width: 100%;
   background-color: transparent;
-  border: 1px solid var(--cor-destaque);
-  color: var(--cor-destaque);
+  border: 1px solid var(--cor-primaria);
+  color: var(--cor-primaria);
   padding: 14px;
-  border-radius: 10px;
-  font-size: 16px;
+  border-radius: 50px;
+  font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 1px;
+  transition: all 0.3s ease;
+  font-family: "Poppins", sans-serif;
 }
 
 .botao-agendar:hover {
-  background-color: var(--cor-destaque);
-  color: #000;
-  box-shadow: 0 0 20px var(--cor-destaque-brilho);
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-principal);
+  box-shadow: 0 0 15px rgba(201, 107, 42, 0.4);
 }
 
-/* --- DESTAQUE (MAIS VENDIDO) --- */
+/* Destaque (Mais Vendido) */
 .cartao-servico.destaque-pacote {
-  border-color: var(--cor-destaque); /* Borda laranja por padrão */
-  background: linear-gradient(180deg, #1a1a1a 0%, #121212 100%);
-  box-shadow: 0 0 30px rgba(245, 166, 35, 0.05);
+  border-color: var(--cor-primaria);
+  background: linear-gradient(180deg, #151515 0%, #0f0f10 100%);
 }
 
 .badge-mais-vendido {
   position: absolute;
   top: 0;
   right: 0;
-  background-color: var(--cor-destaque);
-  color: #000;
-  font-size: 12px;
+  background-color: var(--cor-primaria);
+  color: #fff;
+  font-size: 11px;
   font-weight: 800;
-  padding: 5px 15px;
+  padding: 6px 15px;
   border-bottom-left-radius: 10px;
   text-transform: uppercase;
 }
 
 /* ============================================= */
-/* 4. CALENDÁRIO (RESPONSIVO E MODERNO) */
+/* 4. CALENDÁRIO (VISUAL DARK MODE) */
 /* ============================================= */
 
+.secao-agendamento-detalhes {
+  padding: 60px 0;
+  border-top: 1px solid #222;
+  background-color: #0a0a0a; /* Fundo levemente diferente */
+}
+
 .container-calendario-agendamento {
-  background-color: var(--cor-card-fundo);
-  border: 1px solid var(--cor-borda-suave);
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid #222;
   border-radius: 20px;
   padding: 40px;
-  max-width: 800px;
+  max-width: 600px; /* Mais compacto */
   margin: 40px auto;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
 }
 
-/* (Mantém a estrutura do calendário mas com as novas cores) */
+/* Header do Calendário */
+.calendario-agendamento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
 .calendario-agendamento-header h3 {
   color: var(--cor-texto-principal);
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 .calendario-agendamento-header button {
-  color: var(--cor-texto-secundario);
+  background: #222;
+  border: none;
+  color: var(--cor-texto-principal);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 700;
 }
 .calendario-agendamento-header button:hover {
-  color: var(--cor-destaque);
+  background: var(--cor-primaria);
+}
+
+/* Dias da Semana */
+.calendario-agendamento-dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 15px;
+}
+.calendario-agendamento-dias-semana div {
+  text-align: center;
+  color: var(--cor-texto-secundario);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Grid de Dias */
+.calendario-agendamento-grid-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
 }
 
 .dia-agendamento {
-  background-color: #000;
-  border-color: var(--cor-borda-suave);
+  height: 50px; /* Quadrado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #151515;
   color: var(--cor-texto-secundario);
   border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
 .dia-agendamento:not(.inativo):hover {
-  border-color: var(--cor-destaque);
-  color: var(--cor-texto-principal);
+  background-color: #333;
+  color: #fff;
 }
 .dia-agendamento.selecionado {
-  background-color: var(--cor-destaque);
-  color: #000;
-  border-color: var(--cor-destaque);
+  background-color: var(--cor-primaria);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(201, 107, 42, 0.5);
 }
-.horario-btn {
-  background-color: #000;
-  border: 1px solid var(--cor-borda-suave);
+.dia-agendamento.inativo {
+  opacity: 0.3;
+  cursor: default;
+  background: transparent;
+}
+
+/* Horários */
+.horarios-disponiveis {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.horarios-disponiveis h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
   color: var(--cor-texto-principal);
-  border-radius: 50px; /* Pílula */
+}
+.horarios-disponiveis #data-selecionada-titulo {
+  color: var(--cor-primaria);
+}
+
+#grid-horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.horario-btn {
+  background-color: #151515;
+  border: 1px solid #333;
+  color: var(--cor-texto-principal);
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Poppins", sans-serif;
+}
+.horario-btn:hover:not(.indisponivel) {
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
 }
 .horario-btn.selecionado {
-  background-color: var(--cor-destaque);
-  color: #000;
-  border-color: var(--cor-destaque);
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: #fff;
+  font-weight: 700;
+}
+.horario-btn.indisponivel {
+  opacity: 0.4;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* Botão de Confirmar */
+#botao-confirmar-agendamento {
+  /* Usa o estilo de botão primário */
+  background-color: var(--cor-primaria);
+  color: #fff;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: none; /* Escondido até selecionar horário */
+  margin: 0 auto;
+}
+#botao-confirmar-agendamento:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(201, 107, 42, 0.4);
 }
 
 /* ============================================= */
@@ -306,11 +423,15 @@ body {
   .grid-servicos {
     grid-template-columns: 1fr;
   }
-  .container-filtros {
-    gap: 8px;
-  }
   .filtro-btn {
-    padding: 10px 16px;
+    padding: 8px 16px;
     font-size: 13px;
+  }
+  .container-calendario-agendamento {
+    padding: 20px;
+  }
+  .dia-agendamento {
+    height: 40px;
+    font-size: 14px;
   }
 }
