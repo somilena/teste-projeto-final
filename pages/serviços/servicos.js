@@ -20,7 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
         cartoesServico.forEach((cartao) => {
           const tipoCartao = cartao.getAttribute("data-tipo");
 
-          if (filtro === "todos" || (tipoCartao && tipoCartao.includes(filtro))) {
+          if (
+            filtro === "todos" ||
+            (tipoCartao && tipoCartao.includes(filtro))
+          ) {
             cartao.style.display = "flex"; // Mostra o cartão
           } else {
             cartao.style.display = "none"; // Esconde o cartão
@@ -31,195 +34,185 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =================================================================
-  // 2. LÓGICA DE AGENDAMENTO (CÓDIGO ANTIGO)
+  // 2. LÓGICA DE AGENDAMENTO E PAGAMENTO (NOVO)
   // =================================================================
   const secaoSelecaoServico = document.querySelector(".secao-selecao-servico");
   const secaoCalendario = document.getElementById("secao-calendario");
-  const servicoSelecionadoTitulo = document.getElementById(
+  const botaoVoltar = document.getElementById("botao-voltar-servicos");
+
+  const containerHorarios = document.getElementById("container-horarios");
+  const containerPagamento = document.getElementById("container-pagamento");
+
+  // Elementos de Resumo
+  const resumoServico = document.getElementById("resumo-servico");
+  const servicoTituloTopo = document.getElementById(
     "servico-selecionado-titulo"
   );
+  const resumoData = document.getElementById("resumo-data");
+  const resumoValor = document.getElementById("resumo-valor");
 
-  // (Verifica se secaoCalendario existe antes de continuar)
-  if (secaoCalendario) {
-    const dataSelecionadaTitulo = document.getElementById(
-      "data-selecionada-titulo"
-    );
-    const gridServicos = document.querySelector(".grid-servicos");
-    const botoesAgendar = document.querySelectorAll(".botao-agendar");
+  const botoesAgendar = document.querySelectorAll(".botao-agendar");
 
-    let servicoAtivo = null;
-    let dataCalendarioAtual = new Date();
-    let dataSelecionada = null;
-    let horarioSelecionado = null;
+  let servicoAtivo = null;
+  let precoServico = "R$ 0,00";
+  let dataCalendarioAtual = new Date();
+  let dataSelecionada = null;
 
-    // LÓGICA DE SELEÇÃO DE SERVIÇO (Botões "Agendar")
-    if (botoesAgendar.length > 0 && secaoCalendario) {
-      botoesAgendar.forEach((botao) => {
-        botao.addEventListener("click", () => {
-          servicoAtivo = botao.getAttribute("data-servico");
-          servicoSelecionadoTitulo.textContent = formatarNomeServico(servicoAtivo);
+  // AÇÃO: Clicar em "Agendar" no card
+  if (botoesAgendar.length > 0) {
+    botoesAgendar.forEach((botao) => {
+      botao.addEventListener("click", () => {
+        servicoAtivo = botao.getAttribute("data-servico");
 
-          if (servicoAtivo === "musica" || servicoAtivo === "assinatura") {
-            alert(
-              "Sua solicitação de orçamento foi enviada! Entraremos em contato."
-            );
-            return;
-          }
+        // Pega o nome e o preço do card
+        const card = botao.closest(".cartao-servico");
+        const nomeServico = card.querySelector("h3").textContent;
+        const precoTexto = card.querySelector(".preco-servico").textContent;
 
-          secaoSelecaoServico.style.display = "none";
-          secaoCalendario.style.display = "block";
-          window.scrollTo({ top: secaoCalendario.offsetTop - 100, behavior: 'smooth' });
+        // Preenche o resumo inicial
+        resumoServico.textContent = nomeServico;
+        servicoTituloTopo.textContent = nomeServico;
+        resumoValor.textContent = precoTexto; // Ex: "A partir de R$ 350"
 
-          renderizarCalendario(dataCalendarioAtual);
-        });
+        // Esconde Serviços -> Mostra Agendamento
+        secaoSelecaoServico.style.display = "none";
+        secaoCalendario.style.display = "block";
+
+        // Reseta o estado do agendamento
+        containerHorarios.style.display = "none";
+        containerPagamento.style.display = "none";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        renderizarCalendario(dataCalendarioAtual);
+      });
+    });
+  }
+
+  // AÇÃO: Botão Voltar
+  if (botaoVoltar) {
+    botaoVoltar.addEventListener("click", () => {
+      secaoCalendario.style.display = "none";
+      secaoSelecaoServico.style.display = "block";
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  }
+
+  // --- Lógica do Calendário ---
+  // (Mantenha as variáveis de calendário existentes aqui: mesAnoAtualElement, etc.)
+  const mesAnoAtualElement = document.getElementById("mes-ano-atual-publico");
+  const gridDiasElement = document.querySelector(
+    ".calendario-agendamento-grid-dias"
+  );
+  const botaoMesAnterior = document.getElementById("mes-anterior-publico");
+  const botaoMesSeguinte = document.getElementById("mes-seguinte-publico");
+  const gridHorariosElement = document.getElementById("grid-horarios");
+
+  if (mesAnoAtualElement) {
+    // ... (Função renderizarCalendario igual ao anterior) ...
+    function renderizarCalendario(data) {
+      // (Copie a lógica de renderizar dias aqui, é a mesma)
+      const ano = data.getFullYear();
+      const mes = data.getMonth();
+      const primeiroDiaMes = new Date(ano, mes, 1);
+      const ultimoDiaMes = new Date(ano, mes + 1, 0);
+      const diasNoMes = ultimoDiaMes.getDate();
+      const primeiroDiaSemana = primeiroDiaMes.getDay();
+
+      mesAnoAtualElement.textContent = new Intl.DateTimeFormat("pt-BR", {
+        month: "long",
+        year: "numeric",
+      }).format(data);
+      gridDiasElement.innerHTML = "";
+
+      for (let i = 0; i < primeiroDiaSemana; i++) {
+        gridDiasElement.appendChild(document.createElement("div"));
+      }
+      for (let dia = 1; dia <= diasNoMes; dia++) {
+        const diaElement = document.createElement("div");
+        diaElement.classList.add("dia-agendamento");
+        diaElement.textContent = dia;
+        diaElement.addEventListener("click", () =>
+          selecionarDia(diaElement, ano, mes, dia)
+        );
+        gridDiasElement.appendChild(diaElement);
+      }
+    }
+
+    function selecionarDia(diaElement, ano, mes, dia) {
+      document
+        .querySelectorAll(".dia-agendamento")
+        .forEach((d) => d.classList.remove("selecionado"));
+      diaElement.classList.add("selecionado");
+
+      dataSelecionada = new Date(ano, mes, dia);
+      const dataFormatada = new Intl.DateTimeFormat("pt-BR", {
+        dateStyle: "full",
+      }).format(dataSelecionada);
+      document.getElementById("data-selecionada-titulo").textContent =
+        dataFormatada;
+
+      // Mostra os horários
+      containerHorarios.style.display = "block";
+      renderizarHorariosDisponiveis();
+
+      // Esconde pagamento se mudar o dia (para forçar reescolha de horário)
+      containerPagamento.style.display = "none";
+    }
+
+    function renderizarHorariosDisponiveis() {
+      gridHorariosElement.innerHTML = "";
+      const horarios = [
+        "09:00",
+        "10:00",
+        "11:00",
+        "14:00",
+        "15:00",
+        "16:00",
+        "17:00",
+      ];
+
+      horarios.forEach((hora) => {
+        const btn = document.createElement("button");
+        btn.classList.add("horario-btn");
+        btn.textContent = hora;
+        btn.addEventListener("click", () => selecionarHorario(btn, hora));
+        gridHorariosElement.appendChild(btn);
       });
     }
 
-    function formatarNomeServico(servico) {
-      const botao = document.querySelector(`.botao-agendar[data-servico="${servico}"]`);
-      if (botao) {
-        const cartao = botao.closest('.cartao-servico');
-        if (cartao) {
-          return cartao.querySelector('h3').textContent;
-        }
-      }
-      return "Serviço"; // Fallback
+    function selecionarHorario(btnElement, hora) {
+      document
+        .querySelectorAll(".horario-btn")
+        .forEach((b) => b.classList.remove("selecionado"));
+      btnElement.classList.add("selecionado");
+
+      // Atualiza o resumo e mostra o pagamento
+      const dataCurta = dataSelecionada.toLocaleDateString("pt-BR");
+      resumoData.textContent = `${dataCurta} às ${hora}`;
+
+      containerPagamento.style.display = "block";
+      // Scroll suave até o pagamento
+      containerPagamento.scrollIntoView({ behavior: "smooth" });
     }
 
-    // LÓGICA DO CALENDÁRIO
-    const mesAnoAtualElement = document.getElementById("mes-ano-atual-publico");
-    const gridDiasElement = document.querySelector(
-      ".calendario-agendamento-grid-dias"
-    );
-    const botaoMesAnterior = document.getElementById("mes-anterior-publico");
-    const botaoMesSeguinte = document.getElementById("mes-seguinte-publico");
-    const gridHorariosElement = document.getElementById("grid-horarios");
-    const botaoConfirmarAgendamento = document.getElementById(
-      "botao-confirmar-agendamento"
-    );
+    // Navegação Mês
+    botaoMesAnterior.addEventListener("click", () => {
+      dataCalendarioAtual.setMonth(dataCalendarioAtual.getMonth() - 1);
+      renderizarCalendario(dataCalendarioAtual);
+    });
+    botaoMesSeguinte.addEventListener("click", () => {
+      dataCalendarioAtual.setMonth(dataCalendarioAtual.getMonth() + 1);
+      renderizarCalendario(dataCalendarioAtual);
+    });
 
-    if (mesAnoAtualElement) {
-      function renderizarCalendario(data) {
-        const ano = data.getFullYear();
-        const mes = data.getMonth();
-        const primeiroDiaMes = new Date(ano, mes, 1);
-        const ultimoDiaMes = new Date(ano, mes + 1, 0);
-        const diasNoMes = ultimoDiaMes.getDate();
-        const primeiroDiaSemana = primeiroDiaMes.getDay();
-
-        mesAnoAtualElement.textContent = new Intl.DateTimeFormat("pt-BR", {
-          month: "long",
-          year: "numeric",
-        }).format(data);
-        mesAnoAtualElement.textContent =
-          mesAnoAtualElement.textContent.charAt(0).toUpperCase() +
-          mesAnoAtualElement.textContent.slice(1);
-
-        gridDiasElement.innerHTML = "";
-
-        for (let i = 0; i < primeiroDiaSemana; i++) {
-          const divVazia = document.createElement("div");
-          gridDiasElement.appendChild(divVazia);
-        }
-
-        for (let dia = 1; dia <= diasNoMes; dia++) {
-          const diaElement = document.createElement("div");
-          diaElement.classList.add("dia-agendamento");
-          diaElement.textContent = dia;
-          const dataAtualDoDia = new Date(ano, mes, dia);
-          dataAtualDoDia.setHours(0, 0, 0, 0);
-          const hoje = new Date();
-          hoje.setHours(0, 0, 0, 0);
-          const umAnoFrente = new Date();
-          umAnoFrente.setFullYear(hoje.getFullYear() + 1);
-
-          if (dataAtualDoDia < hoje || dataAtualDoDia > umAnoFrente) {
-            diaElement.classList.add("inativo");
-          } else {
-            diaElement.addEventListener("click", () =>
-              selecionarDia(diaElement, ano, mes, dia)
-            );
-          }
-          gridDiasElement.appendChild(diaElement);
-        }
-      }
-
-      function selecionarDia(diaElement, ano, mes, dia) {
-        document
-          .querySelectorAll(".dia-agendamento")
-          .forEach((d) => d.classList.remove("selecionado"));
-        diaElement.classList.add("selecionado");
-        dataSelecionada = new Date(ano, mes, dia);
-        dataSelecionadaTitulo.textContent = new Intl.DateTimeFormat("pt-BR", {
-          dateStyle: "full",
-        }).format(dataSelecionada);
-        renderizarHorariosDisponiveis();
-      }
-
-      function renderizarHorariosDisponiveis() {
-        gridHorariosElement.innerHTML = "";
-        const horarios = [
-          "09:00", "10:00", "11:00", "14:00", "15:00", "16:00", "17:00",
-        ];
-        horarios.forEach((hora) => {
-          const btn = document.createElement("button");
-          btn.classList.add("horario-btn");
-          btn.textContent = hora;
-          btn.setAttribute("data-hora", hora);
-          if (servicoAtivo === "basico" && hora === "10:00") {
-            btn.classList.add("indisponivel");
-          } else if (servicoAtivo === "standard" && hora === "14:00") {
-            btn.classList.add("indisponivel");
-          } else {
-            btn.addEventListener("click", () => selecionarHorario(btn));
-          }
-          gridHorariosElement.appendChild(btn);
-        });
-        horarioSelecionado = null;
-        botaoConfirmarAgendamento.style.display = "none";
-      }
-
-      function selecionarHorario(btnElement) {
-        document
-          .querySelectorAll(".horario-btn")
-          .forEach((b) => b.classList.remove("selecionado"));
-        btnElement.classList.add("selecionado");
-        horarioSelecionado = btnElement.getAttribute("data-hora");
-        botaoConfirmarAgendamento.style.display = "block";
-      }
-
-      botaoMesAnterior.addEventListener("click", () => {
-        dataCalendarioAtual.setMonth(dataCalendarioAtual.getMonth() - 1);
-        renderizarCalendario(dataCalendarioAtual);
+    // Finalizar (Apenas alerta por enquanto)
+    const formAgendamento = document.getElementById("form-agendamento");
+    if (formAgendamento) {
+      formAgendamento.addEventListener("submit", (e) => {
+        e.preventDefault();
+        alert("Agendamento realizado com sucesso! Entraremos em contato.");
+        window.location.href = "/index.html"; // Redireciona para home
       });
-
-      botaoMesSeguinte.addEventListener("click", () => {
-        dataCalendarioAtual.setMonth(dataCalendarioAtual.getMonth() + 1);
-        renderizarCalendario(dataCalendarioAtual);
-      });
-
-      botaoConfirmarAgendamento.addEventListener("click", () => {
-        if (dataSelecionada && horarioSelecionado && servicoAtivo) {
-          const dataHoraFinal = `${dataSelecionada.toLocaleDateString(
-            "pt-BR"
-          )} às ${horarioSelecionado}`;
-          alert(
-            `Agendamento confirmado!\nServiço: ${formatarNomeServico(
-              servicoAtivo
-            )}\nData e Hora: ${dataHoraFinal}\nEntraremos em contato para mais detalhes.`
-          );
-
-          secaoCalendario.style.display = 'none';
-          secaoSelecaoServico.style.display = 'block';
-          window.scrollTo({ top: secaoSelecaoServico.offsetTop - 100, behavior: 'smooth' });
-          servicoAtivo = null;
-          dataSelecionada = null;
-          horarioSelecionado = null;
-
-        } else {
-          alert("Por favor, selecione uma data e um horário para o agendamento.");
-        }
-      });
-    } // Fim do if (mesAnoAtualElement)
-  } // Fim do if (secaoCalendario)
+    }
+  }
 });

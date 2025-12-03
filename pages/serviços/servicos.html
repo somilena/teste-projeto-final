@@ -285,44 +285,126 @@
         class="secao-agendamento-detalhes"
         style="display: none"
       >
-        <h2>Agende seu Horário</h2>
-        <p class="descricao-secao">
-          Selecione uma data e horário disponíveis para o seu
-          <span id="servico-selecionado-titulo">Serviço</span>.
-        </p>
-
-        <div class="container-calendario-agendamento">
-          <div class="calendario-agendamento-header">
-            <button id="mes-anterior-publico">&lt;</button>
-            <h3 id="mes-ano-atual-publico">Outubro 2025</h3>
-            <button id="mes-seguinte-publico">&gt;</button>
-          </div>
-          <div class="calendario-agendamento-dias-semana">
-            <div>Dom</div>
-            <div>Seg</div>
-            <div>Ter</div>
-            <div>Qua</div>
-            <div>Qui</div>
-            <div>Sex</div>
-            <div>Sáb</div>
-          </div>
-          <div class="calendario-agendamento-grid-dias"></div>
-        </div>
-
-        <div class="horarios-disponiveis">
-          <h3>
-            Horários Disponíveis para <span id="data-selecionada-titulo"></span>
-          </h3>
-          <div id="grid-horarios">
-            <button class="horario-btn" data-hora="09:00">09:00</button>
-            <button class="horario-btn" data-hora="10:00">10:00</button>
-            <button class="horario-btn" data-hora="11:00">11:00</button>
-            <button class="horario-btn" data-hora="14:00">14:00</button>
-            <button class="horario-btn" data-hora="15:00">15:00</button>
-          </div>
-          <button class="botao-principal" id="botao-confirmar-agendamento">
-            Confirmar Agendamento
+        <div class="container-agendamento-completo">
+          <button id="botao-voltar-servicos" class="btn-voltar">
+            <i class="fas fa-arrow-left"></i> Voltar para Serviços
           </button>
+
+          <div class="grid-agendamento">
+            <div class="coluna-selecao">
+              <h2>Escolha Data e Hora</h2>
+              <p class="descricao-secao-agenda">
+                Para o serviço:
+                <strong id="servico-selecionado-titulo" class="texto-destaque"
+                  >---</strong
+                >
+              </p>
+
+              <div class="container-calendario-agendamento">
+                <div class="calendario-agendamento-header">
+                  <button id="mes-anterior-publico">
+                    <i class="fas fa-chevron-left"></i>
+                  </button>
+                  <h3 id="mes-ano-atual-publico">Outubro 2025</h3>
+                  <button id="mes-seguinte-publico">
+                    <i class="fas fa-chevron-right"></i>
+                  </button>
+                </div>
+                <div class="calendario-agendamento-dias-semana">
+                  <div>Dom</div>
+                  <div>Seg</div>
+                  <div>Ter</div>
+                  <div>Qua</div>
+                  <div>Qui</div>
+                  <div>Sex</div>
+                  <div>Sáb</div>
+                </div>
+                <div class="calendario-agendamento-grid-dias"></div>
+              </div>
+
+              <div
+                class="horarios-disponiveis"
+                style="display: none"
+                id="container-horarios"
+              >
+                <h3>
+                  Horários para <span id="data-selecionada-titulo"></span>
+                </h3>
+                <div id="grid-horarios"></div>
+              </div>
+            </div>
+
+            <div
+              class="coluna-pagamento"
+              id="container-pagamento"
+              style="display: none"
+            >
+              <div class="box-resumo">
+                <h3>Resumo do Pedido</h3>
+                <div class="item-resumo">
+                  <span>Serviço:</span>
+                  <span id="resumo-servico">---</span>
+                </div>
+                <div class="item-resumo">
+                  <span>Data/Hora:</span>
+                  <span id="resumo-data">---</span>
+                </div>
+                <div class="item-resumo total">
+                  <span>Valor Total:</span>
+                  <span id="resumo-valor">R$ 0,00</span>
+                </div>
+              </div>
+
+              <form id="form-agendamento" class="form-agendamento">
+                <h3>Seus Dados</h3>
+                <div class="form-group">
+                  <label>Nome Completo</label>
+                  <input type="text" placeholder="Seu nome" required />
+                </div>
+                <div class="form-group">
+                  <label>E-mail</label>
+                  <input type="email" placeholder="seu@email.com" required />
+                </div>
+                <div class="form-group">
+                  <label>Telefone / WhatsApp</label>
+                  <input type="tel" placeholder="(XX) 9XXXX-XXXX" required />
+                </div>
+
+                <h3>Pagamento</h3>
+                <div class="tabs-pagamento">
+                  <button type="button" class="tab-pag ativo">
+                    Cartão de Crédito
+                  </button>
+                  <button type="button" class="tab-pag">PIX</button>
+                </div>
+
+                <div class="dados-cartao">
+                  <div class="form-group">
+                    <label>Número do Cartão</label>
+                    <input type="text" placeholder="0000 0000 0000 0000" />
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Validade</label>
+                      <input type="text" placeholder="MM/AA" />
+                    </div>
+                    <div class="form-group">
+                      <label>CVV</label>
+                      <input type="text" placeholder="123" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Nome no Cartão</label>
+                    <input type="text" placeholder="Como no cartão" />
+                  </div>
+                </div>
+
+                <button type="submit" class="botao-confirmar-final">
+                  Confirmar e Pagar
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </section>
 
