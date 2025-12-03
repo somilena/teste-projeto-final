@@ -1,0 +1,158 @@
+/* ------------------------------------------------ */
+/* 1. CONFIGURAÇÃO BASE (Cor de Fundo da Tela Toda) */
+/* ------------------------------------------------ */
+:root {
+    --bg-color-dark: #121212; 
+    --text-color-light: #ffffff;
+    --accent-color: #e57321;
+    --overlay-color: rgba(0, 0, 0, 0.7);
+    --content-max-width: 1400px; /* Definindo uma variável para a largura máxima do conteúdo */
+}
+
+/* Aplica o fundo escuro a TODO o corpo da página */
+body {
+    background-color: var(--bg-color-dark);
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    color: var(--text-color-light);
+}
+
+/* ------------------------------------------------ */
+/* 2. ESTILOS DA SEÇÃO GALERIA */
+/* ------------------------------------------------ */
+.galeria-section-dark {
+    /* A cor de fundo será a do body, mas podemos definir a cor da seção para garantir */
+    background-color: var(--bg-color-dark); 
+    padding: 100px 0; /* Remove padding lateral aqui */
+    padding-left: 2%;    /* Cria o espaçamento nas laterais esquerda */
+    padding-right: 2%;   /* Cria o espaçamento nas laterais direita */
+}
+
+/* Adicionamos um contêiner interno para centralizar o conteúdo do GRID */
+.galeria-container {
+    max-width: var(--content-max-width);
+    margin: 0 auto; /* Centraliza o conteúdo (grid, título, botão) */
+    padding: 0 5%; /* Adiciona padding lateral para respiro */
+}
+
+.section-title-dark {
+    text-align: center;
+    margin-bottom: 70px;
+    font-size: 3em;
+    /* ... (outros estilos de título) */
+}
+/* ------------------------------------------------ */
+/* LAYOUT DO GRID (Grade) */
+/* ------------------------------------------------ */
+.galeria-grid-dark {
+    display: grid;
+    /* Desktop: 3 colunas */
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px; 
+}
+
+/* Tablet (2 colunas) */
+@media (max-width: 992px) {
+    .galeria-grid-dark {
+        grid-template-columns: repeat(2, 1fr); 
+        gap: 20px;
+    }
+}
+
+/* Celular (1 coluna) */
+@media (max-width: 576px) {
+    .galeria-grid-dark {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* ------------------------------------------------ */
+/* ESTILOS DOS ITENS INDIVIDUAIS */
+/* ------------------------------------------------ */
+.galeria-item-dark {
+    position: relative;
+    overflow: hidden;
+    display: block;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4); /* Sombra mais marcada no dark mode */
+    text-decoration: none;
+    line-height: 0; 
+}
+
+.galeria-item-dark img {
+    width: 100%;
+    height: 350px; /* Altura fixa para alinhar as miniaturas */
+    display: block;
+    object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+    transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out; 
+}
+
+/* ------------------------------------------------ */
+/* ESTILOS DO OVERLAY E HOVER */
+/* ------------------------------------------------ */
+.overlay-dark {
+    position: absolute;
+    bottom: 0; /* Começa na parte inferior */
+    left: 0;
+    width: 100%;
+    background-color: var(--overlay-color); 
+    color: var(--text-color-light);
+    padding: 15px 20px;
+    opacity: 0; /* Inicia INVISÍVEL */
+    transform: translateY(100%); /* Escondido fora da área do item */
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+.overlay-dark h3 {
+    font-size: 1.2em;
+    margin: 5px 0 0;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.category-tag-dark {
+    display: inline-block;
+    font-size: 0.85em;
+    color: var(--accent-color); /* Destaque de cor no texto */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 400;
+}
+
+/* Efeito de Hover (Passar o Mouse) */
+.galeria-item-dark:hover .overlay-dark {
+    opacity: 1; 
+    transform: translateY(0); /* Aparece na base do item */
+}
+
+.galeria-item-dark:hover img {
+    transform: scale(1.05); /* Leve zoom */
+    opacity: 0.7; /* Escurece um pouco a imagem ao dar hover */
+}
+
+
+/* ------------------------------------------------ */
+/* BOTÃO (Inspirado no botão "BUY NOW") */
+/* ------------------------------------------------ */
+.button-container-dark {
+    text-align: center;
+    margin-top: 60px;
+}
+
+.btn-primary-dark {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: var(--text-color-light);
+    padding: 15px 35px;
+    border: none;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary-dark:hover {
+    background-color: #ff8433; /* Cor mais clara no hover */
+}

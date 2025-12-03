@@ -1,0 +1,330 @@
+/* 1. VARIÁVEIS DE COR E GLOBAIS (ATUALIZADAS PARA O TEMA DA IMAGEM) */
+@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap");
+
+:root {
+  --cor-fundo-principal: #0a0a0a; 
+  --cor-fundo-elementos: #0a0a0a; 
+  --cor-acento-principal: #d98236;
+  --cor-texto-principal: #f5f5f5;
+  --cor-texto-secundario: #a0a0a0;
+  --cor-borda: #303030; 
+  --cor-fundo-input-claro: #1c1c1c;
+  --cor-erro: #ff6b6b; /* NOVO: Cor de erro */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2. ESTILOS DA PÁGINA (BODY SEM O BRILHO) */
+.body-login-cadastro {
+  font-family: "Figtree", sans-serif;
+  background-color: var(--cor-fundo-principal); /* Fundo preto */
+  color: var(--cor-texto-principal);
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container-centralizado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 450px;
+}
+
+/* 3. CARTÃO DE AUTENTICAÇÃO (AGORA COM O BRILHO DENTRO) */
+.cartao-autenticacao {
+  background-color: var(--cor-fundo-principal); /* Fundo preto para o gradiente */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  text-align: center;
+  border: 1px solid var(--cor-borda);
+  transition: all 0.2s ease;
+  
+  /* EFEITO DE LUZ (GLOW) MOVIDO PARA DENTRO DO CARTÃO */
+  background-image: radial-gradient(
+    circle at center top,
+    rgba(217, 130, 54, 0.4) 0%, /* Cor do brilho */
+    rgba(217, 130, 54, 0.05) 30%,
+    var(--cor-fundo-principal) 60% /* Fundo preto */
+  );
+  
+  overflow: hidden; 
+  position: relative;
+}
+
+.cartao-autenticacao:hover {
+  border-color: rgb(70, 46, 10);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3), 0 0 10px rgba(217, 130, 54, 0.5);
+}
+
+
+/* 4. NOVOS ESTILOS DE PERFIL (Baseado na imagem) */
+.perfil-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 10px auto;
+  box-shadow: 0 0 15px rgba(217, 130, 54, 0.5); 
+}
+
+/* ESTILOS .perfil-sociais REMOVIDOS */
+
+/* ESTILOS DO TÍTULO E SUBTÍTULO DO PERFIL */
+.titulo-autenticacao {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+  margin-bottom: 8px;
+}
+
+.subtitulo-autenticacao {
+  font-size: 16px;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 20px; /* Espaço após o "Produtora Audiovisual" */
+}
+
+/* 5. SEÇÃO DO FORMULÁRIO (Login/Cadastro) */
+.area-formulario {
+  display: none;
+}
+.area-formulario.ativa {
+  display: block;
+}
+
+.titulo-formulario {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.descricao-formulario {
+  font-size: 14px;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+/* NOVO: Estilos para o Seletor PF/PJ */
+.seletor-tipo-pessoa {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 50px;
+  padding: 5px;
+  background-color: var(--cor-fundo-input-claro);
+}
+.seletor-tipo-pessoa input[type="radio"] {
+  display: none; /* Esconde o radio button real */
+}
+.seletor-tipo-pessoa label {
+  flex: 1;
+  padding: 8px 15px;
+  text-align: center;
+  border-radius: 50px;
+  color: var(--cor-texto-secundario);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 14px; /* Ajuste de fonte */
+}
+/* Estilo do botão selecionado */
+.seletor-tipo-pessoa input[type="radio"]:checked + label {
+  background-color: var(--cor-texto-principal);
+  color: var(--cor-fundo-principal);
+  font-weight: 700;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+
+.formulario-autenticacao {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.campo-formulario-autenticacao {
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.campo-formulario-autenticacao label {
+  font-weight: 500;
+  color: var(--cor-texto-secundario);
+  font-size: 14px;
+}
+
+.campo-formulario-autenticacao input {
+  background-color: var(--cor-fundo-input-claro);
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-principal);
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+  font-family: "Figtree", sans-serif; 
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.campo-formulario-autenticacao input:focus {
+  outline: none;
+  border-color: var(--cor-acento-principal);
+  box-shadow: 0 0 0 3px rgba(217, 130, 54, 0.3);
+}
+
+/* NOVO: Estilos para input[type="date"] (para ficar igual aos outros) */
+.campo-formulario-autenticacao input[type="date"] {
+  background-color: var(--cor-fundo-input-claro);
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-texto-principal);
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+  font-family: "Figtree", sans-serif; 
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  color-scheme: dark; /* Garante que o picker de data seja escuro */
+}
+/* Placeholder do date (quando não selecionado) */
+.campo-formulario-autenticacao input[type="date"]:invalid {
+  color: var(--cor-texto-secundario);
+}
+.campo-formulario-autenticacao input[type="date"]:focus {
+  outline: none;
+  border-color: var(--cor-acento-principal);
+  box-shadow: 0 0 0 3px rgba(217, 130, 54, 0.3);
+}
+
+
+/* Campo de Senha */
+.campo-senha {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.campo-senha input {
+  padding-right: 45px;
+}
+.mostrar-senha {
+  position: absolute;
+  right: 15px;
+  color: var(--cor-texto-secundario);
+  cursor: pointer;
+  font-size: 20px;
+}
+.mostrar-senha:hover {
+  color: var(--cor-acento-principal);
+} 
+
+/* NOVO: Estilos para o campo de CEP com botão */
+.campo-com-botao {
+  display: flex;
+  gap: 10px;
+}
+.campo-com-botao input {
+  flex: 1; /* Input ocupa a maior parte do espaço */
+}
+.botao-buscar-cep {
+  padding: 12px 15px;
+  border: none;
+  border-radius: 8px;
+  background-color: var(--cor-acento-principal);
+  color: #111;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+.botao-buscar-cep:hover {
+  filter: brightness(1.15);
+}
+
+/* NOVO: Estilos para Feedback de Validação */
+.feedback-invalido {
+  color: var(--cor-erro);
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: -4px; /* Puxa para mais perto do campo */
+  display: none; /* Escondido por padrão */
+}
+.feedback-invalido.visivel {
+  display: block; /* Mostra quando tem erro */
+}
+.campo-formulario-autenticacao input.invalido {
+  border-color: var(--cor-erro);
+}
+.campo-formulario-autenticacao input.invalido:focus {
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.3); /* Sombra de erro */
+}
+
+
+/* 6. BOTÃO PRINCIPAL (ESTILO BOTÃO BRANCO DA IMAGEM) */
+.botao-autenticacao {
+  background-color: var(--cor-texto-principal);
+  color: var(--cor-fundo-principal);
+  border: none;
+  padding: 14px 20px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+  margin-top: 15px;
+}
+
+.botao-autenticacao:hover {
+  filter: brightness(0.9);
+  transform: scale(1.03); 
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+.botao-autenticacao:active {
+  transform: scale(0.98);
+}
+
+/* 7. LINK INFERIOR (CADASTRO) */
+.link-inferior {
+  font-size: 14px;
+  color: var(--cor-texto-secundario);
+  margin-top: 25px;
+}
+.link-inferior a {
+  color: var(--cor-acento-principal);
+  text-decoration: none;
+  font-weight: 500;
+}
+.link-inferior a:hover {
+  text-decoration: underline;
+}
+
+/* NOVO: Link "Fale com RP" */
+.link-rp {
+  font-size: 14px;
+  color: var(--cor-texto-secundario);
+  margin-top: 15px; /* Espaço acima */
+  padding-top: 15px; /* Espaço acima com linha */
+  border-top: 1px solid var(--cor-borda); /* Linha divisória */
+}
+.link-rp a {
+  color: var(--cor-acento-principal);
+  text-decoration: none;
+  font-weight: 500;
+}
+.link-rp a:hover {
+  text-decoration: underline;
+}

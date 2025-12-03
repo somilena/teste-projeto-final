@@ -1,0 +1,316 @@
+/* 1. CONFIGURAÇÕES GLOBAIS DA PÁGINA */
+@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --cor-fundo-pagina: #050505; /* Preto quase absoluto */
+  --cor-card-fundo: #121212; /* Cinza bem escuro para cards */
+  --cor-borda-suave: #333333; /* Bordas discretas */
+  --cor-destaque: #f5a623; /* Laranja/Dourado da marca */
+  --cor-destaque-brilho: rgba(245, 166, 35, 0.3); /* Brilho do laranja */
+  --cor-texto-principal: #ffffff;
+  --cor-texto-secundario: #a0a0a0;
+  --fonte-principal: "Figtree", sans-serif;
+}
+
+body {
+  background-color: var(--cor-fundo-pagina);
+  font-family: var(--fonte-principal);
+  color: var(--cor-texto-principal);
+  margin: 0;
+}
+
+/* Ajuste para o container principal */
+.container-servicos {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* ============================================= */
+/* 2. HERO E FILTROS (VISUAL NOVO) */
+/* ============================================= */
+
+.secao-busca-filtros {
+  text-align: center;
+  padding: 80px 0 60px 0;
+  /* Um fundo sutil radial para destacar o topo */
+  background: radial-gradient(
+    circle at center top,
+    #1a1a1a 0%,
+    var(--cor-fundo-pagina) 70%
+  );
+}
+
+.texto-chamada h1 {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.texto-chamada .destaque {
+  color: var(--cor-destaque);
+  /* Pequeno brilho no texto */
+  text-shadow: 0 0 15px rgba(245, 166, 35, 0.4);
+}
+
+.texto-chamada p {
+  font-size: 18px;
+  color: var(--cor-texto-secundario);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Barra de Filtros Estilizada */
+.container-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 40px;
+}
+
+.filtro-btn {
+  background-color: transparent;
+  border: 1px solid var(--cor-borda-suave);
+  color: var(--cor-texto-secundario);
+  padding: 12px 24px;
+  border-radius: 100px; /* Formato de pílula */
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--fonte-principal);
+}
+
+.filtro-btn:hover {
+  border-color: var(--cor-destaque);
+  color: var(--cor-texto-principal);
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.filtro-btn.ativo {
+  background-color: var(--cor-destaque);
+  color: #000; /* Texto preto para contraste no laranja */
+  border-color: var(--cor-destaque);
+  font-weight: 700;
+  box-shadow: 0 0 15px var(--cor-destaque-brilho);
+}
+
+/* ============================================= */
+/* 3. GRID DE SERVIÇOS (CARDS PREMIUM) */
+/* ============================================= */
+
+.secao-selecao-servico {
+  padding-bottom: 80px;
+}
+
+.secao-selecao-servico h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.descricao-secao {
+  text-align: center;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 50px;
+}
+
+.grid-servicos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+}
+
+.cartao-servico {
+  background-color: var(--cor-card-fundo);
+  border: 1px solid var(--cor-borda-suave);
+  border-radius: 20px; /* Cantos mais arredondados */
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efeito de Hover no Card */
+.cartao-servico:hover {
+  transform: translateY(-10px); /* Sobe levemente */
+  border-color: var(--cor-destaque);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.8);
+}
+
+/* Ícone do Serviço */
+.cartao-servico i.ph-fill {
+  font-size: 42px;
+  color: var(--cor-destaque);
+  margin-bottom: 20px;
+  /* Fundo circular sutil atrás do ícone */
+  background: rgba(245, 166, 35, 0.1);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.cartao-servico h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: var(--cor-texto-principal);
+}
+
+.cartao-servico p {
+  color: var(--cor-texto-secundario);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* Lista de Benefícios */
+.lista-itens-pacote {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+  flex-grow: 1; /* Empurra o preço/botão para baixo */
+}
+
+.lista-itens-pacote li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: #d1d1d1;
+  font-size: 14px;
+}
+
+.lista-itens-pacote li i {
+  color: var(--cor-destaque);
+  font-size: 16px;
+}
+
+/* Preço e Botão */
+.preco-servico {
+  display: block;
+  font-size: 18px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.botao-agendar {
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid var(--cor-destaque);
+  color: var(--cor-destaque);
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.botao-agendar:hover {
+  background-color: var(--cor-destaque);
+  color: #000;
+  box-shadow: 0 0 20px var(--cor-destaque-brilho);
+}
+
+/* --- DESTAQUE (MAIS VENDIDO) --- */
+.cartao-servico.destaque-pacote {
+  border-color: var(--cor-destaque); /* Borda laranja por padrão */
+  background: linear-gradient(180deg, #1a1a1a 0%, #121212 100%);
+  box-shadow: 0 0 30px rgba(245, 166, 35, 0.05);
+}
+
+.badge-mais-vendido {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--cor-destaque);
+  color: #000;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 5px 15px;
+  border-bottom-left-radius: 10px;
+  text-transform: uppercase;
+}
+
+/* ============================================= */
+/* 4. CALENDÁRIO (RESPONSIVO E MODERNO) */
+/* ============================================= */
+
+.container-calendario-agendamento {
+  background-color: var(--cor-card-fundo);
+  border: 1px solid var(--cor-borda-suave);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 800px;
+  margin: 40px auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* (Mantém a estrutura do calendário mas com as novas cores) */
+.calendario-agendamento-header h3 {
+  color: var(--cor-texto-principal);
+}
+.calendario-agendamento-header button {
+  color: var(--cor-texto-secundario);
+}
+.calendario-agendamento-header button:hover {
+  color: var(--cor-destaque);
+}
+
+.dia-agendamento {
+  background-color: #000;
+  border-color: var(--cor-borda-suave);
+  color: var(--cor-texto-secundario);
+  border-radius: 8px;
+}
+.dia-agendamento:not(.inativo):hover {
+  border-color: var(--cor-destaque);
+  color: var(--cor-texto-principal);
+}
+.dia-agendamento.selecionado {
+  background-color: var(--cor-destaque);
+  color: #000;
+  border-color: var(--cor-destaque);
+}
+.horario-btn {
+  background-color: #000;
+  border: 1px solid var(--cor-borda-suave);
+  color: var(--cor-texto-principal);
+  border-radius: 50px; /* Pílula */
+}
+.horario-btn.selecionado {
+  background-color: var(--cor-destaque);
+  color: #000;
+  border-color: var(--cor-destaque);
+}
+
+/* ============================================= */
+/* 5. RESPONSIVIDADE */
+/* ============================================= */
+@media (max-width: 768px) {
+  .texto-chamada h1 {
+    font-size: 32px;
+  }
+  .grid-servicos {
+    grid-template-columns: 1fr;
+  }
+  .container-filtros {
+    gap: 8px;
+  }
+  .filtro-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+}

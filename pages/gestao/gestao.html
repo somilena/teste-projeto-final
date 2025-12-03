@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Gestão Audiovisual (SGA)</title>
+  <link rel="icon" href="/assets/img/sga-staff.png">
+  <link rel="stylesheet" href="gestao.css" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+  <div class="container-principal">
+    <aside class="barra-lateral">
+      <div class="logo-sistema">
+        <i class="ph-fill ph-waveform"></i>
+        <span>SGA</span>
+      </div>
+      <nav class="menu-navegacao">
+        <ul>
+          <li class="item-menu ativo" data-pagina="visao-geral">
+            <a href="#"><i class="ph-fill ph-house"></i><span>Visão Geral</span></a>
+          </li>
+
+          <li class="item-menu" data-pagina="agendamentos">
+            <a href="#"><i class="ph-fill ph-calendar-check"></i><span>Agendamentos</span></a>
+          </li>
+          <li class="item-menu" data-pagina="receitas">
+            <a href="#"><i class="ph-fill ph-chart-line-up"></i><span>Receitas</span></a>
+          </li>
+          <li class="item-menu" data-pagina="despesas">
+            <a href="#"><i class="ph-fill ph-chart-line-down"></i><span>Despesas</span></a>
+          </li>
+          <li class="item-menu" data-pagina="clientes">
+            <a href="#"><i class="ph-fill ph-users"></i><span>Clientes</span></a>
+          </li>
+          <li class="item-menu" data-pagina="funcionarios">
+            <a href="#"><i class="ph-fill ph-identification-card"></i><span>Funcionários</span></a>
+          </li>
+          <li class="item-menu" data-pagina="contratos">
+            <a href="#"><i class="ph-fill ph-files"></i><span>Contratos</span></a>
+          </li>
+
+          <li class="item-menu" data-pagina="editar-site">
+            <a href="#"><i class="ph-fill ph-pencil-simple-line"></i><span>Editar Site</span></a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="conteudo-principal">
+      <section id="secao-visao-geral" class="pagina-conteudo ativa">
+        <header class="cabecalho-secao">
+          <h1>Visão Geral</h1>
+          <button class="botao-principal" id="botao-novo-agendamento-rapido">
+            <i class="ph-fill ph-plus-circle"></i>
+            <span>Novo Agendamento</span>
+          </button>
+        </header>
+        <div class="area-widgets">
+          <div class="cartao">
+            <h3>Faturamento (Mês)</h3>
+            <p class="valor" id="faturamento-dashboard">R$ 0,00</p>
+          </div>
+          <div class="cartao">
+            <h3>Projetos Ativos</h3>
+            <p class="valor">12</p>
+          </div>
+          <div class="cartao">
+            <h3>Contratos a Vencer</h3>
+            <p class="valor">3</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="secao-agendamentos" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Agendamentos</h1>
+          <button class="botao-principal" id="botao-novo-agendamento-calendario">
+            <i class="ph-fill ph-plus-circle"></i>
+            <span>Novo Agendamento</span>
+          </button>
+        </header>
+        <div class="container-calendario">
+          <div class="calendario-header">
+            <button id="mes-anterior">&lt;</button>
+            <h2 id="mes-ano-atual">Outubro 2025</h2>
+            <button id="mes-seguinte">&gt;</button>
+          </div>
+          <div class="calendario-dias-semana">
+            <div>Dom</div>
+            <div>Seg</div>
+            <div>Ter</div>
+            <div>Qua</div>
+            <div>Qui</div>
+            <div>Sex</div>
+            <div>Sáb</div>
+          </div>
+          <div class="calendario-grid-dias">
+          </div>
+        </div>
+      </section>
+
+      <section id="secao-receitas" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          
+          <h1>Receitas</h1>
+        </header>
+        <form class="formulario-secao" id="form-nova-receita">
+          <div class="campo-formulario">
+            <label for="receita-origem">Origem da Receita</label>
+            <input type="text" id="receita-origem" placeholder="Ex: Gravação EP Banda " required />
+          </div>
+          <div class="campo-formulario">
+            <label for="receita-cliente">Cliente Associado</label>
+            <input type="text" id="receita-cliente" placeholder="Nome do cliente" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="receita-data-emissao">Data Emissão</label>
+            <input type="date" id="receita-data-emissao" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="receita-data-agendada">Data Agendada</label>
+            <input type="date" id="receita-data-agendada" />
+          </div>
+          <div class="campo-formulario">
+            <label for="receita-valor">Valor</label>
+            <input type="number" step="0.01" id="receita-valor" placeholder="1200.00" required />
+          </div>
+          <button type="submit" class="botao-principal">
+            <i class="ph-fill ph-plus-circle"></i>
+            <span>Adicionar Receita</span>
+          </button>
+        </form>
+
+        <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+          <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
+          <input type="text" id="busca-receita" placeholder="Buscar por origem ou cliente..." 
+                 style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
+        </div>
+        
+        <table class="tabela-dados" id="tabela-receitas">
+
+        <table class="tabela-dados" id="tabela-receitas">
+          <thead>
+            <tr>
+              <th>Origem</th>
+              <th>Cliente</th>
+              <th>Data Emissão</th>
+              <th>Data Agendada</th>
+              <th>Valor (R$)</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">Total</td>
+              <td id="receita-total">R$ 0,00</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <section id="secao-despesas" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Despesas</h1>
+        </header>
+        <form class="formulario-secao" id="form-nova-despesa">
+          <div class="campo-formulario">
+            <label for="despesa-nome">Nome/Origem da Despesa</label>
+            <input type="text" id="despesa-nome" placeholder="Ex: Conta de Luz, Aluguel" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-data-emissao">Data Emissão</label>
+            <input type="date" id="despesa-data-emissao" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-data-vencimento">Data Vencimento</label>
+            <input type="date" id="despesa-data-vencimento" />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-valor">Valor</label>
+            <input type="number" step="0.01" id="despesa-valor" placeholder="800.00" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-status">Status</label>
+            <select id="despesa-status" required>
+              <option value="a_pagar">A Pagar</option>
+              <option value="pago">Pago</option>
+              <option value="atrasado">Atrasado</option>
+            </select>
+          </div>
+          <button type="submit" class="botao-principal">
+            <i class="ph-fill ph-plus-circle"></i>
+            <span>Adicionar Despesa</span>
+          </button>
+        </form>
+        
+        <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+          <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
+          <input type="text" id="busca-despesa" placeholder="Buscar por nome da despesa..." 
+                 style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
+        </div>
+
+        <table class="tabela-dados" id="tabela-despesas">
+          <thead>
+            <tr>
+              <th>Nome/Origem</th>
+              <th>Data Emissão</th>
+              <th>Vencimento</th>
+              <th>Status</th>
+              <th>Valor (R$)</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4">Total</td>
+              <td id="despesa-total">R$ 0,00</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <section id="secao-clientes" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Clientes</h1>
+          <a href="gestao/cadastro-cliente.html" class="botao-principal" target="_blank">
+            <i class="ph-fill ph-plus-circle"></i><span>Novo Cliente</span>
+          </a>
+        </header>
+        <p class="placeholder-conteudo">WIP: Grade de Clientes</p>
+      </section>
+
+      <section id="secao-funcionarios" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Funcionários</h1>
+          <button class="botao-principal" id="botao-novo-funcionario">
+            <i class="ph-fill ph-plus-circle"></i><span>Novo Funcionário</span>
+          </button>
+        </header>
+
+        <div class="container-blocos-funcionarios" id="container-blocos-funcionarios">
+        </div>
+      </section>
+
+      <section id="secao-contratos" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Contratos de Clientes</h1>
+        </header>
+        <form class="formulario-secao" id="form-novo-contrato">
+          <div class="campo-formulario">
+            <label for="contrato-cliente">Cliente Associado</label>
+            <input type="text" id="contrato-cliente" placeholder="Nome do Cliente" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="contrato-titulo">Título do Documento</label>
+            <input type="text" id="contrato-titulo" placeholder="Ex: Contrato Gravação EP" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="contrato-arquivo">Arquivo (PDF)</label>
+            <input type="file" id="contrato-arquivo" accept=".pdf" required />
+          </div>
+          <button type="submit" class="botao-principal">
+            <i class="ph-fill ph-upload-simple"></i>
+            <span>Salvar Contrato</span>
+          </button>
+        </form>
+        <table class="tabela-dados" id="tabela-contratos">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Cliente</th>
+              <th>Data Upload</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section id="secao-editar-site" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Editar Site</h1>
+        </header>
+
+        <div class="navegacao-sub-abas">
+          <button class="botao-sub-aba" data-alvo="sub-home">Home</button>
+          <button class="botao-sub-aba" data-alvo="sub-produtos">Produtos</button>
+          <button class="botao-sub-aba" data-alvo="sub-galeria">Galeria</button>
+          <button class="botao-sub-aba" data-alvo="sub-logs">Logs</button>
+        </div>
+
+        <div id="sub-logs" class="conteudo-sub-aba">
+          <div class="area-widgets" style="margin-bottom: 20px;">
+            <div class="cartao"
+              style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h3>Histórico de Alterações</h3>
+                <p style="color: var(--cor-texto-secundario);">Registro de atividades recentes no site.</p>
+              </div>
+              <button class="botao-principal" onclick="limparLogs()" style="background-color: var(--cor-borda);">
+                <i class="ph-fill ph-trash"></i> Limpar
+              </button>
+            </div>
+          </div>
+
+          <table class="tabela-dados" id="tabela-logs">
+            <thead>
+              <tr>
+                <th>Data/Hora</th>
+                <th>Usuário</th>
+                <th>Ação Realizada</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="sub-home" class="conteudo-sub-aba">
+          <div class="area-widgets" id="grid-home-widgets">
+
+            <div class="cartao" data-categoria="banner">
+              <h3>Banner Principal</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">Destaques do topo.</p>
+
+              <input type="hidden" class="home-edit-index">
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Título</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: Promoção de Verão"
+                  style="width: 100%;">
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Imagem</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="video">
+              <h3>Seção de Vídeos</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">Destaques visuais.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Título do Vídeo</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: Teaser Oficial"
+                  style="width: 100%;">
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Capa/Thumbnail</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="podcast_destaque">
+              <h3>Podcast Destaque</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">Episódio principal.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Título</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: Cumaru Cast #01"
+                  style="width: 100%;">
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Capa</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="episodios">
+              <h3>Episódios Recentes</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">Novos episódios.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Título</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: Ep. #42"
+                  style="width: 100%;">
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Capa</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="apresentadores">
+              <h3>Apresentadores</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">Time de artistas.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Nome</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: João Silva"
+                  style="width: 100%;">
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Foto</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="membros">
+              <h3>Equipe Cumaru</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">Membros da equipe.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Nome</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: Maria Oliveira"
+                  style="width: 100%;">
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Foto</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="depoimentos">
+              <h3>Depoimentos</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">O que dizem.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Nome / Título</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: Carlos - Incrível!"
+                  style="width: 100%;">
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Comentário</label>
+                <textarea class="campo-formulario home-input-desc" rows="2" placeholder="Comentário..."
+                  style="width: 100%; resize: vertical; font-family: inherit;"></textarea>
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Foto</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="parceiros">
+              <h3>Parceiros</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">Colaboradores.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Nome Parceiro</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: Empresa X"
+                  style="width: 100%;">
+              </div>
+
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Logo</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <div id="sub-produtos" class="conteudo-sub-aba">
+          <form class="formulario-secao" id="form-novo-produto">
+            <div class="campo-formulario">
+              <label for="produto-nome">Nome do Produto</label>
+              <input type="text" id="produto-nome" placeholder="Ex: Camiseta Banda X" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="produto-codigo">Código (SKU)</label>
+              <input type="text" id="produto-codigo" placeholder="Ex: CAM-001" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="produto-tamanho">Tamanho</label>
+              <input type="text" id="produto-tamanho" placeholder="Ex: P, M, G ou 38, 40" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="produto-preco">Preço (R$)</label>
+              <input type="number" step="0.01" id="produto-preco" placeholder="59.90" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="produto-status">Status</label>
+              <select id="produto-status" required>
+                <option value="disponivel">Disponível</option>
+                <option value="indisponivel">Indisponível</option>
+              </select>
+            </div>
+
+            <div class="campo-formulario" style="flex-basis: 100%;">
+              <label for="produto-descricao">Descrição</label>
+              <textarea id="produto-descricao" rows="2" placeholder="Detalhes do produto..."></textarea>
+            </div>
+
+            <div class="campo-formulario" style="flex-basis: 100%;">
+              <label for="produto-foto">Foto do Produto</label>
+              <input type="file" id="produto-foto" accept="image/*" required />
+            </div>
+
+            <button type="submit" class="botao-principal">
+              <i class="ph-fill ph-plus-circle"></i>
+              <span>Adicionar Produto</span>
+            </button>
+          </form>
+
+          <table class="tabela-dados" id="tabela-produtos">
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Cód.</th>
+                <th>Nome</th>
+                <th>Tamanho</th>
+                <th>Preço</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="sub-galeria" class="conteudo-sub-aba">
+
+          <form class="formulario-secao" id="form-galeria">
+            <input type="hidden" id="galeria-index-edicao">
+            <div class="campo-formulario">
+              <label for="galeria-titulo">Título</label>
+              <input type="text" id="galeria-titulo" placeholder="Ex: Show de Verão" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="galeria-link">Link de Redirecionamento</label>
+              <input type="text" id="galeria-link" placeholder="https://instagram.com/..." />
+            </div>
+
+            <div class="campo-formulario" style="flex-basis: 100%;">
+              <label for="galeria-imagem">Imagem</label>
+              <input type="file" id="galeria-imagem" accept="image/*" />
+              <small style="color: var(--cor-texto-secundario); display: none;" id="aviso-imagem-atual">Deixe vazio para
+                manter a imagem atual.</small>
+            </div>
+
+            <div style="display: flex; gap: 10px; width: 100%;">
+              <button type="submit" class="botao-principal" id="btn-salvar-galeria">
+                <i class="ph-fill ph-plus-circle"></i>
+                <span>Adicionar Item</span>
+              </button>
+
+              <button type="button" class="botao-principal" id="btn-cancelar-galeria"
+                style="display: none; background-color: var(--cor-borda);">
+                Cancelar
+              </button>
+            </div>
+          </form>
+
+          <div id="grid-galeria-items" class="area-widgets" style="margin-top: 30px;">
+          </div>
+
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modal-agendamento">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2>Novo Agendamento</h2>
+        <button class="modal-fechar" id="modal-fechar-agendamento">
+          &times;
+        </button>
+      </header>
+      <form class="formulario-modal" id="form-novo-agendamento">
+        <div class="campo-formulario">
+          <label for="agendamento-titulo">Título</label>
+          <input type="text" id="agendamento-titulo" required />
+        </div>
+        <div class="campo-formulario">
+          <label for="agendamento-data">Data</label>
+          <input type="date" id="agendamento-data" required />
+        </div>
+        <div class="campo-formulario">
+          <label for="agendamento-obs">Obs</label>
+          <textarea id="agendamento-obs" rows="2" placeholder="Detalhes extras..." style="resize: vertical;"></textarea>
+        </div>
+        <div class="campo-formulario">
+          <label for="agendamento-tipo">Tipo</label>
+          <select id="agendamento-tipo">
+            <option value="gravacao">Gravação</option>
+            <option value="mixagem">Mixagem</option>
+            <option value="reuniao">Reunião</option>
+          </select>
+        </div>
+        <button type="submit" class="botao-principal">
+          Salvar Agendamento
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-detalhes-agendamento">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2>Detalhes do Agendamento</h2>
+        <button class="modal-fechar" id="modal-fechar-detalhes-agendamento">
+          &times;
+        </button>
+      </header>
+      <div class="modal-corpo">
+        <p><strong>Título:</strong> <span id="detalhes-agendamento-titulo"></span></p>
+        <p><strong>Data:</strong> <span id="detalhes-agendamento-data"></span></p>
+        <p><strong>Obs:</strong> <span id="detalhes-agendamento-obs"></span></p>
+        <p><strong>Tipo:</strong> <span id="detalhes-agendamento-tipo"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-novo-funcionario">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2>Novo Funcionário</h2>
+        <button class="modal-fechar" id="modal-fechar-funcionario">
+          &times;
+        </button>
+      </header>
+      <form class="formulario-modal" id="form-novo-funcionario">
+        <div class="campo-formulario">
+          <label for="funcionario-nome">Nome</label>
+          <input type="text" id="funcionario-nome" required />
+        </div>
+        <div class="campo-formulario">
+          <label for="funcionario-email">Email</label>
+          <input type="email" id="funcionario-email" required />
+        </div>
+        <div class="campo-formulario">
+          <label for="funcionario-telefone">Telefone (Opcional)</label>
+          <input type="tel" id="funcionario-telefone" />
+        </div>
+        <div class="campo-formulario">
+          <label for="funcionario-senha">Senha</label>
+          <input type="password" id="funcionario-senha" required />
+        </div>
+        <div class="campo-formulario">
+          <label for="funcionario-confirmar-senha">Confirmar Senha</label>
+          <input type="password" id="funcionario-confirmar-senha" required />
+        </div>
+        <div class="campo-formulario">
+          <label for="funcionario-cargo">Cargo</label>
+          <select id="funcionario-cargo" required>
+            <option value="" disabled selected>Selecione um cargo</option>
+            <option value="adm">Adm</option>
+            <option value="gerente">Gerente</option>
+            <option value="editor">Editor</option>
+            <option value="juridico">Jurídico</option>
+            <option value="contabilidade">Contabilidade</option>
+            <option value="rh">RH</option>
+          </select>
+        </div>
+        <button type="submit" class="botao-principal">
+          Salvar Funcionário
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-detalhes-funcionario">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2 id="modal-detalhes-nome">Detalhes do Funcionário</h2>
+        <button class="modal-fechar" id="modal-fechar-detalhes-funcionario">
+          &times;
+        </button>
+      </header>
+      <div class="modal-corpo">
+        <p><strong>Email:</strong> <span id="modal-detalhes-email"></span></p>
+        <p><strong>Cargo:</strong> <span id="modal-detalhes-cargo"></span></p>
+        <p><strong>Telefone:</strong> <span id="modal-detalhes-telefone"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="gestao.js"></script>
+</body>
+
+</html>
