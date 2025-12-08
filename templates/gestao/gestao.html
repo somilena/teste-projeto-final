@@ -5,8 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sistema de Gestão Audiovisual (SGA)</title>
-  <link rel="icon" href="/assets/img/sga-staff.png">
-  <link rel="stylesheet" href="gestao.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/gestao.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='img/icon/logo-icon.png') }}">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 
@@ -104,7 +104,7 @@
 
       <section id="secao-receitas" class="pagina-conteudo">
         <header class="cabecalho-secao">
-          
+
           <h1>Receitas</h1>
         </header>
         <form class="formulario-secao" id="form-nova-receita">
@@ -134,34 +134,35 @@
           </button>
         </form>
 
-        <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+        <div
+          style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
           <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
-          <input type="text" id="busca-receita" placeholder="Buscar por origem ou cliente..." 
-                 style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
+          <input type="text" id="busca-receita" placeholder="Buscar por origem ou cliente..."
+            style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
         </div>
-        
-        <table class="tabela-dados" id="tabela-receitas">
 
         <table class="tabela-dados" id="tabela-receitas">
-          <thead>
-            <tr>
-              <th>Origem</th>
-              <th>Cliente</th>
-              <th>Data Emissão</th>
-              <th>Data Agendada</th>
-              <th>Valor (R$)</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-          <tfoot>
-            <tr>
-              <td colspan="4">Total</td>
-              <td id="receita-total">R$ 0,00</td>
-              <td></td>
-            </tr>
-          </tfoot>
-        </table>
+
+          <table class="tabela-dados" id="tabela-receitas">
+            <thead>
+              <tr>
+                <th>Origem</th>
+                <th>Cliente</th>
+                <th>Data Emissão</th>
+                <th>Data Agendada</th>
+                <th>Valor (R$)</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="4">Total</td>
+                <td id="receita-total">R$ 0,00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
       </section>
 
       <section id="secao-despesas" class="pagina-conteudo">
@@ -198,11 +199,12 @@
             <span>Adicionar Despesa</span>
           </button>
         </form>
-        
-        <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+
+        <div
+          style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
           <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
-          <input type="text" id="busca-despesa" placeholder="Buscar por nome da despesa..." 
-                 style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
+          <input type="text" id="busca-despesa" placeholder="Buscar por nome da despesa..."
+            style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
         </div>
 
         <table class="tabela-dados" id="tabela-despesas">
@@ -743,7 +745,7 @@
     </div>
   </div>
 
-  <script src="gestao.js"></script>
+  <script src="{{ url_for('static', filename='js/gestao.js') }}"></script>
 </body>
 
 </html>

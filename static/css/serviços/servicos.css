@@ -651,3 +651,199 @@
     order: 2; /* Pagamento fica embaixo */
   }
 }
+
+/* --- ESTILOS DO FORMULÁRIO DE CADASTRO (NOVO) --- */
+
+/* Abas Pessoa Física / Jurídica */
+.tabs-pessoa {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  background-color: #0a0a0a;
+  padding: 5px;
+  border-radius: 50px;
+  border: 1px solid #333;
+}
+
+.tab-pessoa {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--cor-texto-secundario);
+  padding: 10px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+
+.tab-pessoa.ativo {
+  background-color: #333;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Área de Criação de Senha */
+.area-senha-cadastro {
+  margin: 30px 0;
+  padding: 20px;
+  border: 1px dashed #333;
+  border-radius: 12px;
+  background-color: rgba(201, 107, 42, 0.05); /* Fundo laranja muito suave */
+}
+
+.area-senha-cadastro h3 {
+  margin-top: 0 !important;
+  font-size: 16px !important;
+  color: var(--cor-primaria) !important;
+}
+
+.aviso-senha {
+  font-size: 12px;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 15px;
+}
+
+/* --- ESTILOS DO PAGAMENTO (NOVO) --- */
+
+.select-parcelas {
+  width: 100%;
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  color: var(--cor-texto-principal);
+  padding: 12px;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  outline: none;
+}
+.select-parcelas:focus {
+  border-color: var(--cor-primaria);
+}
+
+.box-pix {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px dashed #444;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  color: var(--cor-texto-secundario);
+}
+.box-pix i {
+  font-size: 40px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 15px;
+}
+.desconto-pix {
+  display: block;
+  margin-top: 10px;
+  color: #28a745; /* Verde */
+  font-size: 14px;
+}
+
+/* Ícone dentro do input */
+.input-com-icone {
+  position: relative;
+}
+.input-com-icone i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+.input-com-icone input {
+  padding-left: 45px; /* Espaço para o ícone */
+}
+
+/* ============================================= */
+/* 6. TELA DE CONFIRMAÇÃO (SUCESSO) */
+/* ============================================= */
+
+.tela-confirmacao {
+  text-align: center;
+  padding: 40px 20px;
+  animation: fadeIn 0.5s ease;
+}
+
+.card-sucesso {
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid #333;
+  border-radius: 20px;
+  padding: 60px 40px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.icone-sucesso {
+  width: 80px;
+  height: 80px;
+  background-color: var(--cor-primaria);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 30px auto;
+  box-shadow: 0 0 20px rgba(201, 107, 42, 0.6);
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.card-sucesso h2 {
+  font-size: 32px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 15px;
+}
+
+.card-sucesso p {
+  color: var(--cor-texto-secundario);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.detalhe-email {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-bottom: 30px !important;
+}
+
+.acoes-sucesso {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.botao-portal {
+  width: 100%;
+  max-width: 300px;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none; /* Garante que pareça botão */
+}
+
+.link-voltar-home {
+  color: var(--cor-texto-secundario);
+  font-size: 14px;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+.link-voltar-home:hover {
+  color: var(--cor-texto-principal);
+}

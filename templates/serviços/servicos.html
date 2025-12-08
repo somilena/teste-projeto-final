@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+  <title>Serviços da ProdCumaru</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/servicos.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/carrinho-lateral.css') }}">
+</head>
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+  <header class="cabecalho">
+    <div class="container">
+      <a href="/index.html" class="logo">
+        <img src="/assets/img/logo.png" alt="Logo ProdCumaru" class="logo-imagem" />
+        <small>Produtora Audiovisual</small>
+      </a>
+
+      <div class="navbar-direita" id="navbar-menu">
+        <button class="botao-fechar-menu" id="botao-fechar-menu" aria-label="Fechar menu">
+          &times;
+        </button>
+
+        <nav class="menu-principal">
+          <ul>
+            <li><a href="/index.html">Home</a></li>
+            <li><a href="/pages/serviços/servicos.html">Serviços</a></li>
+            <li><a href="/pages/galeria/galeria.html">Galeria</a></li>
+          </ul>
+        </nav>
+
+        <div class="icones-header">
+          <a href="https://www.instagram.com/prodcumaru" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/channel/UC5ONBnjOuICom8noQ78D9_g" aria-label="Youtube"><i
+              class="fab fa-youtube"></i></a>
+
+          <div class="login-dropdown-container">
+            <a href="#" class="login-trigger" aria-label="Login ou Cadastro">
+              <i class="fas fa-user"></i>
+            </a>
+            <div class="submenu-login">
+              <span class="submenu-login-titulo">FAZER LOGIN</span>
+              <ul>
+                <li>
+                  <a href="/pages/login/login-cliente.html">
+                    <i class="fas fa-headphones"></i>
+                    <span>Portal do Cliente</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="botao-menu-mobile" id="botao-abrir-menu" aria-label="Abrir menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <main class="container-servicos">
+    <section class="secao-busca-filtros">
+      <div class="texto-chamada">
+        <h1>
+          Sua voz anunciada em <span class="destaque">Podcasts</span> e
+          <span class="destaque">Talk Shows</span> em poucos cliques.
+        </h1>
+        <p>
+          Escolha o serviço, o tema, a duração ou a equipe — com agendamentos
+          a partir de R$ 99,90.
+        </p>
+      </div>
+
+      <div class="container-filtros">
+        <button class="filtro-btn ativo" data-filtro="todos">Todos</button>
+        <button class="filtro-btn" data-filtro="podcast">Podcast</button>
+        <button class="filtro-btn" data-filtro="talkshow">Talk Show</button>
+        <button class="filtro-btn" data-filtro="musica">Música</button>
+        <button class="filtro-btn" data-filtro="streaming">
+          Live Streaming
+        </button>
+        <button class="filtro-btn" data-filtro="videoaula">
+          Video Aulas
+        </button>
+        <button class="filtro-btn" data-filtro="street">Sala Street</button>
+        <button class="filtro-btn" data-filtro="acoustic">
+          Lounge Acoustic
+        </button>
+      </div>
+    </section>
+
+    <section class="secao-selecao-servico">
+      <h2>Nossos Pacotes de Podcast</h2>
+      <p class="descricao-secao">
+        Selecione o pacote ideal para o seu projeto e agende seu horário.
+      </p>
+
+      <div class="grid-servicos">
+        <div class="cartao-servico" data-tipo="podcast acoustic">
+          <i class="ph-fill ph-microphone-stage"></i>
+          <h3>CUMARU Básico</h3>
+          <p>
+            Clientes com experiência que necessitam apenas do espaço físico e
+            suporte técnico básico.
+          </p>
+          <ul class="lista-itens-pacote">
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Estúdio Acústico Premium
+            </li>
+            <li><i class="ph-bold ph-check-circle"></i>Técnico de Mesa</li>
+            <li><i class="ph-bold ph-check-circle"></i>Áudio em WAV/MP3</li>
+          </ul>
+          <span class="preco-servico">A partir de R$ 350 (1h)</span>
+          <button class="botao-agendar" data-servico="basico">
+            Agendar Pacote Básico
+          </button>
+        </div>
+
+        <div class="cartao-servico destaque-pacote" data-tipo="podcast talkshow acoustic">
+          <span class="badge-mais-vendido">Mais Vendido</span>
+          <i class="ph-fill ph-monitor-play"></i>
+          <h3>CUMARU Standard</h3>
+          <p>
+            Serviço completo para quem deseja produzir conteúdo audiovisual
+            com suporte em todas as etapas.
+          </p>
+          <ul class="lista-itens-pacote">
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Estúdio Acústico Premium
+            </li>
+            <li><i class="ph-bold ph-check-circle"></i>Técnico de Mesa</li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Edição de Áudio e Vídeo
+            </li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>2 Cortes para Redes/h
+            </li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Equipe Técnica de Suporte
+            </li>
+          </ul>
+          <span class="preco-servico">A partir de R$ 550 (1h)</span>
+          <button class="botao-agendar" data-servico="standard">
+            Agendar Pacote Standard
+          </button>
+        </div>
+
+        <div class="cartao-servico" data-tipo="podcast talkshow streaming videoaula acoustic">
+          <i class="ph-fill ph-star"></i>
+          <h3>CUMARU Premium</h3>
+          <p>
+            Serviço de alta qualidade, com suporte completo e direcionamento
+            personalizado.
+          </p>
+          <ul class="lista-itens-pacote">
+            <li><i class="ph-bold ph-check-circle"></i>Tudo do Standard +</li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>1 teaser/chamada por
+              episódio
+            </li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Equipe Técnica Completa
+            </li>
+            <li><i class="ph-bold ph-check-circle"></i>Direção e Produção</li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Vinheta Sonora Exclusiva
+            </li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Recepção de Convidados
+            </li>
+          </ul>
+          <span class="preco-servico">A partir de R$ 900 (1h)</span>
+          <button class="botao-agendar" data-servico="premium">
+            Agendar Pacote Premium
+          </button>
+        </div>
+
+        <div class="cartao-servico" data-tipo="podcast acoustic">
+          <i class="ph-fill ph-calendar-check"></i>
+          <h3>CUMARU Assinatura</h3>
+          <p>
+            Pacotes mensais semestrais para quem tem produções recorrentes.
+            (Valores por mês)
+          </p>
+          <ul class="lista-itens-pacote">
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Estúdio Acústico Premium
+            </li>
+            <li><i class="ph-bold ph-check-circle"></i>Técnico de Mesa</li>
+            <li><i class="ph-bold ph-check-circle"></i>Áudio em WAV/MP3</li>
+          </ul>
+          <span class="preco-servico">A partir de R$ 1.100 (4h/mês)</span>
+          <button class="botao-agendar" data-servico="assinatura">
+            Consultar Assinatura
+          </button>
+        </div>
+
+        <div class="cartao-servico" data-tipo="musica acoustic">
+          <i class="ph-fill ph-music-notes"></i>
+          <h3>Produção Musical</h3>
+          <p>
+            Gravação, captação, mixagem e masterização. Desde a criação de
+            beats até a distribuição.
+          </p>
+          <ul class="lista-itens-pacote">
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Captação de Voz (90/h)
+            </li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Criação de Beats (500)
+            </li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Produção Completa (800)
+            </li>
+            <li><i class="ph-bold ph-check-circle"></i>Mix/Master (300)</li>
+          </ul>
+          <span class="preco-servico">Sob Consulta</span>
+          <button class="botao-agendar" data-servico="musica">
+            Agendar Produção Musical
+          </button>
+        </div>
+
+        <div class="cartao-servico" data-tipo="street">
+          <i class="ph-fill ph-paint-brush"></i>
+          <h3>Sala Street</h3>
+          <p>
+            Um estúdio com identidade urbana, ideal para podcasts e talk shows
+            com uma estética moderna.
+          </p>
+          <ul class="lista-itens-pacote">
+            <li><i class="ph-bold ph-check-circle"></i>Cenário Urbano</li>
+            <li>
+              <i class="ph-bold ph-check-circle"></i>Equipamento Completo
+            </li>
+            <li><i class="ph-bold ph-check-circle"></i>Técnico de Mesa</li>
+          </ul>
+          <span class="preco-servico">A partir de R$ 350 (1h)</span>
+          <button class="botao-agendar" data-servico="street">
+            Agendar Sala Street
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section id="secao-calendario" class="secao-agendamento-detalhes" style="display: none">
+      <div class="container-agendamento-completo">
+        <button id="botao-voltar-servicos" class="btn-voltar">
+          <i class="fas fa-arrow-left"></i> Voltar para Serviços
+        </button>
+
+        <div class="grid-agendamento">
+          <div class="coluna-selecao">
+            <h2>Escolha Data e Hora</h2>
+            <p class="descricao-secao-agenda">
+              Para o serviço:
+              <strong id="servico-selecionado-titulo" class="texto-destaque">---</strong>
+            </p>
+
+            <div class="container-calendario-agendamento">
+              <div class="calendario-agendamento-header">
+                <button id="mes-anterior-publico">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <h3 id="mes-ano-atual-publico">Outubro 2025</h3>
+                <button id="mes-seguinte-publico">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="calendario-agendamento-dias-semana">
+                <div>Dom</div>
+                <div>Seg</div>
+                <div>Ter</div>
+                <div>Qua</div>
+                <div>Qui</div>
+                <div>Sex</div>
+                <div>Sáb</div>
+              </div>
+              <div class="calendario-agendamento-grid-dias"></div>
+            </div>
+
+            <div class="horarios-disponiveis" style="display: none" id="container-horarios">
+              <h3>
+                Horários para <span id="data-selecionada-titulo"></span>
+              </h3>
+              <div id="grid-horarios"></div>
+            </div>
+          </div>
+
+          <div class="coluna-pagamento" id="container-pagamento" style="display: none">
+            <div class="box-resumo">
+              <h3>Resumo do Pedido</h3>
+              <div class="item-resumo">
+                <span>Serviço:</span>
+                <span id="resumo-servico">---</span>
+              </div>
+              <div class="item-resumo">
+                <span>Data/Hora:</span>
+                <span id="resumo-data">---</span>
+              </div>
+              <div class="item-resumo total">
+                <span>Valor Total:</span>
+                <span id="resumo-valor">R$ 0,00</span>
+              </div>
+            </div>
+
+            <form id="form-agendamento" class="form-agendamento">
+              <h3>Seus Dados</h3>
+
+              <div class="tabs-pessoa">
+                <button type="button" class="tab-pessoa ativo" data-target="pf">
+                  Pessoa Física
+                </button>
+                <button type="button" class="tab-pessoa" data-target="pj">
+                  Pessoa Jurídica
+                </button>
+              </div>
+              <input type="hidden" id="tipo-pessoa" value="pf" />
+
+              <div class="form-group">
+                <label>Nome Completo</label>
+                <input type="text" id="nome-cliente" placeholder="Seu nome" required />
+              </div>
+
+              <div id="campos-pf" class="campos-grupo">
+                <div class="form-group">
+                  <label>CPF</label>
+                  <input type="text" id="cpf-cliente" placeholder="000.000.000-00" />
+                </div>
+              </div>
+
+              <div id="campos-pj" class="campos-grupo" style="display: none">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>CNPJ</label>
+                    <input type="text" id="cnpj-cliente" placeholder="00.000.000/0001-00" />
+                  </div>
+                  <div class="form-group">
+                    <label>Nome da Empresa</label>
+                    <input type="text" id="empresa-cliente" placeholder="Razão Social" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label>E-mail</label>
+                  <input type="email" id="email-cliente" placeholder="seu@email.com" required />
+                </div>
+                <div class="form-group">
+                  <label>Telefone / WhatsApp</label>
+                  <input type="tel" id="telefone-cliente" placeholder="(XX) 9XXXX-XXXX" required />
+                </div>
+              </div>
+
+              <div class="area-senha-cadastro">
+                <h3>Acesso ao Portal</h3>
+                <p class="aviso-senha">
+                  Crie uma senha para acompanhar seu agendamento no Portal do
+                  Cliente.
+                </p>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label>Crie uma Senha</label>
+                    <input type="password" id="senha-cliente" placeholder="Mínimo 6 caracteres" required />
+                  </div>
+
+                  <div class="form-group">
+                    <label>Confirmar Senha</label>
+                    <input type="password" id="confirma-senha-cliente" placeholder="Repita a senha" required />
+                  </div>
+                </div>
+              </div>
+
+              <h3>Pagamento</h3>
+
+              <div class="tabs-pagamento">
+                <button type="button" class="tab-pag ativo" data-metodo="credito">
+                  Crédito
+                </button>
+                <button type="button" class="tab-pag" data-metodo="debito">
+                  Débito
+                </button>
+                <button type="button" class="tab-pag" data-metodo="pix">
+                  PIX
+                </button>
+              </div>
+              <input type="hidden" id="metodo-pagamento" value="credito" />
+
+              <div id="area-pagamento-cartao">
+                <div class="dados-cartao">
+                  <div class="form-group">
+                    <label>Número do Cartão</label>
+                    <div class="input-com-icone">
+                      <i class="far fa-credit-card"></i>
+                      <input type="text" placeholder="0000 0000 0000 0000" maxlength="19" />
+                    </div>
+                  </div>
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label>Validade</label>
+                      <input type="text" placeholder="MM/AA" maxlength="5" />
+                    </div>
+                    <div class="form-group">
+                      <label>CVV</label>
+                      <input type="text" placeholder="123" maxlength="4" />
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Nome no Cartão</label>
+                    <input type="text" placeholder="Como impresso no cartão" />
+                  </div>
+
+                  <div class="form-group" id="grupo-parcelas">
+                    <label>Parcelamento</label>
+                    <select id="select-parcelas" class="select-parcelas">
+                      <option value="1">1x (À vista)</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div id="area-pagamento-pix" style="display: none">
+                <div class="box-pix">
+                  <i class="fas fa-qrcode"></i>
+                  <p>
+                    O código QR e a chave PIX serão gerados após a
+                    confirmação.
+                  </p>
+                  <span class="desconto-pix">Ganhe <strong>5% de desconto</strong> no PIX!</span>
+                </div>
+              </div>
+
+              <button type="submit" class="botao-confirmar-final">
+                Confirmar e Pagar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div id="tela-confirmacao" class="tela-confirmacao" style="display: none">
+        <div class="card-sucesso">
+          <div class="icone-sucesso">
+            <i class="fas fa-check"></i>
+          </div>
+          <h2>Pedido Confirmado!</h2>
+          <p>
+            Seu agendamento foi realizado com sucesso e sua conta foi criada.
+          </p>
+          <p class="detalhe-email">
+            Enviamos um e-mail com os detalhes para
+            <strong id="email-confirmacao-texto"></strong>.
+          </p>
+
+          <div class="acoes-sucesso">
+            <a href="/pages/login/login-cliente.html" class="botao-primario botao-portal">
+              <i class="fas fa-user"></i> Acessar Portal do Cliente
+            </a>
+            <a href="/index.html" class="link-voltar-home">Voltar para Home</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="secao-erro" style="display: none">
+      <p>Erro ao carregar podcasts</p>
+      <button class="botao-erro">Tentar Novamente</button>
+    </div>
+
+    <aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
+      <header>
+        <strong id="cart-header-title">Seu carrinho</strong>
+
+        <button id="close-cart" class="btn close-icon-btn" aria-label="Fechar carrinho">
+          <i class="fa fa-times"></i>
+        </button>
+      </header>
+
+      <div class="cart-items" id="cart-items"></div>
+
+      <div class="cart-footer">
+        <div class="cart-footer-info">
+          <div class="subtotal-row">
+            <span>Subtotal</span>
+            <span id="cart-subtotal">$ 0,00</span>
+          </div>
+          <p>
+            Frete, impostos e descontos calculados na finalização da compra.
+          </p>
+        </div>
+        <div class="cart-footer-buttons">
+          <a href="/pages/loja/carrinho.html" class="btn btn-secondary">Ver meu carrinho</a>
+          <a href="/pages/loja/checkout.html" id="checkout-btn" class="btn btn-primary">Ir para o checkout</a>
+        </div>
+      </div>
+    </aside>
+
+    <div class="cart-backdrop" id="cart-backdrop"></div>
+
+    <div class="modal-backdrop" id="modal-backdrop">
+      <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <h3 id="modal-title">Opções do produto</h3>
+        <div id="modal-content"></div>
+        <div style="
+              display: flex;
+              gap: 10px;
+              justify-content: flex-end;
+              margin-top: 14px;
+            ">
+          <button class="btn" id="modal-close">Fechar</button>
+          <button class="btn" id="modal-add" style="background: var(--accent); color: #fff; border: 0">
+            Adicionar ao carrinho
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="rodape-principal">
+    <div class="container-secao">
+      <div class="rodape-grid">
+        <div class="rodape-coluna">
+          <h4>SOBRE</h4>
+          <p>
+            Produtora de conteúdo premium em Brasília (DF), especializada em
+            música, audiovisual e podcasts. Oferecemos estúdios de alto padrão
+            para o seu projeto e produzimos conteúdo original para a Cumaru
+            TV, nossa plataforma de programas.
+          </p>
+        </div>
+
+        <div class="rodape-coluna">
+          <h4>CONTATO</h4>
+          <ul class="rodape-contato">
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>SHCGN CR QD 710/711 Bloco E, Loja 8 - Asa Norte, Brasília -
+                DF, 70750-650</span>
+            </li>
+            <li>
+              <i class="fab fa-whatsapp"></i>
+              <span>(61) 99267-7680</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>contato@prodcumaru.com</span>
+            </li>
+            <li>
+              <i class="fas fa-clock"></i>
+              <span>Seg a Sex das 10h às 18h</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="rodape-coluna">
+          <h4>REDES SOCIAIS</h4>
+          <ul class="rodape-redes-lista">
+            <li>
+              <a href="https://open.spotify.com/artist/4E1zsQCPKqT9ufRU3T197C?si=2BwALFv8QgyDdYvKzh210g"
+                aria-label="Spotify" title="Spotify"><i class="fab fa-spotify"></i></a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/prodcumaru" aria-label="Instagram" title="Instagram"><i
+                  class="fab fa-instagram"></i></a>
+            </li>
+            <li>
+              <a href="https://wa.me/5561992677680?text=Ol%C3%A1!%20Eu%20gostaria%20de%20tirar%20algumas%20d%C3%BAvidas%20com%20voc%C3%AAs."
+                aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </li>
+            <li>
+              <a href="https://www.tiktok.com/@prodcumaru" aria-label="TikTok" title="TikTok"><i
+                  class="fab fa-tiktok"></i></a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/@prodcumaru" aria-label="Youtube" title="Youtube"><i
+                  class="fab fa-youtube"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="rodape-copyright">
+    <div class="container">
+      <div class="copyright-texto">
+        <p>Copyright © 2025 ProdCumaru. Todos os direitos reservados.</p>
+      </div>
+      <nav class="rodape-menu">
+        <ul>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="#">Termos de Uso</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/servicos.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
