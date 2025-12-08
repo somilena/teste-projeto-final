@@ -1,17 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 
-# Configura o Flask para usar as pastas certas
+# Configura pastas
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
-# Função auxiliar para conectar ao banco
 def get_db():
-    # Certifique-se de que o arquivo 'db_prodcumaru.db' existe na raiz
     return sqlite3.connect("db_prodcumaru.db")
 
-# =======================================================
-# ROTAS DE NAVEGAÇÃO (Páginas do Site)
-# =======================================================
+# ==========================================
+# ROTAS DE NAVEGAÇÃO (O Site)
+# ==========================================
 
 @app.route("/")
 def home():
@@ -31,7 +29,6 @@ def galeria():
 
 @app.route("/gestao")
 def gestao():
-    # Futuramente, aqui você vai buscar dados do banco para o Dashboard
     return render_template("gestao/gestao.html")
 
 @app.route("/portal")
@@ -46,50 +43,38 @@ def login_cliente():
 def login_staff():
     return render_template("login/login-staff.html")
 
-# =======================================================
-# ROTAS DE BANCO DE DADOS (CRUD Clientes - Seu código)
-# =======================================================
+# ==========================================
+# ROTAS DE BANCO DE DADOS (Seu CRUD)
+# ==========================================
 
 @app.route("/cliente")
 def cliente():
+    # Aqui você pode redirecionar para a gestão ou renderizar uma lista
     con = get_db()
     cur = con.cursor()
-    # ATENÇÃO: Verifique se sua tabela no banco chama 'tb_clientes' ou 'tb_clientes_fisico'
     try:
-        cur.execute("SELECT * FROM tb_clientes") 
+        cur.execute("SELECT * FROM tb_clientes")
         dados = cur.fetchall()
-    except sqlite3.OperationalError:
-        dados = [] # Evita erro se a tabela não existir ainda
-        print("Erro: Tabela tb_clientes não encontrada.")
+    except:
+        dados = []
     con.close()
-    
-    # Se você ainda não tem um 'cliente.html' específico, pode usar o gestão para testar
-    # ou criar um arquivo temporário em templates/gestao/clientes_lista.html
-    return render_template("gestao/cadastro-cliente.html", clientes=dados) 
+    return render_template("gestao/cadastro-cliente.html", clientes=dados)
 
 @app.route("/cliente/novo", methods=["POST"])
 def cliente_novo():
     if request.method == "POST":
         nome = request.form["nome"]
-        # Adapte os campos conforme o seu formulário HTML real
-        # data_nasc = request.form["data_nasc"] 
         email = request.form["email"]
-        tel = request.form.get("telefone", "") # .get evita erro se não vier
-
+        tel = request.form.get("telefone", "")
+        
         con = get_db()
         cur = con.cursor()
-        # Ajuste a query conforme a tabela real do seu banco SQLite
-        cur.execute("""
-            INSERT INTO tb_clientes (nome, email, telefone)
-            VALUES (?, ?, ?)
-        """, (nome, email, tel))
+        cur.execute("INSERT INTO tb_clientes (nome, email, telefone) VALUES (?, ?, ?)", (nome, email, tel))
         con.commit()
         con.close()
-        return redirect(url_for('gestao')) # Redireciona para o painel
+        return redirect(url_for('gestao')) # Volta para gestão após salvar
 
-# =======================================================
-# INICIALIZAÇÃO
-# =======================================================
+# ... (Mantenha suas rotas de Fornecedor aqui se precisar) ...
 
 if __name__ == "__main__":
     app.run(debug=True)
