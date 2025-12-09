@@ -122,7 +122,7 @@
 
           <h1>Receitas</h1>
         </header>
-        <form class="formulario-secao" id="form-nova-receita">
+        <form class="formulario-secao" action="{{ url_for('salvar_receita') }}" method="POST">
           <div class="campo-formulario">
             <label for="receita-origem">Origem da Receita</label>
             <input type="text" id="receita-origem" placeholder="Ex: Gravação EP Banda " required />
@@ -189,7 +189,7 @@
         <header class="cabecalho-secao">
           <h1>Despesas</h1>
         </header>
-        <form class="formulario-secao" id="form-nova-despesa">
+        <form class="formulario-secao" action="{{ url_for('salvar_despesa') }}" method="POST">
           <div class="campo-formulario">
             <label for="despesa-nome">Nome/Origem da Despesa</label>
             <input type="text" id="despesa-nome" placeholder="Ex: Conta de Luz, Aluguel" required />
@@ -257,7 +257,7 @@
       <section id="secao-clientes" class="pagina-conteudo">
         <header class="cabecalho-secao">
           <h1>Clientes</h1>
-          <a href="cadastro-cliente.html" class="botao-principal" target="_blank">
+          <a href="{{ url_for('cliente') }}" class="botao-principal" target="_blank">
             <i class="ph-fill ph-plus-circle"></i><span>Novo Cliente</span>
           </a>
         </header>
@@ -319,7 +319,7 @@
         <header class="cabecalho-secao">
           <h1>Contratos de Clientes</h1>
         </header>
-        <form class="formulario-secao" id="form-novo-contrato">
+        <form class="formulario-secao" action="{{ url_for('salvar_contrato') }}" method="POST" enctype="multipart/form-data">
           <div class="campo-formulario">
             <label for="contrato-cliente">Cliente Associado</label>
             <input type="text" id="contrato-cliente" placeholder="Nome do Cliente" required />
@@ -700,7 +700,7 @@
           &times;
         </button>
       </header>
-      <form class="formulario-modal" id="form-novo-agendamento">
+      <form class="formulario-modal" action="{{ url_for('salvar_agendamento') }}" method="POST">
         <div class="campo-formulario">
           <label for="agendamento-titulo">Título</label>
           <input type="text" id="agendamento-titulo" required />
@@ -753,7 +753,7 @@
           &times;
         </button>
       </header>
-      <form class="formulario-modal" id="form-novo-funcionario">
+      <form class="formulario-modal" action="{{ url_for('salvar_funcionario') }}" method="POST">
 
         <input type="hidden" id="funcionario-index-edicao">
 
