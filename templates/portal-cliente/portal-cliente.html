@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal do Cliente | ProdCumaru</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/portal-cliente/portal-cliente.css') }}">
+    <link rel="icon" href="/assets/img/icon/cliente.png" />
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  </head>
+  <body class="body-portal-moderno">
+    <div class="layout-wrapper">
+      <aside class="sidebar-moderna">
+        <div class="logo-area">
+          <i class="ph-fill ph-headphones"></i>
+          <span>ProdCumaru</span>
+        </div>
+
+        <nav class="nav-moderna">
+          <ul>
+            <li class="nav-item ativo" data-pagina="agendamentos">
+              <i class="ph-bold ph-calendar-check"></i> Meus Agendamentos
+            </li>
+            <li class="nav-item" data-pagina="perfil">
+              <i class="ph-bold ph-user-circle"></i> Meu Perfil
+            </li>
+          </ul>
+
+          <span class="nav-categoria">Suporte</span>
+          <ul>
+            <li class="nav-item">
+              <a href="https://wa.me/5561992677680" target="_blank">
+                <i class="ph-bold ph-whatsapp-logo"></i> Falar no WhatsApp
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="logout-area">
+          <button id="btn-tema-toggle" class="btn-tema-toggle">
+            <i class="ph-bold ph-moon"></i> <span>Modo Escuro</span>
+          </button>
+
+          <a href="../login/login-cliente.html" class="btn-sair">
+            <i class="ph-bold ph-sign-out"></i> Sair
+          </a>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar-moderna">
+          <h2 id="titulo-pagina">Meus Agendamentos</h2>
+          <div class="user-profile">
+            <img
+              src="/assets/img/icon/cliente.png"
+              alt="User"
+              id="img-perfil-header"
+            />
+            <span id="nome-header">Cliente</span>
+          </div>
+        </header>
+
+        <div class="content-wrapper">
+          <div id="secao-agendamentos" class="secao-conteudo">
+            <div class="header-banner">
+              <div class="header-info">
+                <h1>Gerencie seus Horários</h1>
+                <p>
+                  Você pode reagendar com até <strong>48 horas</strong> de
+                  antecedência.
+                </p>
+              </div>
+              <div class="header-actions">
+                <a
+                  href="/pages/serviços/servicos.html"
+                  class="btn-novo-agendamento"
+                >
+                  <i class="ph-bold ph-plus"></i> Novo Agendamento
+                </a>
+              </div>
+            </div>
+
+            <div class="lista-agendamentos-container">
+              <div class="list-header-row">
+                <span>Data & Hora</span>
+                <span>Serviço</span>
+                <span>Status</span>
+                <span>Ações</span>
+              </div>
+              <div id="lista-agendamentos-body"></div>
+            </div>
+          </div>
+
+          <div id="secao-perfil" class="secao-conteudo" style="display: none">
+            <div class="section-perfil">
+              <div class="perfil-header">
+                <div class="foto-wrapper">
+                  <img
+                    src="/assets/img/icon/cliente.png"
+                    alt="Foto Perfil"
+                    class="foto-grande"
+                    id="img-perfil-grande"
+                  />
+                  <label
+                    for="input-foto"
+                    class="btn-trocar-foto"
+                    title="Trocar Foto"
+                  >
+                    <i class="ph-bold ph-camera"></i>
+                  </label>
+                  <input
+                    type="file"
+                    id="input-foto"
+                    accept="image/*"
+                    style="display: none"
+                  />
+                </div>
+                <div class="perfil-info-topo">
+                  <h2 id="nome-perfil-topo">Seu Nome</h2>
+                  <p>Membro desde 2025</p>
+                </div>
+              </div>
+
+              <form class="form-perfil">
+                <div class="form-group">
+                  <label>Nome Completo</label>
+                  <input type="text" id="input-nome" />
+                </div>
+                <div class="form-group">
+                  <label>E-mail</label>
+                  <input
+                    type="email"
+                    id="input-email"
+                    disabled
+                    style="opacity: 0.5"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Telefone / WhatsApp</label>
+                  <input type="text" id="input-telefone" />
+                </div>
+                <div class="full-width">
+                  <button
+                    type="button"
+                    class="btn-salvar"
+                    id="btn-salvar-perfil"
+                  >
+                    Salvar Alterações
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-overlay" id="modal-reagendamento">
+      <div class="modal-conteudo">
+        <header class="modal-cabecalho">
+          <h2>Solicitar Reagendamento</h2>
+          <button class="modal-fechar" id="modal-fechar">&times;</button>
+        </header>
+        <form class="formulario-modal" id="form-reagendamento">
+          <p>
+            Selecione uma nova data para o serviço:
+            <strong id="modal-nome-servico"></strong>
+          </p>
+          <div class="campo-formulario">
+            <label>Nova Data Sugerida</label>
+            <input type="date" id="reagendamento-data" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Novo Horário</label>
+            <select id="reagendamento-hora">
+              <option value="09:00">09:00</option>
+              <option value="10:00">10:00</option>
+              <option value="14:00">14:00</option>
+              <option value="16:00">16:00</option>
+            </select>
+          </div>
+          <button type="submit" class="botao-principal">
+            Confirmar Reagendamento
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/portal-cliente/portal-cliente.js') }}"></script>
+  </body>
+</html>

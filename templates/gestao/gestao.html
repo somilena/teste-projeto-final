@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Gestão Audiovisual (SGA)</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/gestao/gestao.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='img/icon/logo-icon.png') }}">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    .alert-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+    }
+
+    .alert {
+      padding: 15px 20px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      color: #fff;
+      font-weight: 500;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .alert.success {
+      background-color: #2dce89;
+    }
+
+    .alert.error {
+      background-color: #f5365c;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="alert-container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert {{ category }}">{{ message }}</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+  </div>
+
+  <div class="container-principal">
+    <aside class="barra-lateral">
+      <div class="logo-sistema">
+        <i class="ph-fill ph-waveform"></i>
+        <span>SGA</span>
+      </div>
+      <nav class="menu-navegacao">
+        <ul>
+          <li class="item-menu ativo" data-pagina="visao-geral">
+            <a href="#"><i class="ph-fill ph-house"></i><span>Visão Geral</span></a>
+          </li>
+          <li class="item-menu" data-pagina="agendamentos">
+            <a href="#"><i class="ph-fill ph-calendar-check"></i><span>Agendamentos</span></a>
+          </li>
+          <li class="item-menu" data-pagina="receitas">
+            <a href="#"><i class="ph-fill ph-chart-line-up"></i><span>Receitas</span></a>
+          </li>
+          <li class="item-menu" data-pagina="despesas">
+            <a href="#"><i class="ph-fill ph-chart-line-down"></i><span>Despesas</span></a>
+          </li>
+          <li class="item-menu" data-pagina="clientes">
+            <a href="#"><i class="ph-fill ph-users"></i><span>Clientes</span></a>
+          </li>
+          <li class="item-menu" data-pagina="funcionarios">
+            <a href="#"><i class="ph-fill ph-identification-card"></i><span>Funcionários</span></a>
+          </li>
+          <li class="item-menu" data-pagina="contratos">
+            <a href="#"><i class="ph-fill ph-files"></i><span>Contratos</span></a>
+          </li>
+          <li class="item-menu" data-pagina="editar-site">
+            <a href="#"><i class="ph-fill ph-pencil-simple-line"></i><span>Editar Site</span></a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="conteudo-principal">
+
+      <section id="secao-visao-geral" class="pagina-conteudo ativa">
+        <header class="cabecalho-secao">
+          <h1>Visão Geral</h1>
+          <button class="botao-principal" id="botao-novo-agendamento-rapido">
+            <i class="ph-fill ph-plus-circle"></i><span>Novo Agendamento</span>
+          </button>
+        </header>
+
+        <div class="area-widgets">
+          <div class="cartao">
+            <h3>Faturamento (Mês)</h3>
+            <p class="valor" id="faturamento-dashboard">R$ {{ "%.2f"|format(faturamento) }}</p>
+          </div>
+          <div class="cartao">
+            <h3>Agendamentos</h3>
+            <p class="valor">{{ total_agendamentos }}</p>
+          </div>
+          <div class="cartao">
+            <h3>Clientes Totais</h3>
+            <p class="valor">{{ total_clientes }}</p>
+          </div>
+        </div>
+
+        <!-- Eventos de Hoje -->
+        <div class="area-widgets" style="margin-top: 30px;">
+          <div class="cartao">
+            <h3><i class="ph-fill ph-calendar"></i> Eventos de Hoje <span id="data-hoje-extenso"></span></h3>
+            <div id="lista-eventos-hoje" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Alerta de Contas Atrasadas -->
+        <div id="alerta-contas-atrasadas"
+          style="display: none; background-color: #ff6b6b; color: white; padding: 15px; border-radius: 8px; margin-top: 20px;">
+          <strong>⚠️ Atenção:</strong> Você tem contas atrasadas. Verifique a seção de Despesas para mais detalhes.
+        </div>
+      </section>
+
+      <section id="secao-agendamentos" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Agendamentos</h1>
+          <button class="botao-principal" id="botao-novo-agendamento-calendario">
+            <i class="ph-fill ph-plus-circle"></i><span>Novo Agendamento</span>
+          </button>
+        </header>
+        <div class="container-calendario">
+          <div class="calendario-header">
+            <button id="mes-anterior">&lt;</button>
+            <h2 id="mes-ano-atual">Mês Atual</h2>
+            <button id="mes-seguinte">&gt;</button>
+          </div>
+          <div class="calendario-dias-semana">
+            <div>Dom</div>
+            <div>Seg</div>
+            <div>Ter</div>
+            <div>Qua</div>
+            <div>Qui</div>
+            <div>Sex</div>
+            <div>Sáb</div>
+          </div>
+          <div class="calendario-grid-dias"></div>
+        </div>
+
+        <h3 style="margin-top:20px;">Lista de Agendamentos</h3>
+        <table class="tabela-dados">
+          <thead>
+            <tr>
+              <th>Evento</th>
+              <th>Data</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for ag in agendamentos %}
+            <tr>
+              <td>{{ ag['servico'] }}</td>
+              <td>{{ ag['data_agend'] }}</td>
+              <td>{{ ag['status'] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="3">Nenhum agendamento encontrado.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="secao-receitas" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Receitas</h1>
+        </header>
+
+        <form class="formulario-secao" id="form-nova-receita" action="{{ url_for('nova_receita') }}" method="POST">
+          <div class="campo-formulario">
+            <label>Origem da Receita</label>
+            <input type="text" id="receita-origem" name="origem" placeholder="Ex: Gravação EP" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Cliente Associado</label>
+            <input type="text" id="receita-cliente" name="cliente" placeholder="Nome do cliente" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Data Emissão</label>
+            <input type="date" id="receita-data-emissao" name="data_emissao" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Data Agendada</label>
+            <input type="date" id="receita-data-agendada" name="data_agendada" />
+          </div>
+          <div class="campo-formulario">
+            <label>Obs (Opcional)</label>
+            <input type="text" id="receita-obs" name="obs" placeholder="Detalhes..." />
+          </div>
+          <div class="campo-formulario">
+            <label>Valor</label>
+            <input type="number" step="0.01" id="receita-valor" name="valor" placeholder="0.00" required />
+          </div>
+          <button type="submit" class="botao-principal">
+            <i class="ph-fill ph-plus-circle"></i><span>Adicionar Receita</span>
+          </button>
+        </form>
+
+        <div
+          style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+          <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
+          <input type="text" id="busca-receita" placeholder="Buscar por origem ou cliente..."
+            style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
+        </div>
+
+        <table class="tabela-dados" id="tabela-receitas">
+          <thead>
+            <tr>
+              <th>Origem</th>
+              <th>Cliente</th>
+              <th>Data Emissão</th>
+              <th>Valor (R$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in receitas %}
+            <tr>
+              <td>{{ item['tipo'] }}</td>
+              <td>{{ item['nome'] }}</td>
+              <td>{{ item['data_emissao'] }}</td>
+              <td>R$ {{ "%.2f"|format(item['valor_total']) }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4">Nenhuma receita registrada.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3">Total</td>
+              <td id="receita-total">R$ {{ "%.2f"|format(faturamento) }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <section id="secao-despesas" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Despesas</h1>
+        </header>
+
+        <form class="formulario-secao" id="form-nova-despesa" action="{{ url_for('nova_despesa') }}" method="POST">
+          <div class="campo-formulario">
+            <label>Nome/Origem</label>
+            <input type="text" id="despesa-nome" name="nome" placeholder="Ex: Conta de Luz" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Data Emissão</label>
+            <input type="date" id="despesa-data-emissao" name="data_emissao" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Vencimento</label>
+            <input type="date" id="despesa-data-vencimento" name="data_vencimento" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Obs</label>
+            <input type="text" id="despesa-obs" name="obs" />
+          </div>
+          <div class="campo-formulario">
+            <label>Valor</label>
+            <input type="number" step="0.01" id="despesa-valor" name="valor" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Status</label>
+            <select id="despesa-status" name="status" required>
+              <option value="A Pagar">A Pagar</option>
+              <option value="Pago">Pago</option>
+              <option value="Atrasado">Atrasado</option>
+            </select>
+          </div>
+          <button type="submit" class="botao-principal">
+            <i class="ph-fill ph-plus-circle"></i><span>Adicionar Despesa</span>
+          </button>
+        </form>
+
+        <div
+          style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+          <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
+          <input type="text" id="busca-despesa" placeholder="Buscar por nome..."
+            style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
+        </div>
+
+        <table class="tabela-dados" id="tabela-despesas">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Vencimento</th>
+              <th>Status</th>
+              <th>Valor (R$)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in despesas %}
+            <tr>
+              <td>{{ item['nome'] }}</td>
+              <td>{{ item['data_vencimento'] }}</td>
+              <td>{{ item['status'] }}</td>
+              <td>R$ {{ "%.2f"|format(item['valor_total']) }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4">Nenhuma despesa registrada.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="secao-clientes" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Clientes</h1>
+          <a href="{{ url_for('pagina_cadastro_cliente') }}" class="botao-principal" target="_blank">
+            <i class="ph-fill ph-plus-circle"></i><span>Novo Cliente</span>
+          </a>
+        </header>
+
+        <div
+          style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+          <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
+          <input type="text" id="busca-cliente" placeholder="Buscar..."
+            style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
+        </div>
+
+        <table class="tabela-dados" id="tabela-clientes">
+          <thead>
+            <tr>
+              <th>Nome / Razão</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Tipo</th>
+              <th>Documento</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cli in clientes %}
+            <tr>
+              <td>{{ cli['nome'] }}</td>
+              <td>{{ cli['email'] }}</td>
+              <td>{{ cli['tel_cel'] }}</td>
+              <td><span style="background:#eee; padding:2px 5px; border-radius:4px;">{{ cli['tipo'] }}</span></td>
+              <td>{{ cli['doc'] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="5">Nenhum cliente cadastrado.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="secao-funcionarios" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Funcionários</h1>
+          <button class="botao-principal" id="botao-novo-funcionario">
+            <i class="ph-fill ph-plus-circle"></i><span>Novo Funcionário</span>
+          </button>
+        </header>
+
+        <div
+          style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+          <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
+          <input type="text" id="busca-funcionario" placeholder="Buscar..."
+            style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
+        </div>
+
+        <table class="tabela-dados" id="tabela-funcionarios">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Cargo</th>
+              <th>Email</th>
+              <th>Telefone</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for func in funcionarios %}
+            <tr>
+              <td>{{ func['nome'] }}</td>
+              <td>{{ func['cargo'] }}</td>
+              <td>{{ func['email'] }}</td>
+              <td>{{ func['tel_cel'] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="4">Nenhum funcionário encontrado.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="secao-contratos" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Contratos de Clientes</h1>
+        </header>
+
+        <form class="formulario-secao" action="{{ url_for('novo_contrato') }}" method="POST"
+          enctype="multipart/form-data">
+          <div class="campo-formulario">
+            <label>Cliente Associado</label>
+            <input type="text" name="cliente" placeholder="Nome do Cliente" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Título do Documento</label>
+            <input type="text" name="titulo" placeholder="Ex: Contrato 001" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Arquivo (PDF)</label>
+            <input type="file" name="arquivo" accept=".pdf" required />
+          </div>
+          <button type="submit" class="botao-principal">
+            <i class="ph-fill ph-upload-simple"></i><span>Salvar Contrato</span>
+          </button>
+        </form>
+
+        <table class="tabela-dados" id="tabela-contratos">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Cliente</th>
+              <th>Arquivo</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cont in contratos %}
+            <tr>
+              <td>{{ cont['titulo_doc'] }}</td>
+              <td>{{ cont['cliente_ass'] }}</td>
+              <td><a href="#" style="color: var(--cor-acento-principal);">Baixar PDF</a></td>
+            </tr>
+            {% else %}
+            <tr>
+              <td colspan="3">Nenhum contrato.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </section>
+
+      <section id="secao-editar-site" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Editar Site</h1>
+        </header>
+
+        <div class="navegacao-sub-abas">
+          <button class="botao-sub-aba" data-alvo="sub-home">Home</button>
+          <button class="botao-sub-aba" data-alvo="sub-produtos">Produtos</button>
+          <button class="botao-sub-aba" data-alvo="sub-galeria">Galeria</button>
+          <button class="botao-sub-aba" data-alvo="sub-logs">Logs</button>
+        </div>
+
+        <div id="sub-logs" class="conteudo-sub-aba">
+          <div class="area-widgets" style="margin-bottom: 20px;">
+            <div class="cartao"
+              style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <h3>Histórico de Alterações</h3>
+                <p style="color: var(--cor-texto-secundario);">Registro de atividades recentes.</p>
+              </div>
+              <button class="botao-principal" onclick="limparLogs()" style="background-color: var(--cor-borda);">
+                <i class="ph-fill ph-trash"></i> Limpar
+              </button>
+            </div>
+          </div>
+          <table class="tabela-dados" id="tabela-logs">
+            <thead>
+              <tr>
+                <th>Data/Hora</th>
+                <th>Usuário</th>
+                <th>Ação</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div id="sub-home" class="conteudo-sub-aba">
+          <div class="area-widgets" id="grid-home-widgets">
+            <div class="cartao" data-categoria="banner">
+              <h3>Banner Principal</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">Destaques do topo.</p>
+              <input type="hidden" class="home-edit-index">
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Título</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: Promoção"
+                  style="width: 100%;">
+              </div>
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Imagem</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+            <div class="cartao" data-categoria="video">
+              <h3>Seção de Vídeos</h3>
+              <p style="color: var(--cor-texto-secundario); margin-bottom: 15px;">Destaques visuais.</p>
+              <input type="hidden" class="home-edit-index">
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Título</label>
+                <input type="text" class="campo-formulario home-input-titulo" placeholder="Ex: Teaser"
+                  style="width: 100%;">
+              </div>
+              <div style="margin-bottom: 15px;">
+                <label style="font-size: 14px; display: block; margin-bottom: 5px;">Capa</label>
+                <input type="file" class="campo-formulario home-input-file" style="width: 100%;" accept="image/*">
+              </div>
+              <button class="botao-principal btn-salvar-home"
+                style="width: 100%; justify-content: center; margin-bottom: 15px;">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="sub-produtos" class="conteudo-sub-aba">
+          <form class="formulario-secao" id="form-novo-produto">
+            <div class="campo-formulario"><label>Nome</label><input type="text" id="produto-nome"></div>
+            <div class="campo-formulario"><label>Preço</label><input type="number" id="produto-preco"></div>
+            <button type="submit" class="botao-principal">Salvar</button>
+          </form>
+          <table class="tabela-dados" id="tabela-produtos">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Preço</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <div id="sub-galeria" class="conteudo-sub-aba">
+          <form class="formulario-secao" id="form-galeria">
+            <div class="campo-formulario"><label>Título</label><input type="text" id="galeria-titulo"></div>
+            <div class="campo-formulario"><label>Imagem</label><input type="file" id="galeria-imagem"></div>
+            <button type="submit" class="botao-principal">Salvar</button>
+          </form>
+          <div id="grid-galeria-items" class="area-widgets"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modal-agendamento">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2>Novo Agendamento</h2>
+        <button class="modal-fechar" id="modal-fechar-agendamento">&times;</button>
+      </header>
+      <form class="formulario-modal" id="form-novo-agendamento" action="{{ url_for('novo_agendamento') }}"
+        method="POST">
+        <div class="campo-formulario">
+          <label>Título</label>
+          <input type="text" id="agendamento-titulo" name="titulo" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Data</label>
+          <input type="date" id="agendamento-data" name="data" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Obs</label>
+          <textarea id="agendamento-obs" name="obs" rows="2"></textarea>
+        </div>
+        <div class="campo-formulario">
+          <label>Tipo</label>
+          <select id="agendamento-tipo" name="tipo">
+            <option value="Gravação">Gravação</option>
+            <option value="Mixagem">Mixagem</option>
+            <option value="Reunião">Reunião</option>
+          </select>
+        </div>
+        <button type="submit" class="botao-principal">Salvar Agendamento</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-detalhes-agendamento">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2>Detalhes do Agendamento</h2>
+        <button class="modal-fechar" id="modal-fechar-detalhes-agendamento">&times;</button>
+      </header>
+      <div class="modal-corpo">
+        <p><strong>Evento:</strong> <span id="detalhes-agendamento-titulo"></span></p>
+        <p><strong>Data:</strong> <span id="detalhes-agendamento-data"></span></p>
+        <p><strong>Tipo:</strong> <span id="detalhes-agendamento-tipo"></span></p>
+        <p><strong>Observações:</strong> <span id="detalhes-agendamento-obs"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-novo-funcionario">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2 id="titulo-modal-funcionario">Novo Funcionário</h2>
+        <button class="modal-fechar" id="modal-fechar-funcionario">&times;</button>
+      </header>
+      <form class="formulario-modal" id="form-novo-funcionario" action="{{ url_for('novo_funcionario') }}"
+        method="POST">
+        <input type="hidden" id="funcionario-index-edicao" value="">
+        <div class="campo-formulario">
+          <label>Nome</label><input type="text" id="funcionario-nome" name="nome" required />
+        </div>
+        <div class="campo-formulario">
+          <label>CPF</label><input type="text" id="funcionario-cpf" name="cpf" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Cargo</label>
+          <select id="funcionario-cargo" name="cargo">
+            <option value="Admin">Admin</option>
+            <option value="Editor">Editor</option>
+          </select>
+        </div>
+        <div class="campo-formulario">
+          <label>Email</label><input type="email" id="funcionario-email" name="email" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Telefone</label><input type="tel" id="funcionario-tel-cel" name="tel_cel" />
+        </div>
+        <div class="campo-formulario">
+          <label>Senha</label><input type="password" id="funcionario-senha" name="senha" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Confirmar Senha</label><input type="password" id="funcionario-confirmar-senha" name="confirmar_senha"
+            required />
+        </div>
+        <button type="submit" id="btn-salvar-funcionario" class="botao-principal">Salvar Funcionário</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-detalhes-funcionario">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2>Detalhes do Funcionário</h2>
+        <button class="modal-fechar" id="modal-fechar-detalhes-funcionario">&times;</button>
+      </header>
+      <div class="modal-corpo">
+        <p><strong>Nome:</strong> <span id="detalhes-funcionario-nome"></span></p>
+        <p><strong>CPF:</strong> <span id="detalhes-funcionario-cpf"></span></p>
+        <p><strong>Email:</strong> <span id="detalhes-funcionario-email"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-editar-cliente">
+    <div class="modal-conteudo" style="max-height: 80vh; overflow-y: auto;">
+      <header class="modal-cabecalho">
+        <h2>Editar Cliente</h2>
+        <button class="modal-fechar" id="modal-fechar-editar-cliente">&times;</button>
+      </header>
+      <form class="formulario-modal" id="form-editar-cliente">
+        <input type="hidden" id="edit-cliente-index" value="">
+        <input type="hidden" id="edit-cliente-tipo-atual" value="">
+
+        <!-- Campos PF -->
+        <div id="campos-edit-pf" style="display: none;">
+          <div class="campo-formulario">
+            <label>Nome</label>
+            <input type="text" id="edit-cliente-nome" />
+          </div>
+          <div class="campo-formulario">
+            <label>CPF</label>
+            <input type="text" id="edit-cliente-cpf" />
+          </div>
+          <div class="campo-formulario">
+            <label>Data Nascimento</label>
+            <input type="date" id="edit-cliente-nascimento" />
+          </div>
+        </div>
+
+        <!-- Campos PJ -->
+        <div id="campos-edit-pj" style="display: none;">
+          <div class="campo-formulario">
+            <label>Razão Social</label>
+            <input type="text" id="edit-cliente-razao" />
+          </div>
+          <div class="campo-formulario">
+            <label>CNPJ</label>
+            <input type="text" id="edit-cliente-cnpj" />
+          </div>
+        </div>
+
+        <!-- Campos Comuns -->
+        <div class="campo-formulario">
+          <label>Email</label>
+          <input type="email" id="edit-cliente-email" />
+        </div>
+        <div class="campo-formulario">
+          <label>Telefone</label>
+          <input type="tel" id="edit-cliente-telefone" />
+        </div>
+        <div class="campo-formulario">
+          <label>CEP</label>
+          <input type="text" id="edit-cliente-cep" />
+        </div>
+        <div class="campo-formulario">
+          <label>Logradouro</label>
+          <input type="text" id="edit-cliente-logradouro" />
+        </div>
+        <div class="campo-formulario">
+          <label>Número</label>
+          <input type="text" id="edit-cliente-numero" />
+        </div>
+        <div class="campo-formulario">
+          <label>Bairro</label>
+          <input type="text" id="edit-cliente-bairro" />
+        </div>
+        <div class="campo-formulario">
+          <label>Cidade</label>
+          <input type="text" id="edit-cliente-cidade" />
+        </div>
+        <div class="campo-formulario">
+          <label>UF</label>
+          <input type="text" id="edit-cliente-uf" />
+        </div>
+        <div class="campo-formulario">
+          <label>Senha</label>
+          <input type="password" id="edit-cliente-senha" />
+        </div>
+        <button type="submit" class="botao-principal">Salvar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/gestao/gestao.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,1334 @@
+/* ============================================= */
+/* ARQUIVO: principal.css */
+/* Estilos globais do site (Header, Footer, Botões, etc.) */
+/* ============================================= */
+
+/* --- CONFIGURAÇÕES GLOBAIS E VARIÁVEIS --- */
+:root {
+  /* --- Cores Base (Atualizadas) --- */
+  --cor-fundo: #000;
+  /* Valor antigo: #0c0c0c */
+  --cor-fundo-secundario: #0f0f10;
+  /* Valor antigo: #1a1a1a (baseado no --panel) */
+  --cor-texto-principal: #fff;
+  /* Valor antigo: #ffffff (baseado no --white) */
+  --cor-texto-secundario: #c9c9c9;
+  /* Valor antigo: #a0a0a0 (baseado no --muted) */
+  --cor-primaria: #c96b2a;
+  /* Valor antigo: #d97a31 (baseado no --accent) */
+
+  /* --- Cores (Antigas Mantidas) --- */
+  --cor-gradiente-1: #007f7f;
+  /* Tom de verde mais vibrante para o círculo */
+  --cor-gradiente-2: #e07b4c;
+  /* Tom de laranja mais vibrante para o círculo */
+
+  /* --- Fonte (Antiga Mantida) --- */
+  --fonte-principal: "Poppins", sans-serif;
+
+  /* --- Variáveis Novas (Adicionadas) --- */
+  --raio-borda: 28px;
+  /* NOVO (baseado no --rounded) */
+  --espacamento-padrao: 36px;
+  /* NOVO (baseado no --gap) */
+  --largura-container: 1200px;
+  /* NOVO (baseado no --container) */
+
+  /* (Ignorei o --card-bg: #f0f4f6; pois é de tema claro) */
+}
+
+/* --- RESET BÁSICO --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto-principal);
+  font-family: var(--fonte-principal);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+/* --- LAYOUTS E CONTAINERS GLOBAIS --- */
+
+/* Container para Header e Copyright (alinha itens nas pontas) */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Container padrão para seções (centralizado com padding) */
+.container-secao {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
+}
+
+/* Container de Grid (2 colunas, usado em "Sobre" e "Player") */
+.container-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* --- COMPONENTES GLOBAIS (TÍTULOS E BOTÕES) --- */
+
+/* Título de seção centralizado */
+.titulo-secao {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.subtitulo-secao {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cor-texto-secundario);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.titulo-secao h2 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-top: 5px;
+  color: var(--cor-texto-principal);
+}
+
+/* Cabeçalho de seção (título à esquerda, botão à direita) */
+.secao-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+}
+
+.secao-cabecalho .titulo-secao {
+  text-align: left;
+  margin-bottom: 0;
+}
+
+/* Botões */
+.botao-primario {
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-principal);
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.botao-primario:hover {
+  background-color: #222;
+  color: var(--cor-texto-principal);
+}
+
+.botao-secundario:hover {
+  background-color: #222;
+  color: var(--cor-texto-principal);
+}
+
+.botao-secundario {
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-principal);
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.botao-secundario:hover {
+  background-color: var(--cor-texto-principal);
+  color: var(--cor-fundo);
+}
+
+.botao-terciario {
+  background-color: transparent;
+  border: 2px solid var(--cor-texto-secundario);
+  color: var(--cor-texto-principal);
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.botao-terciario:hover {
+  background-color: var(--cor-texto-principal);
+  color: var(--cor-fundo);
+  border-color: var(--cor-texto-principal);
+}
+
+.botao-badge {
+  background-color: var(--cor-fundo-secundario);
+  color: var(--cor-texto-principal);
+  padding: 8px 15px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+}
+
+.botao-badge:hover {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: #fff;
+}
+
+/* --- ESTILOS DO CABEÇALHO (HEADER) --- */
+.cabecalho {
+  padding: 28px 80px;
+  position: relative;
+  transition: background-color 0.4s ease;
+  color: var(--cor-texto-secundario);
+  background-color: var(--cor-fundo);
+  border-bottom: 1px solid #333;
+
+  /* --- ADICIONE ESTA LINHA DE VOLTA --- */
+  /* Isso garante que o header E SEUS FILHOS (os dropdowns)
+     fiquem sempre na frente do conteúdo da página */
+  z-index: 1000;
+}
+
+/* O .container dentro do .cabecalho herda os estilos do .topbar */
+.cabecalho .container {
+  /* Remove o limite de largura e a centralização */
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  /* Remove qualquer padding do .container padrão */
+  width: 100%;
+  /* Ocupa 100% do .cabecalho (que agora tem o padding) */
+
+  /* Mantém os estilos de layout */
+  display: flex;
+  /* (Garante o .cabecalhoflex) */
+  align-items: center;
+  /* (Garante o alinhamento) */
+  gap: 16px;
+  justify-content: space-between;
+}
+
+/* Estilos do .logo (baseado no .brand) */
+.logo {
+  display: block;
+  /* Garante que o <a> seja um bloco */
+  color: var(--cor-texto-principal);
+}
+
+.logo-imagem {
+  /* Defina a altura que você quer para o seu logo */
+  height: 70px;
+  width: auto;
+  /* Largura se ajusta automaticamente */
+  display: block;
+  /* Faz a imagem ocupar sua própria linha */
+}
+
+/* Estilos do .logo small (baseado no .brand small) */
+.logo small {
+  display: block;
+  font-weight: 400;
+  font-size: 12px;
+  color: #9b9b9b;
+  margin-top: 3px;
+}
+
+/* Estilos do .menu-principal (baseado no nav.nav) */
+.menu-principal a {
+  color: var(--cor-texto-secundario);
+  font-size: 14px;
+  /* Ajustado (era 13px) */
+  font-weight: 700;
+  /* Ajustado (era 500) */
+  text-transform: uppercase;
+  /* NOVO: Deixa tudo maiúsculo */
+  letter-spacing: 1px;
+  /* NOVO: Espaçamento entre letras */
+  transition: color 0.3s ease;
+}
+
+.menu-principal ul {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  /* gap: 22px; */
+}
+
+.menu-principal a {
+  color: var(--cor-texto-secundario);
+  /* Cor "muted" (cinza claro) */
+  font-size: 14px;
+  font-weight: 500;
+  /* Fonte mais fina (era 700) */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  /* Menos espaçamento (era 1px) */
+  transition: color 0.3s ease;
+}
+
+.menu-principal a:hover {
+  color: var(--cor-primaria);
+}
+
+/* Estilos do .icones-header (baseado no .nav-icons) */
+.icones-header {
+  display: flex;
+  /* display: flex; */
+  gap: 14px;
+  /* gap: 14px; */
+  align-items: center;
+  /* align-items: center; */
+}
+
+.icones-header a {
+  color: var(--cor-texto-principal);
+  /* MUDEI DE --cor-texto-secundario */
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.icones-header a:hover {
+  color: var(--cor-primaria);
+}
+
+/* Novo estilo para Icones, baseado no .nav-icons */
+.icones-header {
+  display: flex;
+  gap: 14px;
+  /* Ajustado (era 20px) */
+  align-items: center;
+}
+
+.icones-header a {
+  color: var(--cor-texto-secundario);
+  font-size: 16px;
+  /* Ajustado (era 18px no pai) */
+  transition: color 0.3s ease;
+  /* Adicionado */
+}
+
+.icones-header a:hover {
+  color: var(--cor-primaria);
+}
+
+/* --- NOVO: Agrupador da Navbar Direita --- */
+.navbar-direita {
+  display: flex;
+  /* Coloca o menu e os ícones lado a lado */
+  align-items: center;
+  /* Alinha eles verticalmente */
+  gap: 30px;
+  /* Espaço entre o menu e os ícones */
+}
+
+/* --- ESTILOS DOS DROPDOWNS (ATUALIZADO) --- */
+.menu-principal li {
+  position: relative;
+}
+
+/* O container do dropdown (fundo escuro, sem borda) */
+.menu-principal .submenu {
+  display: block;
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  /* ATUALIZAÇÕES DE VISUAL */
+  background-color: var(--cor-fundo-secundario);
+  /* Fundo #0f0f10 */
+  min-width: 220px;
+  /* Um pouco mais largo */
+  padding: 10px 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+  /* Sombra suave */
+  /* Removemos a borda e o border-radius */
+
+  /* ATUALIZAÇÕES DE TRANSIÇÃO (Mais sutil) */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(5px);
+  /* Deslize menor */
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  z-index: 100;
+}
+
+.menu-principal .submenu li {
+  padding: 0;
+}
+
+/* Os links dentro do dropdown (texto maiúsculo) */
+.menu-principal .submenu a {
+  padding: 12px 20px;
+  /* Mais preenchimento */
+  display: block;
+  white-space: nowrap;
+
+  /* ATUALIZAÇÕES DE VISUAL */
+  color: var(--cor-texto-secundario);
+  /* Cor 'muted' */
+  font-weight: 700;
+  /* Negrito */
+  font-size: 13px;
+  text-transform: uppercase;
+  /* MAIÚSCULO */
+  letter-spacing: 0.5px;
+  /* (Removemos o 'font-weight: 400') */
+}
+
+/* O hover do link dentro do dropdown */
+.menu-principal .submenu a:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  /* Fundo branco bem sutil */
+  color: var(--cor-primaria);
+  /* Texto fica laranja */
+}
+
+/* Lógica para mostrar o submenu (já deve existir) */
+.menu-principal .menu-dropdown:hover .submenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Seta (já deve existir) */
+.menu-principal .fa-chevron-down {
+  font-size: 10px;
+  margin-left: 8px;
+  transition: transform 0.3s ease;
+}
+
+/* Rotação da seta (já deve existir) */
+.menu-principal .menu-dropdown:hover .fa-chevron-down {
+  transform: rotate(180deg);
+}
+
+/* --- ESTILOS DO RODAPÉ (FOOTER) --- */
+
+.rodape-principal {
+  background-color: var(--cor-fundo-secundario);
+  border-bottom: 1px solid #333;
+}
+
+.rodape-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+}
+
+.rodape-coluna h4 {
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 30px;
+  font-weight: 700;
+}
+
+.rodape-coluna p {
+  color: var(--cor-texto-secundario);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.rodape-sociais {
+  margin-top: 25px;
+  display: flex;
+  gap: 15px;
+}
+
+.rodape-sociais a {
+  font-size: 20px;
+  color: var(--cor-texto-secundario);
+
+  /* --- NOVOS ESTILOS --- */
+  display: inline-flex;
+  /* Para centralizar o ícone <i> */
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  /* Largura do "quadrado" */
+  height: 44px;
+  /* Altura do "quadrado" */
+  border-radius: 8px;
+  /* Cantos arredondados */
+  background-color: transparent;
+  /* Fundo transparente por padrão */
+
+  /* Transição para TODOS os efeitos */
+  transition: all 0.3s ease;
+}
+
+.rodape-sociais a:hover {
+  color: var(--cor-texto-principal);
+  /* Ícone fica branco */
+  background-color: var(--cor-primaria);
+  /* Fundo "laranjinha" */
+  transform: translateY(-3px);
+  /* Efeito "ir pra frente" (subir) */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  /* Sombra suave */
+}
+
+.rodape-contato {
+  list-style: none;
+  font-size: 15px;
+}
+
+.rodape-contato li {
+  color: var(--cor-texto-secundario);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.rodape-contato li i {
+  color: var(--cor-primaria);
+  font-size: 16px;
+  margin-top: 4px;
+}
+
+/* Lista de Redes Sociais (Substitui Posts Recentes) */
+.rodape-redes-lista {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  /* Para os ícones quebrarem a linha em telas pequenas */
+  gap: 15px;
+  /* Espaço entre os ícones */
+}
+
+.rodape-redes-lista a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  /* Largura do "círculo" */
+  height: 44px;
+  /* Altura do "círculo" */
+  border-radius: 50%;
+  /* Círculo perfeito */
+  background-color: var(--cor-fundo-secundario);
+  /* Fundo cinza escuro */
+  border: 1px solid #333;
+  /* Borda sutil */
+  color: var(--cor-texto-secundario);
+  font-size: 20px;
+  transition: all 0.3s ease;
+}
+
+.rodape-redes-lista a:hover {
+  background-color: var(--cor-primaria);
+  /* Fundo laranja */
+  color: var(--cor-texto-principal);
+  /* Ícone branco */
+  border-color: var(--cor-primaria);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos do Sub-Rodapé (Copyright) */
+.rodape-copyright {
+  background-color: #000;
+  padding: 25px 0;
+}
+
+.copyright-texto p {
+  color: var(--cor-texto-secundario);
+  font-size: 14px;
+}
+
+.copyright-texto a {
+  color: #fff;
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+.copyright-texto a:hover {
+  color: var(--cor-primaria);
+}
+
+.rodape-menu ul {
+  display: flex;
+  gap: 25px;
+}
+
+.rodape-menu a {
+  color: var(--cor-texto-secundario);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.rodape-menu a:hover {
+  color: #fff;
+}
+
+/* ============================================= */
+/* ANIMAÇÃO DO CURSOR PISCANDO NO BOTÃO */
+/* ============================================= */
+
+/* 1. Define a animação */
+@keyframes piscar-suave {
+
+  0%,
+  100% {
+    /* Começa e termina visível */
+    opacity: 1;
+  }
+
+  50% {
+    /* Fica invisível no meio da animação */
+    opacity: 0;
+  }
+}
+
+/* 2. Cria o ponto piscando */
+.botao-primario::after,
+.botao-secundario::after {
+  content: "";
+}
+
+/* 3. MOSTRA o ponto e COMEÇA a animação SÓ no hover */
+.botao-primario:hover::after,
+.botao-secundario:hover::after {
+  content: ".";
+  /* O ponto APARECE */
+  animation: piscar-suave 1s infinite;
+}
+
+/* ============================================= */
+/* --- ESTILOS DO DROPDOWN DE LOGIN (NOVO) --- */
+/* ============================================= */
+
+/* O container do ícone e do menu */
+.login-dropdown-container {
+  position: relative;
+  /* Permite posicionar o submenu */
+  display: flex;
+  /* Para alinhar o ícone */
+  align-items: center;
+}
+
+/* * O ícone de Login (com visual de círculo duplo) 
+   * (Isso SOBRESCREVE o estilo padrão de .icones-header a)
+   */
+.login-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  /* Tamanho total do círculo externo */
+  height: 38px;
+  border-radius: 50%;
+  background-color: transparent;
+
+  /* Borda externa cinza (baseado na imagem) */
+  border: 2px solid #444;
+  transition: all 0.3s ease;
+
+  /* Anula a cor de texto herdada de .icones-header a */
+  color: transparent;
+}
+
+/* O ícone 'i' (que vira o círculo interno) */
+.login-trigger i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  /* Tamanho do círculo interno */
+  height: 28px;
+  background-color: #444;
+  /* Fundo cinza escuro */
+  color: #fff;
+  /* Ícone de pessoa branco */
+  font-size: 14px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+/* Efeito de Hover no ícone de login */
+.login-trigger:hover {
+  border-color: var(--cor-primaria);
+  /* Borda externa fica laranja */
+}
+
+.login-trigger:hover i {
+  background-color: var(--cor-primaria);
+  /* Círculo interno fica laranja */
+}
+
+/* * O menu dropdown em si (VISUAL SUAVE / DARK MODE) 
+ */
+.submenu-login {
+  /* Visual */
+  background-color: var(--cor-fundo-secundario);
+  /* Fundo escuro #0f0f10 */
+  color: var(--cor-texto-principal);
+  /* Texto claro */
+  border-radius: 8px;
+  /* Bordas arredondadas */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  /* Sombra mais escura */
+  border: 1px solid #333;
+  /* Borda escura */
+
+  /* Posicionamento (mantido) */
+  position: absolute;
+  top: 150%;
+  right: 0;
+  width: 210px;
+  padding: 10px;
+
+  /* Animação (mantida) */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(5px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+  z-index: 100;
+}
+
+/* Mostrar o menu ao passar o mouse (mantido) */
+.login-dropdown-container:hover .submenu-login {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Título "FAZER LOGIN" (cor ajustada) */
+.submenu-login-titulo {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--cor-texto-secundario);
+  /* Cor cinza clara (era #888) */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+  padding-left: 8px;
+}
+
+.submenu-login ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* O link do item (cor ajustada) */
+.submenu-login li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cor-texto-principal);
+  /* Cor branca (era #333) */
+  transition: all 0.2s ease;
+}
+
+/* Ícone dentro do link (cor ajustada) */
+.submenu-login li a i {
+  font-size: 15px;
+  width: 20px;
+  text-align: center;
+  color: var(--cor-texto-secundario);
+  /* Cor cinza clara (era #555) */
+  transition: all 0.2s ease;
+}
+
+/* Efeito de hover no item (cor ajustada) */
+.submenu-login li a:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  /* Fundo branco sutil */
+  color: var(--cor-primaria);
+  /* Cor laranja (era #111) */
+}
+
+.submenu-login li a:hover i {
+  color: var(--cor-primaria);
+  /* Cor laranja (era #111) */
+}
+
+/* ============================================= */
+/* --- ESTILOS RESPONSIVOS (MOBILE) --- */
+/* ============================================= */
+
+/* --- 1. BOTÕES DE MENU MOBILE (ESCONDIDOS EM DESKTOP) --- */
+.botao-menu-mobile {
+  display: none;
+  /* Escondido em desktop */
+  background: none;
+  border: none;
+  color: var(--cor-texto-principal);
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1001;
+  /* Fica na frente */
+}
+
+.botao-fechar-menu {
+  display: none;
+  /* Escondido em desktop */
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--cor-texto-principal);
+  font-size: 30px;
+  cursor: pointer;
+}
+
+
+/* --- 2. BREAKPOINT (TABLET/MOBILE) --- */
+@media (max-width: 1024px) {
+
+  /* --- AJUSTES NO HEADER --- */
+  .cabecalho {
+    padding: 20px 25px;
+    /* Padding menor */
+  }
+
+  .cabecalho.scrolled {
+    padding: 15px 25px;
+    /* Padding menor ao rolar */
+  }
+
+  /* Mostra o botão hamburger */
+  .botao-menu-mobile {
+    display: block;
+  }
+
+  /* --- O MENU SLIDE-IN --- */
+  .navbar-direita {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    /* Começa escondido fora da tela */
+    width: 300px;
+    /* Largura do menu */
+    height: 100vh;
+    background-color: var(--cor-fundo-secundario);
+    border-left: 1px solid #333;
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+
+    /* Reorganiza o layout interno */
+    flex-direction: column;
+    align-items: flex-start;
+    /* Alinha itens à esquerda */
+    justify-content: flex-start;
+    padding: 80px 30px 30px 30px;
+    /* Padding interno */
+    gap: 40px;
+
+    transition: right 0.4s ease-in-out;
+    z-index: 2000;
+    /* Fica acima de tudo */
+  }
+
+  /* Classe que o JS vai adicionar */
+  .navbar-direita.ativo {
+    right: 0;
+    /* Menu aparece */
+  }
+
+  /* Mostra o botão "Fechar" (X) */
+  .botao-fechar-menu {
+    display: block;
+  }
+
+  /* --- ITENS DENTRO DO MENU MOBILE --- */
+  .menu-principal ul {
+    flex-direction: column;
+    /* Empilha os links */
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .menu-principal a {
+    font-size: 18px;
+    /* Fonte maior */
+    font-weight: 600;
+  }
+
+  .icones-header {
+    flex-direction: row;
+    /* Mantém os ícones em linha */
+    gap: 20px;
+  }
+
+  .icones-header a {
+    font-size: 20px;
+    /* Ícones maiores */
+  }
+}
+
+
+/* --- 3. RESPONSIVIDADE DO RODAPÉ --- */
+@media (max-width: 768px) {
+
+  /* Reverta o padding do header para mobile */
+  .cabecalho {
+    padding: 20px 25px;
+  }
+
+  .cabecalho.scrolled {
+    padding: 15px 25px;
+    /* Padding menor ao rolar */
+  }
+
+  /* Empilha as colunas do rodapé */
+  .rodape-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  /* Ajusta o padding do rodapé para mobile */
+  .rodape-principal {
+    /* (A regra que reverteu o padding do rodapé foi removida) */
+  }
+
+  /* Empilha o copyright e o menu do rodapé */
+  .rodape-copyright .container {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .rodape-menu ul {
+    justify-content: center;
+  }
+}
+
+/* ============================================= */
+/* --- NOVO CSS DO CARRINHO (Imagem 155549) --- */
+/* ============================================= */
+
+.cart-btn {
+  position: relative;
+}
+
+/* ============================================= */
+/* --- ALTERAÇÃO DA NOTIFICAÇÃO DO CARRINHO --- */
+/* ============================================= */
+.cart-count {
+  position: absolute;
+  top: -8px;
+  /* Ajuste de posição */
+  right: -10px;
+  /* Ajuste de posição */
+
+  background: #5a5a5a;
+  /* Cinza da imagem */
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+
+  /* --- Estilos para o círculo --- */
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  /* Círculo perfeito */
+
+  /* --- Estilos para centralizar o número --- */
+  /* O JS vai alternar entre 'none' e 'flex' */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  /* Remove altura da linha extra */
+  padding: 0;
+  /* Remove padding antigo */
+}
+
+/* ============================================= */
+/* --- FIM DA ALTERAÇÃO DA NOTIFICAÇÃO --- */
+/* ============================================= */
+
+
+/* --- GAVETA DO CARRINHO (Sidebar) --- */
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: -460px;
+  /* Largura aumentada */
+  width: 440px;
+  /* Largura aumentada */
+  height: 100vh;
+  background: #1c1c1c;
+  /* Fundo mais claro */
+  color: var(--muted);
+  box-shadow: -12px 0 30px rgba(0, 0, 0, 0.6);
+  transition: right .26s ease;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-drawer.open {
+  right: 0;
+}
+
+/* --- CABEÇALHO DO CARRINHO --- */
+.cart-drawer header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  /* Mais padding */
+  border-bottom: 1px solid #333;
+  /* Borda inferior */
+}
+
+.cart-drawer header>strong {
+  font-size: 18px;
+  color: var(--white);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn.close-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 20px;
+  padding: 5px;
+  margin: 0;
+  width: auto;
+  line-height: 1;
+}
+
+.btn.close-icon-btn:hover {
+  color: var(--white);
+  background: transparent;
+}
+
+
+/* --- ITENS DO CARRINHO --- */
+.cart-items {
+  flex: 1;
+  overflow-y: auto;
+  padding: 25px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 80px 1fr auto;
+  /* Imagem | Info | Preço Total */
+  gap: 20px;
+  margin-bottom: 25px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #333;
+}
+
+.cart-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.cart-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+  background: #2a2a2a;
+}
+
+/* Coluna de Informações */
+.item-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Garante que a coluna do meio se estique se necessário */
+  justify-content: space-between;
+}
+
+.item-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent);
+  /* Cor laranja */
+  text-decoration: none;
+}
+
+.item-title:hover {
+  text-decoration: underline;
+}
+
+.item-unit-price {
+  font-size: 15px;
+  color: var(--white);
+  margin-top: 4px;
+}
+
+.item-description {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.item-info .qty {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.item-info .qty span {
+  padding: 0 15px;
+  font-size: 16px;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.item-info .qty .btn {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 0;
+  margin: 0;
+  width: auto;
+}
+
+.item-info .qty .btn:hover {
+  color: var(--white);
+  background: transparent;
+}
+
+/* ================================== */
+/* --- INÍCIO DA ALTERAÇÃO (CSS) --- */
+/* ================================== */
+/* Link "Remover item" (Lixeira) */
+.remove-link {
+  font-size: 16px;
+  /* Tamanho do ícone */
+  color: var(--muted);
+  text-decoration: none;
+  /* Remove sublinhado */
+  margin-top: 0;
+  /* Removido, pois o pai controla o alinhamento */
+  transition: color 0.2s;
+}
+
+.remove-link:hover {
+  color: #ff6b6b;
+  /* Vermelho no hover */
+}
+
+/* Preço Total do Item (Direita) */
+.item-total-price {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--white);
+  /* text-align: right; (removido, pai controla) */
+}
+
+/* NOVO: Wrapper para a 3ª coluna (Preço e Lixeira) */
+.item-price-and-remove {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* Preço no topo, lixeira embaixo */
+  align-items: flex-end;
+  /* Tudo alinhado à direita */
+  text-align: right;
+}
+
+/* ================================== */
+/* --- FIM DA ALTERAÇÃO (CSS) --- */
+/* ================================== */
+
+/* --- RODAPÉ DO CARRINHO --- */
+.cart-footer {
+  background: #121212;
+  /* Fundo mais escuro */
+  border-top: 1px solid #333;
+  padding: 25px;
+  margin-top: auto;
+  /* Empurra para o fundo */
+}
+
+/* Linha do Subtotal */
+.cart-footer-info .subtotal-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.cart-footer-info .subtotal-row span:first-child {
+  font-size: 16px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.cart-footer-info .subtotal-row span:last-child {
+  font-size: 18px;
+  color: var(--white);
+  font-weight: 700;
+}
+
+.cart-footer-info p {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+  padding: 0;
+}
+
+/* Botões do Rodapé */
+.cart-footer-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* Duas colunas */
+  gap: 15px;
+  margin-top: 20px;
+}
+
+/* Botões de volta ao original (Cinza e Laranja no hover) */
+.cart-footer-buttons .btn.btn-secondary {
+  background: #333;
+  color: var(--white);
+  border: 1px solid #444;
+  padding: 12px;
+  text-align: center;
+  border-radius: 0;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.cart-footer-buttons .btn.btn-secondary:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
+}
+
+.cart-footer-buttons .btn.btn-primary,
+.cart-footer-buttons #checkout-btn {
+  background: #333;
+  color: var(--white);
+  border: 1px solid #444;
+  padding: 12px;
+  text-align: center;
+  border-radius: 0;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.cart-footer-buttons .btn.btn-primary:hover,
+.cart-footer-buttons #checkout-btn:hover {
+  filter: none;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--white);
+}
+
+
+/* Modal for product options */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+
+.modal-backdrop.open {
+  display: flex
+}
+
+.modal {
+  background: #0e0e0e;
+  padding: 20px;
+  border-radius: 10px;
+  width: 520px;
+  color: var(--muted);
+}
+
+.modal h3 {
+  color: #fff;
+  margin-top: 0
+}
+
+.variant-btn {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #2b2b2b;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer
+}
+
+.modal label {
+  display: flex;
+  align-items: center;
+  gap: 8px
+}
+
+/* Backdrop Opaco */
+.cart-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  /* Fundo cinza-escuro (sem blur) */
+  z-index: 9998;
+  display: none;
+  animation: fadeIn 0.3s ease;
+  cursor: pointer;
+}
+
+.cart-backdrop.open {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

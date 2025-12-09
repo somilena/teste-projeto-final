@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/icon/logo-icon.png') }}">
+
+  <title>{% block title %}ProdCumaru{% endblock %}</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
+
+  {% block head_extra %}{% endblock %}
+</head>
+
+<body>
+  <header class="cabecalho">
+    <div class="container">
+      <a href="{{ url_for('home') }}" class="logo">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo ProdCumaru" class="logo-imagem">
+        <small>Produtora Audiovisual</small>
+      </a>
+
+      <div class="navbar-direita" id="navbar-menu">
+        <button class="botao-fechar-menu" id="botao-fechar-menu" aria-label="Fechar menu">×</button>
+
+        <nav class="menu-principal">
+          <ul>
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('servicos') }}">Serviços</a></li>
+            <li><a href="{{ url_for('galeria') }}">Galeria</a></li>
+          </ul>
+        </nav>
+
+        <div class="icones-header">
+          <a href="https://www.instagram.com/prodcumaru" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/@prodcumaru" aria-label="Youtube"><i class="fab fa-youtube"></i></a>
+
+          <div class="login-dropdown-container">
+            <a href="#" class="login-trigger" aria-label="Login">
+              <i class="fas fa-user"></i>
+            </a>
+            <div class="submenu-login">
+              <span class="submenu-login-titulo">FAZER LOGIN</span>
+              <ul>
+                <li>
+                  <a href="{{ url_for('login_cliente') }}">
+                    <i class="fas fa-headphones"></i>
+                    <span>Portal do Cliente</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="botao-menu-mobile" id="botao-abrir-menu" aria-label="Abrir menu">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <a href="#" id="btn-topo" class="btn-topo"><i class="fas fa-arrow-up"></i></a>
+
+  <footer class="rodape-principal">
+    <div class="container-secao">
+      <div class="rodape-grid">
+        <div class="rodape-coluna">
+          <h4>SOBRE</h4>
+          <p>
+            Produtora de conteúdo premium em Brasília (DF), especializada em
+            música, audiovisual e podcasts. Oferecemos estúdios de alto padrão
+            para o seu projeto e produzimos conteúdo original para a Cumaru
+            TV, nossa plataforma de programas.
+          </p>
+        </div>
+
+        <div class="rodape-coluna">
+          <h4>CONTATO</h4>
+          <ul class="rodape-contato">
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>SHCGN CR QD 710/711 Bloco E, Loja 8 - Asa Norte, Brasília -
+                DF, 70750-650</span>
+            </li>
+            <li>
+              <i class="fab fa-whatsapp"></i>
+              <span>(61) 99267-7680</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>contato@prodcumaru.com</span>
+            </li>
+            <li>
+              <i class="fas fa-clock"></i>
+              <span>Seg a Sex das 10h às 18h</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="rodape-coluna">
+          <h4>REDES SOCIAIS</h4>
+          <ul class="rodape-redes-lista">
+            <li>
+              <a href="https://open.spotify.com/artist/4E1zsQCPKqT9ufRU3T197C?si=2BwALFv8QgyDdYvKzh210g"
+                aria-label="Spotify" title="Spotify"><i class="fab fa-spotify"></i></a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/prodcumaru" aria-label="Instagram" title="Instagram"><i
+                  class="fab fa-instagram"></i></a>
+            </li>
+            <li>
+              <a href="https://wa.me/5561992677680?text=Ol%C3%A1!%20Eu%20gostaria%20de%20tirar%20algumas%20d%C3%BAvidas%20com%20voc%C3%AAs."
+                aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </li>
+            <li>
+              <a href="https://www.tiktok.com/@prodcumaru" aria-label="TikTok" title="TikTok"><i
+                  class="fab fa-tiktok"></i></a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/@prodcumaru" aria-label="Youtube" title="Youtube"><i
+                  class="fab fa-youtube"></i></a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <div class="rodape-copyright">
+    <div class="container">
+      <div class="copyright-texto">
+        <p>Copyright © 2025 ProdCumaru. Todos os direitos reservados.</p>
+      </div>
+      <nav class="rodape-menu">
+        <ul>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="#">Termos de Uso</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  {% block scripts_extra %}{% endblock %}
+</body>
+
+</html>

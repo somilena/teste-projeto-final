@@ -1,0 +1,849 @@
+/* ============================================= */
+/* ARQUIVO: servicos.css (DESIGN PREMIUM) */
+/* Estilos específicos da Página de Serviços */
+/* ============================================= */
+
+/* Importa a fonte Poppins para garantir consistência com a Home */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+/* 1. CONFIGURAÇÕES GERAIS DA PÁGINA */
+.container-servicos {
+  max-width: 1400px; /* Largura maior para ficar imersivo */
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Títulos das Seções */
+.container-servicos h2 {
+  font-size: 36px;
+  margin-bottom: 15px;
+  text-align: center;
+  color: var(--cor-texto-principal);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.descricao-secao {
+  font-size: 16px;
+  color: var(--cor-texto-secundario);
+  text-align: center;
+  margin-bottom: 60px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ============================================= */
+/* 2. HERO E BARRA DE FILTROS */
+/* ============================================= */
+
+.secao-busca-filtros {
+  text-align: center;
+  padding: 60px 0 40px 0;
+  /* Fundo sutil radial para destacar o topo */
+  background: radial-gradient(
+    circle at center top,
+    #1a1a1a 0%,
+    transparent 70%
+  );
+  margin-bottom: 40px;
+}
+
+.texto-chamada h1 {
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: var(--cor-texto-principal);
+}
+
+.texto-chamada .destaque {
+  color: var(--cor-primaria); /* Laranja */
+  text-shadow: 0 0 20px rgba(201, 107, 42, 0.3); /* Brilho suave */
+}
+
+.texto-chamada p {
+  font-size: 18px;
+  color: var(--cor-texto-secundario);
+}
+
+/* Botões de Filtro (Estilo Pílula) */
+.container-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 40px;
+}
+
+.filtro-btn {
+  background-color: transparent;
+  border: 1px solid #333;
+  color: var(--cor-texto-secundario);
+  padding: 10px 24px;
+  border-radius: 50px; /* Redondo */
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+.filtro-btn:hover {
+  border-color: var(--cor-primaria);
+  color: var(--cor-texto-principal);
+  background-color: rgba(201, 107, 42, 0.1);
+}
+
+.filtro-btn.ativo {
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-principal);
+  border-color: var(--cor-primaria);
+  font-weight: 700;
+  box-shadow: 0 0 15px rgba(201, 107, 42, 0.4);
+}
+
+/* ============================================= */
+/* 3. GRELHA DE SERVIÇOS (CARDS) */
+/* ============================================= */
+
+.grid-servicos {
+  display: grid;
+  /* Cards responsivos que não ficam muito pequenos */
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 30px;
+  padding-bottom: 60px;
+}
+
+.cartao-servico {
+  background-color: var(--cor-fundo-secundario); /* #0f0f10 */
+  border: 1px solid #222;
+  border-radius: 16px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+/* Efeito de Hover no Card */
+.cartao-servico:hover {
+  transform: translateY(-5px);
+  border-color: var(--cor-primaria);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Ícone Grande */
+.cartao-servico i.ph-fill {
+  font-size: 48px;
+  color: var(--cor-primaria);
+  margin-bottom: 25px;
+  /* Círculo suave atrás do ícone */
+  background: rgba(201, 107, 42, 0.1);
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+}
+.cartao-servico:hover i.ph-fill {
+  transform: scale(1.1); /* Ícone cresce no hover */
+}
+
+.cartao-servico h3 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: var(--cor-texto-principal);
+}
+
+.cartao-servico p {
+  color: var(--cor-texto-secundario);
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 30px;
+}
+
+/* Lista de Itens */
+.lista-itens-pacote {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+  flex-grow: 1; /* Empurra o preço para baixo */
+}
+
+.lista-itens-pacote li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: #d1d1d1;
+  font-size: 14px;
+}
+
+.lista-itens-pacote li i {
+  color: var(--cor-primaria);
+  font-size: 18px;
+  background: none;
+  width: auto;
+  height: auto;
+  margin: 0;
+}
+
+/* Preço */
+.preco-servico {
+  display: block;
+  font-size: 20px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+/* Botão de Agendar (Estilo Premium) */
+.botao-agendar {
+  width: 100%;
+  background-color: transparent;
+  border: 1px solid var(--cor-primaria);
+  color: var(--cor-primaria);
+  padding: 14px;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  font-family: "Poppins", sans-serif;
+}
+
+.botao-agendar:hover {
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-principal);
+  box-shadow: 0 0 15px rgba(201, 107, 42, 0.4);
+}
+
+/* Destaque (Mais Vendido) */
+.cartao-servico.destaque-pacote {
+  border-color: var(--cor-primaria);
+  background: linear-gradient(180deg, #151515 0%, #0f0f10 100%);
+}
+
+.badge-mais-vendido {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--cor-primaria);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 6px 15px;
+  border-bottom-left-radius: 10px;
+  text-transform: uppercase;
+}
+
+/* ============================================= */
+/* 4. CALENDÁRIO (VISUAL DARK MODE) */
+/* ============================================= */
+
+.secao-agendamento-detalhes {
+  padding: 60px 0;
+  border-top: 1px solid #222;
+  background-color: #0a0a0a; /* Fundo levemente diferente */
+}
+
+.container-calendario-agendamento {
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid #222;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px; /* Mais compacto */
+  margin: 40px auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* Header do Calendário */
+.calendario-agendamento-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.calendario-agendamento-header h3 {
+  color: var(--cor-texto-principal);
+  font-size: 22px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.calendario-agendamento-header button {
+  background: #222;
+  border: none;
+  color: var(--cor-texto-principal);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 700;
+}
+.calendario-agendamento-header button:hover {
+  background: var(--cor-primaria);
+}
+
+/* Dias da Semana */
+.calendario-agendamento-dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 15px;
+}
+.calendario-agendamento-dias-semana div {
+  text-align: center;
+  color: var(--cor-texto-secundario);
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Grid de Dias */
+.calendario-agendamento-grid-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+
+.dia-agendamento {
+  height: 50px; /* Quadrado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #151515;
+  color: var(--cor-texto-secundario);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+.dia-agendamento:not(.inativo):hover {
+  background-color: #333;
+  color: #fff;
+}
+.dia-agendamento.selecionado {
+  background-color: var(--cor-primaria);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(201, 107, 42, 0.5);
+}
+.dia-agendamento.inativo {
+  opacity: 0.3;
+  cursor: default;
+  background: transparent;
+}
+
+/* Horários */
+.horarios-disponiveis {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.horarios-disponiveis h3 {
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: var(--cor-texto-principal);
+}
+.horarios-disponiveis #data-selecionada-titulo {
+  color: var(--cor-primaria);
+}
+
+#grid-horarios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
+.horario-btn {
+  background-color: #151515;
+  border: 1px solid #333;
+  color: var(--cor-texto-principal);
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Poppins", sans-serif;
+}
+.horario-btn:hover:not(.indisponivel) {
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+}
+.horario-btn.selecionado {
+  background-color: var(--cor-primaria);
+  border-color: var(--cor-primaria);
+  color: #fff;
+  font-weight: 700;
+}
+.horario-btn.indisponivel {
+  opacity: 0.4;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* Botão de Confirmar */
+#botao-confirmar-agendamento {
+  /* Usa o estilo de botão primário */
+  background-color: var(--cor-primaria);
+  color: #fff;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: none; /* Escondido até selecionar horário */
+  margin: 0 auto;
+}
+#botao-confirmar-agendamento:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(201, 107, 42, 0.4);
+}
+
+/* ============================================= */
+/* 5. RESPONSIVIDADE */
+/* ============================================= */
+@media (max-width: 768px) {
+  .texto-chamada h1 {
+    font-size: 32px;
+  }
+  .grid-servicos {
+    grid-template-columns: 1fr;
+  }
+  .filtro-btn {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+  .container-calendario-agendamento {
+    padding: 20px;
+  }
+  .dia-agendamento {
+    height: 40px;
+    font-size: 14px;
+  }
+}
+
+/* ============================================= */
+/* 5. NOVO LAYOUT DE AGENDAMENTO (CHECKOUT) */
+/* ============================================= */
+
+/* Container que segura as duas colunas */
+.container-agendamento-completo {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  font-family: "Poppins", sans-serif; /* Fonte Oficial */
+}
+
+.btn-voltar {
+  background: transparent;
+  border: none;
+  color: var(--cor-texto-secundario);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+  transition: color 0.3s;
+  font-family: "Poppins", sans-serif;
+}
+.btn-voltar:hover {
+  color: var(--cor-primaria);
+}
+
+/* Grid de 2 Colunas (Calendário | Pagamento) */
+.grid-agendamento {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+/* Coluna da Esquerda */
+.coluna-selecao h2 {
+  text-align: left;
+  font-size: 28px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 10px;
+}
+.descricao-secao-agenda {
+  color: var(--cor-texto-secundario);
+  margin-bottom: 30px;
+}
+.texto-destaque {
+  color: var(--cor-primaria);
+}
+
+/* Ajuste do Calendário para caber na coluna */
+.container-calendario-agendamento {
+  margin: 0; /* Remove margem automática */
+  max-width: 100%;
+  padding: 30px;
+}
+.horarios-disponiveis {
+  margin: 30px 0 0 0;
+  max-width: 100%;
+}
+
+/* COLUNA DA DIREITA (Pagamento) */
+.coluna-pagamento {
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid #333;
+  border-radius: 20px;
+  padding: 40px;
+  animation: fadeInRight 0.5s ease;
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Box de Resumo */
+.box-resumo {
+  background: #0a0a0a;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #222;
+  margin-bottom: 30px;
+}
+.box-resumo h3 {
+  font-size: 18px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 15px;
+  border-bottom: 1px solid #333;
+  padding-bottom: 10px;
+}
+.item-resumo {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: var(--cor-texto-secundario);
+}
+.item-resumo.total {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #333;
+  font-size: 18px;
+  color: var(--cor-texto-principal);
+  font-weight: 700;
+}
+.item-resumo.total span:last-child {
+  color: var(--cor-primaria);
+}
+
+/* Formulário */
+.form-agendamento h3 {
+  color: var(--cor-texto-principal);
+  font-size: 20px;
+  margin-bottom: 20px;
+  margin-top: 30px;
+}
+.form-agendamento h3:first-of-type {
+  margin-top: 0;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+.form-group input {
+  width: 100%;
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  color: var(--cor-texto-principal);
+  padding: 12px;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.form-group input:focus {
+  border-color: var(--cor-primaria);
+}
+
+/* Abas de Pagamento */
+.tabs-pagamento {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.tab-pag {
+  flex: 1;
+  background: #0a0a0a;
+  border: 1px solid #333;
+  color: var(--cor-texto-secundario);
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+.tab-pag.ativo {
+  background: var(--cor-primaria);
+  color: #fff;
+  border-color: var(--cor-primaria);
+}
+
+/* Botão Final */
+.botao-confirmar-final {
+  width: 100%;
+  background-color: var(--cor-primaria);
+  color: #fff;
+  border: none;
+  padding: 16px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin-top: 30px;
+  transition: all 0.3s;
+  font-family: "Poppins", sans-serif;
+}
+.botao-confirmar-final:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 20px rgba(201, 107, 42, 0.4);
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  .grid-agendamento {
+    grid-template-columns: 1fr; /* Vira 1 coluna no mobile */
+  }
+  .coluna-pagamento {
+    order: 2; /* Pagamento fica embaixo */
+  }
+}
+
+/* --- ESTILOS DO FORMULÁRIO DE CADASTRO (NOVO) --- */
+
+/* Abas Pessoa Física / Jurídica */
+.tabs-pessoa {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  background-color: #0a0a0a;
+  padding: 5px;
+  border-radius: 50px;
+  border: 1px solid #333;
+}
+
+.tab-pessoa {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--cor-texto-secundario);
+  padding: 10px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s;
+}
+
+.tab-pessoa.ativo {
+  background-color: #333;
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Área de Criação de Senha */
+.area-senha-cadastro {
+  margin: 30px 0;
+  padding: 20px;
+  border: 1px dashed #333;
+  border-radius: 12px;
+  background-color: rgba(201, 107, 42, 0.05); /* Fundo laranja muito suave */
+}
+
+.area-senha-cadastro h3 {
+  margin-top: 0 !important;
+  font-size: 16px !important;
+  color: var(--cor-primaria) !important;
+}
+
+.aviso-senha {
+  font-size: 12px;
+  color: var(--cor-texto-secundario);
+  margin-bottom: 15px;
+}
+
+/* --- ESTILOS DO PAGAMENTO (NOVO) --- */
+
+.select-parcelas {
+  width: 100%;
+  background-color: #0a0a0a;
+  border: 1px solid #333;
+  color: var(--cor-texto-principal);
+  padding: 12px;
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+  cursor: pointer;
+  outline: none;
+}
+.select-parcelas:focus {
+  border-color: var(--cor-primaria);
+}
+
+.box-pix {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px dashed #444;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  color: var(--cor-texto-secundario);
+}
+.box-pix i {
+  font-size: 40px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 15px;
+}
+.desconto-pix {
+  display: block;
+  margin-top: 10px;
+  color: #28a745; /* Verde */
+  font-size: 14px;
+}
+
+/* Ícone dentro do input */
+.input-com-icone {
+  position: relative;
+}
+.input-com-icone i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+.input-com-icone input {
+  padding-left: 45px; /* Espaço para o ícone */
+}
+
+/* ============================================= */
+/* 6. TELA DE CONFIRMAÇÃO (SUCESSO) */
+/* ============================================= */
+
+.tela-confirmacao {
+  text-align: center;
+  padding: 40px 20px;
+  animation: fadeIn 0.5s ease;
+}
+
+.card-sucesso {
+  background-color: var(--cor-fundo-secundario);
+  border: 1px solid #333;
+  border-radius: 20px;
+  padding: 60px 40px;
+  max-width: 600px;
+  margin: 0 auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.icone-sucesso {
+  width: 80px;
+  height: 80px;
+  background-color: var(--cor-primaria);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  margin: 0 auto 30px auto;
+  box-shadow: 0 0 20px rgba(201, 107, 42, 0.6);
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.card-sucesso h2 {
+  font-size: 32px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 15px;
+}
+
+.card-sucesso p {
+  color: var(--cor-texto-secundario);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.detalhe-email {
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 10px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-bottom: 30px !important;
+}
+
+.acoes-sucesso {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.botao-portal {
+  width: 100%;
+  max-width: 300px;
+  justify-content: center;
+  gap: 10px;
+  text-decoration: none; /* Garante que pareça botão */
+}
+
+.link-voltar-home {
+  color: var(--cor-texto-secundario);
+  font-size: 14px;
+  text-decoration: underline;
+  transition: color 0.3s;
+}
+.link-voltar-home:hover {
+  color: var(--cor-texto-principal);
+}

@@ -1,0 +1,497 @@
+/* ============================================= */
+/* PORTAL CLIENTE - TEMA HÍBRIDO (CLARO/ESCURO) */
+/* ============================================= */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+:root {
+  /* --- TEMA CLARO (Padrão - Baseado na imagem branca) --- */
+  --cor-bg-body: #f4f6f8;
+  --cor-bg-sidebar: #ffffff;
+  --cor-bg-card: #ffffff;
+  --cor-bg-hover: #fff8f0; /* Laranja bem clarinho */
+
+  --cor-text-main: #333333;
+  --cor-text-muted: #8898aa;
+
+  --cor-borda: #e9ecef;
+  --sombra-card: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  /* Cores da Marca (Fixas) */
+  --cor-primaria: #c96b2a; /* Laranja Cumaru */
+  --cor-primaria-hover: #e08e45;
+  --cor-verde: #2dce89;
+  --cor-vermelho: #f5365c;
+}
+
+/* --- TEMA ESCURO (Ativado pela classe .dark-mode) --- */
+body.dark-mode {
+  --cor-bg-body: #050505;
+  --cor-bg-sidebar: #0f0f10;
+  --cor-bg-card: #141414;
+  --cor-bg-hover: #1f1f1f;
+
+  --cor-text-main: #ffffff;
+  --cor-text-muted: #a0a0a0;
+
+  --cor-borda: #2a2a2a;
+  --sombra-card: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--cor-bg-body);
+  color: var(--cor-text-main);
+  height: 100vh;
+  overflow: hidden;
+  transition: background-color 0.3s, color 0.3s; /* Transição suave */
+}
+
+.layout-wrapper {
+  display: flex;
+  height: 100%;
+}
+
+/* --- SIDEBAR --- */
+.sidebar-moderna {
+  width: 260px;
+  background: var(--cor-bg-sidebar);
+  border-right: 1px solid var(--cor-borda);
+  display: flex;
+  flex-direction: column;
+  padding: 25px;
+  transition: background 0.3s, border-color 0.3s;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--cor-primaria);
+}
+.logo-area i {
+  font-size: 24px;
+}
+
+.nav-moderna ul {
+  list-style: none;
+  margin-bottom: 30px;
+}
+.nav-categoria {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--cor-text-muted);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+  letter-spacing: 1px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  color: var(--cor-text-muted);
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  margin-bottom: 5px;
+}
+.nav-item i {
+  font-size: 20px;
+}
+
+.nav-item:hover,
+.nav-item.ativo {
+  background-color: var(--cor-bg-hover);
+  color: var(--cor-primaria);
+  font-weight: 600;
+}
+/* No dark mode, o hover é diferente */
+body.dark-mode .nav-item:hover,
+body.dark-mode .nav-item.ativo {
+  color: #fff;
+  border-left: 3px solid var(--cor-primaria);
+}
+
+.logout-area {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Botão de Tema */
+.btn-tema-toggle {
+  background: var(--cor-bg-card);
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-text-main);
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn-tema-toggle:hover {
+  border-color: var(--cor-primaria);
+}
+
+.btn-sair {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cor-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 10px;
+  transition: color 0.2s;
+}
+.btn-sair:hover {
+  color: var(--cor-vermelho);
+}
+
+/* --- MAIN CONTENT --- */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--cor-bg-body);
+}
+
+.topbar-moderna {
+  height: 80px;
+  background: var(--cor-bg-sidebar);
+  border-bottom: 1px solid var(--cor-borda);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  transition: background 0.3s, border-color 0.3s;
+}
+.topbar-moderna h2 {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--cor-borda);
+  object-fit: cover;
+}
+.user-profile span {
+  font-weight: 500;
+  color: var(--cor-text-main);
+}
+
+.content-wrapper {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+/* --- BANNER (Laranja sempre) --- */
+.header-banner {
+  background: linear-gradient(
+    135deg,
+    #f5a623 0%,
+    #d97a31 100%
+  ); /* Laranja vivo */
+  border-radius: 16px;
+  padding: 30px;
+  color: #fff; /* Sempre branco no banner */
+  box-shadow: 0 10px 20px rgba(245, 166, 35, 0.2);
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+}
+/* No dark mode, o banner fica um pouco mais sóbrio */
+body.dark-mode .header-banner {
+  background: linear-gradient(135deg, #c96b2a 0%, #a0501a 100%);
+  border: 1px solid var(--cor-borda);
+}
+
+.header-info h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+  color: #fff;
+}
+.header-info p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 14px;
+}
+
+.btn-novo-agendamento {
+  background: #fff;
+  color: var(--cor-primaria);
+  text-decoration: none;
+  padding: 12px 25px;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+body.dark-mode .btn-novo-agendamento {
+  background: #000;
+  color: #fff;
+}
+.btn-novo-agendamento:hover {
+  transform: translateY(-2px);
+}
+
+/* --- LISTA DE AGENDAMENTOS --- */
+.lista-agendamentos-container {
+  background-color: var(--cor-bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+  overflow: hidden;
+  box-shadow: var(--sombra-card);
+}
+
+.list-header-row {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1fr 150px;
+  padding: 20px 25px;
+  background-color: var(--cor-bg-hover);
+  border-bottom: 1px solid var(--cor-borda);
+  color: var(--cor-text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.agendamento-row {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 1fr 150px;
+  padding: 20px 25px;
+  border-bottom: 1px solid var(--cor-borda);
+  align-items: center;
+  transition: background 0.2s;
+  background-color: var(--cor-bg-card);
+}
+.agendamento-row:last-child {
+  border-bottom: none;
+}
+.agendamento-row:hover {
+  background-color: var(--cor-bg-hover);
+}
+
+.agendamento-data strong {
+  font-size: 15px;
+  color: var(--cor-text-main);
+  display: block;
+}
+.agendamento-data span {
+  font-size: 13px;
+  color: var(--cor-text-muted);
+}
+
+.agendamento-servico {
+  font-weight: 500;
+  color: var(--cor-primaria);
+}
+
+.status-badge {
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+.status-badge.confirmado {
+  background: rgba(45, 206, 137, 0.1);
+  color: var(--cor-verde);
+}
+
+/* Botão Reagendar */
+.btn-reagendar {
+  background: transparent;
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-text-muted);
+  padding: 8px 15px;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+.btn-reagendar:hover:not(.desativado) {
+  border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+  background: var(--cor-bg-hover);
+}
+.btn-reagendar.desativado {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* --- PERFIL --- */
+.section-perfil {
+  background: var(--cor-bg-card);
+  padding: 40px;
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+  max-width: 700px;
+  margin: 0 auto;
+  box-shadow: var(--sombra-card);
+}
+.perfil-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  border-bottom: 1px solid var(--cor-borda);
+}
+.foto-wrapper {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+.foto-grande {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--cor-primaria);
+}
+.btn-trocar-foto {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background: var(--cor-primaria);
+  color: #fff;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.btn-trocar-foto:hover {
+  transform: scale(1.1);
+}
+
+.form-perfil {
+  display: grid;
+  gap: 20px;
+}
+.form-group label {
+  font-size: 13px;
+  color: var(--cor-text-muted);
+  display: block;
+  margin-bottom: 8px;
+}
+.form-group input {
+  width: 100%;
+  background: var(--cor-bg-hover);
+  border: 1px solid var(--cor-borda);
+  padding: 12px;
+  border-radius: 8px;
+  color: var(--cor-text-main);
+  font-family: "Poppins", sans-serif;
+}
+.form-group input:focus {
+  border-color: var(--cor-primaria);
+  outline: none;
+  background: var(--cor-bg-card);
+}
+
+.btn-salvar {
+  background: var(--cor-primaria);
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  float: right;
+}
+.btn-salvar:hover {
+  background: var(--cor-primaria-hover);
+}
+
+/* --- MODAL --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+.modal-conteudo {
+  background: var(--cor-bg-card);
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+  width: 400px;
+  color: var(--cor-text-main);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+.modal-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.modal-fechar {
+  background: none;
+  border: none;
+  color: var(--cor-text-muted);
+  font-size: 24px;
+  cursor: pointer;
+}
+.formulario-modal input,
+.formulario-modal select {
+  width: 100%;
+  background: var(--cor-bg-hover);
+  border: 1px solid var(--cor-borda);
+  padding: 10px;
+  margin-bottom: 15px;
+  color: var(--cor-text-main);
+  border-radius: 6px;
+}
+.botao-principal {
+  width: 100%;
+  background: var(--cor-primaria);
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
