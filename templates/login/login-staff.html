@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SGA Staff</title>
   <link rel="icon" href="/assets/img/sga-staff.png">
-  <link rel="stylesheet" href="login-staff.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login/login-staff.css') }}">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 
@@ -89,7 +89,8 @@
     </div>
   </div>
 
-  <script src="login-staff.js"></script>
+    <script src="{{ url_for('static', filename='js/login/login-staff.js') }}"></script>
+
 </body>
 
 </html>

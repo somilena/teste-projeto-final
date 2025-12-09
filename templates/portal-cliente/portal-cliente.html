@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portal do Cliente | ProdCumaru</title>
-    <link rel="stylesheet" href="portal-cliente.css" />
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/portal-cliente/portal-cliente.css') }}">
     <link rel="icon" href="/assets/img/icon/cliente.png" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
   </head>
@@ -186,6 +186,6 @@
       </div>
     </div>
 
-    <script src="portal-cliente.js"></script>
+    <script src="{{ url_for('static', filename='js/portal-cliente/portal-cliente.js') }}"></script>
   </body>
 </html>

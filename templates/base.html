@@ -13,7 +13,6 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='css/global.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/carrinho-lateral.css') }}">
 
   {% block head_extra %}{% endblock %}
 </head>
@@ -32,7 +31,6 @@
         <nav class="menu-principal">
           <ul>
             <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('loja') }}">Loja</a></li>
             <li><a href="{{ url_for('servicos') }}">Serviços</a></li>
             <li><a href="{{ url_for('galeria') }}">Galeria</a></li>
           </ul>
@@ -41,10 +39,6 @@
         <div class="icones-header">
           <a href="https://www.instagram.com/prodcumaru" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
           <a href="https://www.youtube.com/@prodcumaru" aria-label="Youtube"><i class="fab fa-youtube"></i></a>
-          <a href="#" aria-label="Carrinho" id="open-cart" class="cart-btn">
-            <i class="fas fa-shopping-cart"></i>
-            <span class="cart-count" id="cart-count">0</span>
-          </a>
 
           <div class="login-dropdown-container">
             <a href="#" class="login-trigger" aria-label="Login">
@@ -82,40 +76,6 @@
     {% endblock %}
   </main>
 
-  <aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
-    <header>
-      <strong id="cart-header-title">Seu carrinho</strong>
-      <button id="close-cart" class="btn close-icon-btn">&times;</button>
-    </header>
-    <div class="cart-items" id="cart-items"></div>
-    <div class="cart-footer">
-      <div class="cart-footer-info">
-        <div class="subtotal-row">
-          <span>Subtotal</span>
-          <span id="cart-subtotal">$ 0,00</span>
-        </div>
-        <p>Frete calculado no checkout.</p>
-      </div>
-      <div class="cart-footer-buttons">
-        <a href="#" class="btn btn-secondary">Ver carrinho</a> <a href="#" class="btn btn-primary"
-          id="checkout-btn">Checkout</a>
-      </div>
-    </div>
-  </aside>
-  <div class="cart-backdrop" id="cart-backdrop"></div>
-
-  <div class="modal-backdrop" id="modal-backdrop">
-    <div class="modal">
-      <h3 id="modal-title">Opções</h3>
-      <div id="modal-content"></div>
-      <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px;">
-        <button class="btn" id="modal-close">Fechar</button>
-        <button class="btn" id="modal-add"
-          style="background: var(--cor-primaria); color: #fff; border: 0">Adicionar</button>
-      </div>
-    </div>
-  </div>
-
   <a href="#" id="btn-topo" class="btn-topo"><i class="fas fa-arrow-up"></i></a>
 
   <footer class="rodape-principal">
@@ -123,37 +83,83 @@
       <div class="rodape-grid">
         <div class="rodape-coluna">
           <h4>SOBRE</h4>
-          <p>Produtora de conteúdo premium em Brasília (DF), especializada em música, audiovisual e podcasts.</p>
+          <p>
+            Produtora de conteúdo premium em Brasília (DF), especializada em
+            música, audiovisual e podcasts. Oferecemos estúdios de alto padrão
+            para o seu projeto e produzimos conteúdo original para a Cumaru
+            TV, nossa plataforma de programas.
+          </p>
         </div>
+
         <div class="rodape-coluna">
           <h4>CONTATO</h4>
           <ul class="rodape-contato">
-            <li><i class="fas fa-map-marker-alt"></i> <span>Asa Norte, Brasília - DF</span></li>
-            <li><i class="fab fa-whatsapp"></i> <span>(61) 99267-7680</span></li>
-            <li><i class="fas fa-envelope"></i> <span>contato@prodcumaru.com</span></li>
+            <li>
+              <i class="fas fa-map-marker-alt"></i>
+              <span>SHCGN CR QD 710/711 Bloco E, Loja 8 - Asa Norte, Brasília -
+                DF, 70750-650</span>
+            </li>
+            <li>
+              <i class="fab fa-whatsapp"></i>
+              <span>(61) 99267-7680</span>
+            </li>
+            <li>
+              <i class="fas fa-envelope"></i>
+              <span>contato@prodcumaru.com</span>
+            </li>
+            <li>
+              <i class="fas fa-clock"></i>
+              <span>Seg a Sex das 10h às 18h</span>
+            </li>
           </ul>
         </div>
+
         <div class="rodape-coluna">
           <h4>REDES SOCIAIS</h4>
           <ul class="rodape-redes-lista">
-            <li><a href="#"><i class="fab fa-spotify"></i></a></li>
-            <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-            <li><a href="#"><i class="fab fa-tiktok"></i></a></li>
-            <li><a href="#"><i class="fab fa-youtube"></i></a></li>
+            <li>
+              <a href="https://open.spotify.com/artist/4E1zsQCPKqT9ufRU3T197C?si=2BwALFv8QgyDdYvKzh210g"
+                aria-label="Spotify" title="Spotify"><i class="fab fa-spotify"></i></a>
+            </li>
+            <li>
+              <a href="https://www.instagram.com/prodcumaru" aria-label="Instagram" title="Instagram"><i
+                  class="fab fa-instagram"></i></a>
+            </li>
+            <li>
+              <a href="https://wa.me/5561992677680?text=Ol%C3%A1!%20Eu%20gostaria%20de%20tirar%20algumas%20d%C3%BAvidas%20com%20voc%C3%AAs."
+                aria-label="WhatsApp" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            </li>
+            <li>
+              <a href="https://www.tiktok.com/@prodcumaru" aria-label="TikTok" title="TikTok"><i
+                  class="fab fa-tiktok"></i></a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/@prodcumaru" aria-label="Youtube" title="Youtube"><i
+                  class="fab fa-youtube"></i></a>
+            </li>
           </ul>
         </div>
       </div>
     </div>
   </footer>
+
   <div class="rodape-copyright">
     <div class="container">
       <div class="copyright-texto">
         <p>Copyright © 2025 ProdCumaru. Todos os direitos reservados.</p>
       </div>
+      <nav class="rodape-menu">
+        <ul>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="#">Termos de Uso</a></li>
+        </ul>
+      </nav>
     </div>
   </div>
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+  {% block scripts_extra %}{% endblock %}
 </body>
 
 </html>

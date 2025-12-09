@@ -77,7 +77,7 @@
   overflow: hidden;
 
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
-    url("/assets/img/fundo-pagina-studio.png");
+    url("../../img/fundo-pagina-studio.png");
 
   background-size: cover;
   background-position: center center;
@@ -464,7 +464,7 @@
       rgba(29, 106, 108, 0.8),
       rgba(212, 95, 62, 0.8)
     ),
-    url("/assets/img/fundo-pagina-studio1.png");
+    url("../../img/fundo-pagina-studio1.png");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -794,7 +794,7 @@
       rgba(212, 95, 62, 0.7),
       rgba(27, 106, 108, 0.7)
     ),
-    url("/assets/img/fundo-pagina-studio2.png");
+    url("../../img/fundo-pagina-studio2.png");
   /* <-- TROQUE AQUI */
   background-size: cover;
   background-position: center;

@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SGA - Portal do Cliente</title>
-  <link rel="stylesheet" href="cadastro-cliente.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/gestao/cadastro-cliente.css') }}">
 
 </head>
 
@@ -131,7 +131,7 @@
     </div>
   </div>
 
-  <script src="cadastro-cliente.js"></script>
+  <script src="{{ url_for('static', filename='js/gestao/cadastro-cliente.js') }}"></script>
 
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
