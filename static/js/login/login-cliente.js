@@ -359,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(
         "Login de Cliente efetuado (simulação)! Redirecionando para o Portal do Cliente..."
       );
-      window.location.href = "/pages/portal-cliente/portal-cliente.html";
+      window.location.href = "/portal";
     });
   }
 

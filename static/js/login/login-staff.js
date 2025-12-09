@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(
         "Login de Staff efetuado (simulação)! Redirecionando para o Dashboard..."
       );
-      window.location.href = "/pages/gestao/gestao.html"; // Redireciona para o dashboard principal
+      window.location.href = "/gestao"; // Redireciona para o dashboard principal
     });
 
   document
