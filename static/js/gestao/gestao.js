@@ -30,11 +30,11 @@ document.addEventListener("DOMContentLoaded", () => {
         renderizarCalendario();
       }
 
-      // 2. NOVO: Se for Editar Site: Força o clique na sub-aba "Home"
+      // 2. Se for Editar Site: Força o clique na sub-aba "Home"
       if (paginaAlvoID === "editar-site") {
         const btnSubHome = document.querySelector('.botao-sub-aba[data-alvo="sub-home"]');
         if (btnSubHome) {
-          btnSubHome.click(); // Simula o clique para resetar a visualização
+          btnSubHome.click();
         }
       }
     });
@@ -45,29 +45,23 @@ document.addEventListener("DOMContentLoaded", () => {
   // =================================================================
   const tabelaLogsBody = document.querySelector("#tabela-logs tbody");
 
-  // Simulação de banco de dados de logs
   let logsSistema = [
     { data: new Date().toLocaleString(), usuario: "Admin", acao: "Sistema iniciado." }
   ];
 
-  // Função Global para registrar ações
   window.registrarLog = function (descricaoAcao, usuario = "Admin") {
     const dataAtual = new Date().toLocaleString();
-
-    // Adiciona no início do array (mais recente primeiro)
     logsSistema.unshift({
       data: dataAtual,
       usuario: usuario,
       acao: descricaoAcao
     });
-
     renderizarLogs();
   };
 
   function renderizarLogs() {
     if (!tabelaLogsBody) return;
     tabelaLogsBody.innerHTML = "";
-
     logsSistema.forEach(log => {
       const linha = document.createElement("tr");
       linha.innerHTML = `
@@ -79,7 +73,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Função para limpar logs
   window.limparLogs = function () {
     if (confirm("Deseja limpar todo o histórico de logs?")) {
       logsSistema = [];
@@ -116,7 +109,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let dataExibida = new Date();
   let dataSelecionada = null;
+  // Exemplo: adiciona um evento para hoje para teste
   let agendamentos = [
+    {
+      data: new Date(), // Hoje
+      titulo: "Reunião de Pauta",
+      tipo: "reuniao",
+      obs: "Discutir novos projetos."
+    },
     {
       data: new Date(2025, 9, 25),
       titulo: "Gravação 'Podcast X'",
@@ -286,7 +286,9 @@ document.addEventListener("DOMContentLoaded", () => {
       fecharModalAgendamento();
       dataExibida = new Date(novaData.getFullYear(), novaData.getMonth(), 1);
       dataSelecionada = novaData;
+
       renderizarCalendario();
+      atualizarWidgetEventosHoje(); // <--- ATUALIZA VISÃO GERAL
     });
   }
 
@@ -301,6 +303,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (confirm("Deseja excluir este agendamento?")) {
           agendamentos.splice(index, 1);
           renderizarCalendario();
+          atualizarWidgetEventosHoje(); // <--- ATUALIZA VISÃO GERAL
         }
       }
       else if (eventoClicado) {
@@ -313,127 +316,223 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =================================================================
-  // 4. LÓGICA DE FUNCIONÁRIOS
+  // 4. LÓGICA DE FUNCIONÁRIOS (COM EDIÇÃO E TABELA)
   // =================================================================
   const modalFuncionario = document.getElementById("modal-novo-funcionario");
   const botaoAbrirModalFuncionario = document.getElementById("botao-novo-funcionario");
   const botaoFecharModalFuncionario = document.getElementById("modal-fechar-funcionario");
   const formFuncionario = document.getElementById("form-novo-funcionario");
   const secaoFuncionarios = document.getElementById("secao-funcionarios");
-  const containerBlocosFuncionarios = document.getElementById("container-blocos-funcionarios");
 
+  // ATUALIZADO: Agora usa tabela em vez de container de blocos
+  const tabelaFuncionariosBody = document.querySelector("#tabela-funcionarios tbody");
+  const inputBuscaFuncionario = document.getElementById("busca-funcionario");
+
+  // Elementos do Formulário
+  const inputIndexEdicao = document.getElementById("funcionario-index-edicao");
+  const tituloModalFuncionario = document.getElementById("titulo-modal-funcionario");
+  const btnSalvarFuncionario = document.getElementById("btn-salvar-funcionario");
+  const inputNomeFunc = document.getElementById("funcionario-nome");
+  const inputCpfFunc = document.getElementById("funcionario-cpf");
+  const inputEmailFunc = document.getElementById("funcionario-email");
+  const inputCargoFunc = document.getElementById("funcionario-cargo");
+  const inputTelFunc = document.getElementById("funcionario-telefone");
+  const inputSenhaFunc = document.getElementById("funcionario-senha");
+  const inputConfSenhaFunc = document.getElementById("funcionario-confirmar-senha");
+
+  // Detalhes (pode ser usado via tabela ou removido se preferir só tabela)
   const modalDetalhesFuncionario = document.getElementById("modal-detalhes-funcionario");
   const botaoFecharModalDetalhes = document.getElementById("modal-fechar-detalhes-funcionario");
-  const spanNomeDetalhes = document.getElementById("modal-detalhes-nome");
-  const spanEmailDetalhes = document.getElementById("modal-detalhes-email");
-  const spanCargoDetalhes = document.getElementById("modal-detalhes-cargo");
-  const spanTelefoneDetalhes = document.getElementById("modal-detalhes-telefone");
 
   let funcionarios = [];
 
-  const abrirModalFuncionario = () => { modalFuncionario.style.display = "flex"; };
+  const abrirModalParaCriar = () => {
+    formFuncionario.reset();
+    inputIndexEdicao.value = "";
+    tituloModalFuncionario.textContent = "Novo Funcionário";
+    btnSalvarFuncionario.textContent = "Salvar Funcionário";
+    inputSenhaFunc.required = true;
+    inputConfSenhaFunc.required = true;
+    modalFuncionario.style.display = "flex";
+  };
+
+  const abrirModalParaEditar = (index) => {
+    const func = funcionarios[index];
+    inputIndexEdicao.value = index;
+    inputNomeFunc.value = func.nome;
+    inputCpfFunc.value = func.cpf;
+    inputEmailFunc.value = func.email;
+    inputCargoFunc.value = func.cargo;
+    inputTelFunc.value = func.telefone || "";
+    inputSenhaFunc.value = "";
+    inputConfSenhaFunc.value = "";
+    inputSenhaFunc.required = false;
+    inputConfSenhaFunc.required = false;
+    tituloModalFuncionario.textContent = "Editar Funcionário";
+    btnSalvarFuncionario.textContent = "Atualizar Dados";
+    modalFuncionario.style.display = "flex";
+  };
+
   const fecharModalFuncionario = () => {
     modalFuncionario.style.display = "none";
     formFuncionario.reset();
   };
+
   const fecharModalDetalhesFuncionario = () => { modalDetalhesFuncionario.style.display = "none"; };
 
-  if (botaoAbrirModalFuncionario) botaoAbrirModalFuncionario.addEventListener("click", abrirModalFuncionario);
+  if (botaoAbrirModalFuncionario) botaoAbrirModalFuncionario.addEventListener("click", abrirModalParaCriar);
   if (botaoFecharModalFuncionario) botaoFecharModalFuncionario.addEventListener("click", fecharModalFuncionario);
-  if (modalFuncionario) modalFuncionario.addEventListener("click", (e) => { if (e.target === modalFuncionario) fecharModalFuncionario(); });
+
+  if (modalFuncionario) {
+    modalFuncionario.addEventListener("click", (e) => {
+      if (e.target === modalFuncionario) fecharModalFuncionario();
+    });
+  }
 
   if (botaoFecharModalDetalhes) botaoFecharModalDetalhes.addEventListener("click", fecharModalDetalhesFuncionario);
-  if (modalDetalhesFuncionario) modalDetalhesFuncionario.addEventListener("click", (e) => { if (e.target === modalDetalhesFuncionario) fecharModalDetalhesFuncionario(); });
+  if (modalDetalhesFuncionario) {
+    modalDetalhesFuncionario.addEventListener("click", (e) => {
+      if (e.target === modalDetalhesFuncionario) fecharModalDetalhesFuncionario();
+    });
+  }
+
+  if (inputCpfFunc) {
+    inputCpfFunc.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.substring(0, 11);
+      let formattedValue = value;
+      if (value.length > 9) formattedValue = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      else if (value.length > 6) formattedValue = value.replace(/^(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
+      else if (value.length > 3) formattedValue = value.replace(/^(\d{3})(\d{3})/, '$1.$2');
+      e.target.value = formattedValue;
+    });
+  }
 
   if (formFuncionario) {
     formFuncionario.addEventListener("submit", (e) => {
       e.preventDefault();
-      const nome = document.getElementById("funcionario-nome").value;
-      const email = document.getElementById("funcionario-email").value;
-      const senha = document.getElementById("funcionario-senha").value;
-      const confirmarSenha = document.getElementById("funcionario-confirmar-senha").value;
-      const cargo = document.getElementById("funcionario-cargo").value;
-      const telefone = document.getElementById("funcionario-telefone").value;
+
+      const index = inputIndexEdicao.value;
+      const nome = inputNomeFunc.value;
+      const cpf = inputCpfFunc.value;
+      const email = inputEmailFunc.value;
+      const cargo = inputCargoFunc.value;
+      const telefone = inputTelFunc.value;
+      const senha = inputSenhaFunc.value;
+      const confirmarSenha = inputConfSenhaFunc.value;
 
       if (senha !== confirmarSenha) {
         alert("As senhas não coincidem.");
         return;
       }
-      funcionarios.push({ nome, email, cargo, telefone });
+      if (cpf.length < 14) {
+        alert("CPF incompleto.");
+        return;
+      }
+
+      const dadosFuncionario = { nome, cpf, email, cargo, telefone };
+
+      if (index !== "") {
+        funcionarios[parseInt(index)] = dadosFuncionario;
+        if (window.registrarLog) window.registrarLog(`Funcionário atualizado: ${nome}`);
+        alert("Funcionário atualizado com sucesso!");
+      } else {
+        if (!senha) { alert("Senha é obrigatória para novos cadastros."); return; }
+        funcionarios.push(dadosFuncionario);
+        if (window.registrarLog) window.registrarLog(`Funcionário cadastrado: ${nome}`);
+      }
+
       atualizarTabelaFuncionarios();
       fecharModalFuncionario();
     });
   }
 
+  // ATUALIZADO: Renderiza em Tabela
   function atualizarTabelaFuncionarios() {
-    if (!containerBlocosFuncionarios) return;
-    containerBlocosFuncionarios.innerHTML = "";
+    if (!tabelaFuncionariosBody) return;
 
-    if (funcionarios.length === 0) {
-      containerBlocosFuncionarios.innerHTML = `<p class="placeholder-blocos">Nenhum funcionário cadastrado.</p>`;
-    } else {
-      funcionarios.forEach((func, index) => {
-        const blocoHTML = `
-          <div class="bloco-funcionario" data-index="${index}">
-            <button class="botao-acao apagar-funcionario" data-index="${index}" title="Apagar funcionário">
+    tabelaFuncionariosBody.innerHTML = "";
+    const termo = inputBuscaFuncionario ? inputBuscaFuncionario.value.toLowerCase() : "";
+
+    funcionarios.forEach((func, index) => {
+      const textoNome = func.nome.toLowerCase();
+      const textoCargo = func.cargo.toLowerCase();
+      const textoCpf = func.cpf.replace(/\D/g, '');
+
+      if (termo === "" || textoNome.includes(termo) || textoCargo.includes(termo) || textoCpf.includes(termo)) {
+
+        const linha = document.createElement("tr");
+        const cargoFormatado = func.cargo.charAt(0).toUpperCase() + func.cargo.slice(1);
+
+        linha.innerHTML = `
+          <td><strong>${func.nome}</strong></td>
+          <td>${func.cpf}</td>
+          <td>
+             <span style="background: var(--cor-acento-secundario); color: #111; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 12px;">
+               ${cargoFormatado}
+             </span>
+          </td>
+          <td>${func.email}</td>
+          <td>${func.telefone || "-"}</td>
+          <td>
+            <button class="botao-acao editar-funcionario" data-index="${index}" title="Editar">
+              <i class="ph-fill ph-pencil-simple"></i>
+            </button>
+            <button class="botao-acao apagar-funcionario" data-index="${index}" title="Apagar" style="margin-left: 10px;">
               <i class="ph-fill ph-trash"></i>
             </button>
-            <h3>${func.nome}</h3>
-            <p class="email-funcionario">${func.email}</p>
-            <span class="cargo-funcionario">${func.cargo}</span>
-          </div>
+          </td>
         `;
-        containerBlocosFuncionarios.insertAdjacentHTML('beforeend', blocoHTML);
-      });
-    }
+        tabelaFuncionariosBody.appendChild(linha);
+      }
+    });
+  }
+
+  // Listener para busca de funcionários
+  if (inputBuscaFuncionario) {
+    inputBuscaFuncionario.addEventListener("input", atualizarTabelaFuncionarios);
   }
 
   if (secaoFuncionarios) {
     secaoFuncionarios.addEventListener("click", (e) => {
+      const btnEditar = e.target.closest(".editar-funcionario");
       const btnApagar = e.target.closest(".apagar-funcionario");
-      const bloco = e.target.closest(".bloco-funcionario");
 
-      if (btnApagar) {
+      if (btnEditar) {
+        e.stopPropagation();
+        const index = parseInt(btnEditar.dataset.index, 10);
+        abrirModalParaEditar(index);
+      }
+      else if (btnApagar) {
         e.stopPropagation();
         const index = parseInt(btnApagar.dataset.index, 10);
-        if (confirm(`Apagar ${funcionarios[index].nome}?`)) {
+        const nomeFunc = funcionarios[index].nome;
+        if (confirm(`Tem certeza que deseja apagar ${nomeFunc}?`)) {
           funcionarios.splice(index, 1);
+          if (window.registrarLog) window.registrarLog(`Funcionário removido: ${nomeFunc}`);
           atualizarTabelaFuncionarios();
-        }
-      } else if (bloco) {
-        const index = parseInt(bloco.dataset.index, 10);
-        const func = funcionarios[index];
-        if (func) {
-          spanNomeDetalhes.textContent = func.nome;
-          spanEmailDetalhes.textContent = func.email;
-          spanCargoDetalhes.textContent = func.cargo;
-          spanTelefoneDetalhes.textContent = func.telefone || "Não informado";
-          modalDetalhesFuncionario.style.display = "flex";
         }
       }
     });
   }
 
- // =================================================================
-  // 5. LÓGICA FINANCEIRA (Receitas e Despesas) - COM BUSCA EM AMBOS
   // =================================================================
-  
-  // --- REFERÊNCIAS DESPESAS ---
+  // 5. LÓGICA FINANCEIRA (Receitas e Despesas) - COM OBS E ALERTA
+  // =================================================================
+
   const formDespesa = document.getElementById("form-nova-despesa");
   const tabelaDespesaBody = document.querySelector("#tabela-despesas tbody");
   const totalDespesaEl = document.getElementById("despesa-total");
-  const inputBuscaDespesa = document.getElementById("busca-despesa"); // Busca Despesa
+  const inputBuscaDespesa = document.getElementById("busca-despesa");
   let despesas = [];
 
-  // --- REFERÊNCIAS RECEITAS ---
   const formReceita = document.getElementById("form-nova-receita");
   const tabelaReceitaBody = document.querySelector("#tabela-receitas tbody");
   const totalReceitaEl = document.getElementById("receita-total");
   const faturamentoDashboard = document.getElementById("faturamento-dashboard");
-  const inputBuscaReceita = document.getElementById("busca-receita"); // Busca Receita
+  const inputBuscaReceita = document.getElementById("busca-receita");
   let receitas = [];
 
-  // 1. SUBMIT NOVA DESPESA
   if (formDespesa) {
     formDespesa.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -442,19 +541,19 @@ document.addEventListener("DOMContentLoaded", () => {
       const dataVencimento = document.getElementById("despesa-data-vencimento").value;
       const valor = parseFloat(document.getElementById("despesa-valor").value);
       const status = document.getElementById("despesa-status").value;
+      const obs = document.getElementById("despesa-obs").value; // NOVO: OBS
 
       if (!nome || !dataEmissao || isNaN(valor)) return;
-      
-      despesas.push({ nome, dataEmissao, dataVencimento, valor, status });
-      
-      if(window.registrarLog) window.registrarLog(`Adicionou despesa: ${nome} - R$ ${valor}`);
+
+      despesas.push({ nome, dataEmissao, dataVencimento, valor, status, obs });
+
+      if (window.registrarLog) window.registrarLog(`Adicionou despesa: ${nome} - R$ ${valor}`);
 
       atualizarTabelaDespesas();
       formDespesa.reset();
     });
   }
 
-  // 2. SUBMIT NOVA RECEITA
   if (formReceita) {
     formReceita.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -463,63 +562,53 @@ document.addEventListener("DOMContentLoaded", () => {
       const dataEmissao = document.getElementById("receita-data-emissao").value;
       const dataAgendada = document.getElementById("receita-data-agendada").value;
       const valor = parseFloat(document.getElementById("receita-valor").value);
+      const obs = document.getElementById("receita-obs").value; // NOVO: OBS
 
       if (!origem || !cliente || !dataEmissao || isNaN(valor)) return;
-      
-      receitas.push({ origem, cliente, dataEmissao, dataAgendada, valor });
-      
-      if(window.registrarLog) window.registrarLog(`Adicionou receita: ${origem} - R$ ${valor}`);
+
+      receitas.push({ origem, cliente, dataEmissao, dataAgendada, valor, obs });
+
+      if (window.registrarLog) window.registrarLog(`Adicionou receita: ${origem} - R$ ${valor}`);
 
       atualizarTabelaReceitas();
       formReceita.reset();
     });
   }
 
-  // 3. LISTENERS DE BUSCA (INPUT)
-  if (inputBuscaReceita) {
-    inputBuscaReceita.addEventListener("input", atualizarTabelaReceitas);
-  }
-  if (inputBuscaDespesa) {
-    inputBuscaDespesa.addEventListener("input", atualizarTabelaDespesas);
-  }
+  if (inputBuscaReceita) inputBuscaReceita.addEventListener("input", atualizarTabelaReceitas);
+  if (inputBuscaDespesa) inputBuscaDespesa.addEventListener("input", atualizarTabelaDespesas);
 
-  // 4. ATUALIZAR TABELA DESPESAS (COM FILTRO)
   function atualizarTabelaDespesas() {
     if (!tabelaDespesaBody) return;
-    
-    // Verifica atrasos (lógica de data)
+
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0);
 
     despesas.forEach(despesa => {
-        if (despesa.status === 'a_pagar' && despesa.dataVencimento) {
-            const partes = despesa.dataVencimento.split('-');
-            const vencimento = new Date(partes[0], partes[1] - 1, partes[2]);
-            if (vencimento < hoje) despesa.status = 'atrasado';
-        }
+      if (despesa.status === 'a_pagar' && despesa.dataVencimento) {
+        const partes = despesa.dataVencimento.split('-');
+        const vencimento = new Date(partes[0], partes[1] - 1, partes[2]);
+        if (vencimento < hoje) despesa.status = 'atrasado';
+      }
     });
 
     tabelaDespesaBody.innerHTML = "";
     let totalFiltrado = 0;
-    
-    // Pega termo de busca
     const termo = inputBuscaDespesa ? inputBuscaDespesa.value.toLowerCase() : "";
 
     despesas.forEach((despesa, index) => {
       const textoNome = despesa.nome.toLowerCase();
-
-      // Filtra pelo nome
       if (termo === "" || textoNome.includes(termo)) {
-          totalFiltrado += despesa.valor;
+        totalFiltrado += despesa.valor;
+        const linha = document.createElement("tr");
+        if (despesa.status === 'atrasado') linha.classList.add('atrasado');
 
-          const linha = document.createElement("tr");
-          if(despesa.status === 'atrasado') linha.classList.add('atrasado');
+        const selectAPagar = (despesa.status === 'a_pagar') ? 'selected' : '';
+        const selectPago = (despesa.status === 'pago') ? 'selected' : '';
+        const selectAtrasado = (despesa.status === 'atrasado') ? 'selected' : '';
 
-          const selectAPagar = (despesa.status === 'a_pagar') ? 'selected' : '';
-          const selectPago = (despesa.status === 'pago') ? 'selected' : '';
-          const selectAtrasado = (despesa.status === 'atrasado') ? 'selected' : '';
-
-          linha.innerHTML = `
+        // NOVO: Coluna de Obs incluída
+        linha.innerHTML = `
             <td>${despesa.nome}</td>
             <td>${despesa.dataEmissao}</td>
             <td>${despesa.dataVencimento}</td>
@@ -530,50 +619,52 @@ document.addEventListener("DOMContentLoaded", () => {
                 <option value="atrasado" ${selectAtrasado}>Atrasado</option>
               </select>
             </td>
+            <td style="color: var(--cor-texto-secundario); font-size: 14px;">${despesa.obs || "-"}</td>
             <td>R$ ${despesa.valor.toFixed(2)}</td>
             <td>
               <button class="botao-acao apagar-despesa" data-index="${index}"><i class="ph-fill ph-trash"></i></button>
             </td>
           `;
-          tabelaDespesaBody.appendChild(linha);
+        tabelaDespesaBody.appendChild(linha);
       }
     });
-    
-    // Total mostra a soma dos itens visíveis na busca
+
     if (totalDespesaEl) totalDespesaEl.textContent = `R$ ${totalFiltrado.toFixed(2)}`;
+
+    // Verifica alerta de atraso após atualizar status
+    atualizarAlertaAtrasos();
   }
 
-  // 5. ATUALIZAR TABELA RECEITAS (COM FILTRO)
   function atualizarTabelaReceitas() {
     if (!tabelaReceitaBody) return;
     tabelaReceitaBody.innerHTML = "";
-    
+
     let totalFiltrado = 0;
     let totalGeral = 0;
-    
     const termo = inputBuscaReceita ? inputBuscaReceita.value.toLowerCase() : "";
 
     receitas.forEach((receita, index) => {
-      totalGeral += receita.valor; 
-
+      totalGeral += receita.valor;
       const textoOrigem = receita.origem.toLowerCase();
       const textoCliente = receita.cliente.toLowerCase();
 
       if (termo === "" || textoOrigem.includes(termo) || textoCliente.includes(termo)) {
-          totalFiltrado += receita.valor;
+        totalFiltrado += receita.valor;
+        const linha = document.createElement("tr");
 
-          const linha = document.createElement("tr");
-          linha.innerHTML = `
+        // NOVO: Coluna de Obs incluída
+        linha.innerHTML = `
             <td>${receita.origem}</td>
             <td>${receita.cliente}</td>
             <td>${receita.dataEmissao}</td>
             <td>${receita.dataAgendada}</td>
+            <td style="color: var(--cor-texto-secundario); font-size: 14px;">${receita.obs || "-"}</td>
             <td>R$ ${receita.valor.toFixed(2)}</td>
             <td>
               <button class="botao-acao apagar-receita" data-index="${index}"><i class="ph-fill ph-trash"></i></button>
             </td>
           `;
-          tabelaReceitaBody.appendChild(linha);
+        tabelaReceitaBody.appendChild(linha);
       }
     });
 
@@ -581,53 +672,49 @@ document.addEventListener("DOMContentLoaded", () => {
     if (faturamentoDashboard) faturamentoDashboard.textContent = `R$ ${totalGeral.toFixed(2)}`;
   }
 
-  // 6. EVENTOS DE TABELA (DELEGAÇÃO)
   if (tabelaDespesaBody) {
-    // Mudar Status
     tabelaDespesaBody.addEventListener("change", (e) => {
       if (e.target.classList.contains("status-select-despesa")) {
         const index = parseInt(e.target.dataset.index, 10);
         const novoStatus = e.target.value;
         if (despesas[index]) despesas[index].status = novoStatus;
-        
         const linha = e.target.closest('tr');
-        if(novoStatus === 'atrasado') linha.classList.add('atrasado');
+        if (novoStatus === 'atrasado') linha.classList.add('atrasado');
         else linha.classList.remove('atrasado');
-        
-        if(window.registrarLog) window.registrarLog(`Alterou status da despesa "${despesas[index].nome}" para ${novoStatus}`);
+        if (window.registrarLog) window.registrarLog(`Alterou status da despesa "${despesas[index].nome}" para ${novoStatus}`);
+
+        atualizarAlertaAtrasos(); // Atualiza alerta ao mudar status manualmente
       }
     });
-
-    // Apagar Despesa
     tabelaDespesaBody.addEventListener("click", (e) => {
       const btn = e.target.closest(".apagar-despesa");
       if (btn) {
-        if(confirm("Deseja apagar esta despesa?")) {
-            const index = parseInt(btn.dataset.index, 10);
-            if(window.registrarLog) window.registrarLog(`Removeu despesa: ${despesas[index].nome}`);
-            despesas.splice(index, 1);
-            atualizarTabelaDespesas();
+        if (confirm("Deseja apagar esta despesa?")) {
+          const index = parseInt(btn.dataset.index, 10);
+          despesas.splice(index, 1);
+          if (window.registrarLog) window.registrarLog(`Removeu despesa: ${despesas[index].nome}`);
+          atualizarTabelaDespesas();
         }
       }
     });
   }
 
   if (tabelaReceitaBody) {
-    // Apagar Receita
     tabelaReceitaBody.addEventListener("click", (e) => {
       const btn = e.target.closest(".apagar-receita");
       if (btn) {
-        if(confirm("Deseja apagar esta receita?")) {
-            const index = parseInt(btn.dataset.index, 10);
-            if(window.registrarLog) window.registrarLog(`Removeu receita: ${receitas[index].origem}`);
-            receitas.splice(index, 1);
-            atualizarTabelaReceitas();
+        if (confirm("Deseja apagar esta receita?")) {
+          const index = parseInt(btn.dataset.index, 10);
+          receitas.splice(index, 1);
+          if (window.registrarLog) window.registrarLog(`Removeu receita: ${receitas[index].origem}`);
+          atualizarTabelaReceitas();
         }
       }
     });
   }
+
   // =================================================================
-  // 6. LÓGICA DE PRODUTOS (COM LOGS E STATUS EDITÁVEL)
+  // 6. LÓGICA DE PRODUTOS
   // =================================================================
   const formProduto = document.getElementById("form-novo-produto");
   const tabelaProdutosBody = document.querySelector("#tabela-produtos tbody");
@@ -636,7 +723,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (formProduto) {
     formProduto.addEventListener("submit", (e) => {
       e.preventDefault();
-
       const nome = document.getElementById("produto-nome").value;
       const codigo = document.getElementById("produto-codigo").value;
       const tamanho = document.getElementById("produto-tamanho").value;
@@ -653,10 +739,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       produtos.push({ nome, codigo, tamanho, preco, status, descricao, fotoURL });
-
-      // LOG
       registrarLog(`Adicionou produto: ${nome} (${codigo})`);
-
       atualizarTabelaProdutos();
       formProduto.reset();
     });
@@ -665,10 +748,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function atualizarTabelaProdutos() {
     if (!tabelaProdutosBody) return;
     tabelaProdutosBody.innerHTML = "";
-
     produtos.forEach((prod, index) => {
       const linha = document.createElement("tr");
-
       const classeStatus = prod.status === 'disponivel' ? 'status-disponivel' : 'status-indisponivel';
       const selDisponivel = prod.status === 'disponivel' ? 'selected' : '';
       const selIndisponivel = prod.status === 'indisponivel' ? 'selected' : '';
@@ -700,28 +781,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (tabelaProdutosBody) {
-    // Listener: Mudar Status
     tabelaProdutosBody.addEventListener("change", (e) => {
       if (e.target.classList.contains("status-select-produto")) {
         const index = parseInt(e.target.dataset.index, 10);
         const novoStatus = e.target.value;
-
         if (produtos[index]) {
           produtos[index].status = novoStatus;
-          // LOG
           registrarLog(`Alterou status de "${produtos[index].nome}" para ${novoStatus.toUpperCase()}`);
         }
-
         e.target.classList.remove('status-disponivel', 'status-indisponivel');
-        if (novoStatus === 'disponivel') {
-          e.target.classList.add('status-disponivel');
-        } else {
-          e.target.classList.add('status-indisponivel');
-        }
+        if (novoStatus === 'disponivel') e.target.classList.add('status-disponivel');
+        else e.target.classList.add('status-indisponivel');
       }
     });
-
-    // Listener: Apagar Produto
     tabelaProdutosBody.addEventListener("click", (e) => {
       const btn = e.target.closest(".apagar-produto");
       if (btn) {
@@ -729,10 +801,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const index = parseInt(btn.dataset.index, 10);
           const nomeProd = produtos[index].nome;
           produtos.splice(index, 1);
-
-          // LOG
           registrarLog(`Removeu produto: ${nomeProd}`);
-
           atualizarTabelaProdutos();
         }
       }
@@ -740,14 +809,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =================================================================
-  // 7. LÓGICA DA SUB-ABA GALERIA (CRUD COM LOGS)
+  // 7. LÓGICA DA SUB-ABA GALERIA
   // =================================================================
   const formGaleria = document.getElementById("form-galeria");
   const gridGaleria = document.getElementById("grid-galeria-items");
   const btnSalvarGaleria = document.getElementById("btn-salvar-galeria");
   const btnCancelarGaleria = document.getElementById("btn-cancelar-galeria");
   const avisoImagem = document.getElementById("aviso-imagem-atual");
-
   const inputGaleriaIndex = document.getElementById("galeria-index-edicao");
   const inputGaleriaTitulo = document.getElementById("galeria-titulo");
   const inputGaleriaLink = document.getElementById("galeria-link");
@@ -764,14 +832,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function renderizarGaleria() {
     if (!gridGaleria) return;
     gridGaleria.innerHTML = "";
-
     galeriaItems.forEach((item, index) => {
       const card = document.createElement("div");
       card.className = "cartao";
       card.style.display = "flex";
       card.style.flexDirection = "column";
       card.style.justifyContent = "space-between";
-
       card.innerHTML = `
         <div style="margin-bottom: 15px;">
             <img src="${item.fotoURL}" alt="${item.titulo}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
@@ -780,7 +846,6 @@ document.addEventListener("DOMContentLoaded", () => {
                ${item.link ? 'Acessar Link <i class="ph-bold ph-arrow-square-out"></i>' : 'Sem link'}
             </a>
         </div>
-        
         <div style="display: flex; gap: 10px; margin-top: 10px;">
             <button class="botao-principal editar-galeria" data-index="${index}" style="font-size: 14px; padding: 8px; flex: 1; justify-content: center;">
                 <i class="ph-fill ph-pencil-simple"></i> Editar
@@ -797,40 +862,25 @@ document.addEventListener("DOMContentLoaded", () => {
   if (formGaleria) {
     formGaleria.addEventListener("submit", (e) => {
       e.preventDefault();
-
       const indexEdicao = inputGaleriaIndex.value;
       const titulo = inputGaleriaTitulo.value;
       const link = inputGaleriaLink.value;
       const file = inputGaleriaImagem.files[0];
-
       let urlFinal = "";
 
       if (indexEdicao !== "") {
-        // MODO EDIÇÃO
         const itemAtual = galeriaItems[parseInt(indexEdicao)];
-        if (file) {
-          urlFinal = URL.createObjectURL(file);
-        } else {
-          urlFinal = itemAtual.fotoURL;
-        }
+        if (file) urlFinal = URL.createObjectURL(file);
+        else urlFinal = itemAtual.fotoURL;
         galeriaItems[indexEdicao] = { titulo, link, fotoURL: urlFinal };
-
-        // LOG
         registrarLog(`Editou item da galeria: ${titulo}`);
         alert("Item atualizado com sucesso!");
       } else {
-        // MODO ADIÇÃO
-        if (file) {
-          urlFinal = URL.createObjectURL(file);
-        } else {
-          urlFinal = "https://via.placeholder.com/300x200?text=Sem+Imagem";
-        }
+        if (file) urlFinal = URL.createObjectURL(file);
+        else urlFinal = "https://via.placeholder.com/300x200?text=Sem+Imagem";
         galeriaItems.push({ titulo, link, fotoURL: urlFinal });
-
-        // LOG
         registrarLog(`Adicionou item à galeria: ${titulo}`);
       }
-
       renderizarGaleria();
       resetarFormularioGaleria();
     });
@@ -852,21 +902,16 @@ document.addEventListener("DOMContentLoaded", () => {
     gridGaleria.addEventListener("click", (e) => {
       const btnEditar = e.target.closest(".editar-galeria");
       const btnApagar = e.target.closest(".apagar-galeria");
-
       if (btnEditar) {
         const index = btnEditar.dataset.index;
         prepararEdicao(index);
       }
-
       if (btnApagar) {
         if (confirm("Tem certeza que deseja apagar este item?")) {
           const index = btnApagar.dataset.index;
           const tituloItem = galeriaItems[index].titulo;
           galeriaItems.splice(index, 1);
-
-          // LOG
           registrarLog(`Removeu item da galeria: ${tituloItem}`);
-
           renderizarGaleria();
           if (inputGaleriaIndex.value === index) resetarFormularioGaleria();
         }
@@ -874,9 +919,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  if (btnCancelarGaleria) {
-    btnCancelarGaleria.addEventListener("click", resetarFormularioGaleria);
-  }
+  if (btnCancelarGaleria) btnCancelarGaleria.addEventListener("click", resetarFormularioGaleria);
 
   function resetarFormularioGaleria() {
     formGaleria.reset();
@@ -887,51 +930,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // =================================================================
-  // 8. LÓGICA DA SUB-ABA HOME (CRUD COMPLETO POR WIDGET)
+  // 8. LÓGICA DA SUB-ABA HOME
   // =================================================================
-
-  // Objeto para armazenar os dados de cada seção da Home
   let homeData = {
-    banner: [],
-    video: [],
-    podcast_destaque: [],
-    episodios: [],
-    apresentadores: [],
-    membros: [],
-    depoimentos: [],
-    parceiros: []
+    banner: [], video: [], podcast_destaque: [], episodios: [], apresentadores: [], membros: [], depoimentos: [], parceiros: []
   };
 
   const gridHome = document.getElementById("grid-home-widgets");
 
-  // Função para renderizar as mini-listas dentro de cada widget
   function renderizarHomeWidgets() {
     if (!gridHome) return;
-
-    // Para cada chave no objeto de dados
     Object.keys(homeData).forEach(categoria => {
-      // Encontra o cartão correspondente no HTML
       const cartao = gridHome.querySelector(`.cartao[data-categoria="${categoria}"]`);
       if (!cartao) return;
-
       const containerLista = cartao.querySelector(".lista-home-items");
       if (!containerLista) return;
-
-      containerLista.innerHTML = ""; // Limpa lista
-
-      // Renderiza itens
+      containerLista.innerHTML = "";
       homeData[categoria].forEach((item, index) => {
         const itemDiv = document.createElement("div");
-        // Estilo inline para a lista ficar bonita dentro do card
-        itemDiv.style.display = "flex";
-        itemDiv.style.alignItems = "center";
-        itemDiv.style.justifyContent = "space-between";
-        itemDiv.style.background = "var(--cor-fundo-principal)";
-        itemDiv.style.padding = "8px";
-        itemDiv.style.borderRadius = "6px";
-        itemDiv.style.marginTop = "8px";
-        itemDiv.style.border = "1px solid var(--cor-borda)";
-
+        itemDiv.style.cssText = "display:flex; align-items:center; justify-content:space-between; background:var(--cor-fundo-principal); padding:8px; border-radius:6px; margin-top:8px; border:1px solid var(--cor-borda);";
         itemDiv.innerHTML = `
                 <div style="display:flex; align-items:center; gap:8px; overflow: hidden;">
                     <img src="${item.fotoURL}" style="width: 30px; height: 30px; border-radius: 4px; object-fit: cover; flex-shrink: 0;">
@@ -950,128 +967,74 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Event Delegation para cliques no Grid Home (Adicionar, Editar, Apagar)
   if (gridHome) {
     gridHome.addEventListener("click", (e) => {
       const target = e.target;
-
-      // 1. BOTÃO ADICIONAR / SALVAR
       const btnSalvar = target.closest(".btn-salvar-home");
       if (btnSalvar) {
         const cartao = btnSalvar.closest(".cartao");
         const categoria = cartao.dataset.categoria;
-
-        // Inputs
         const inputTitulo = cartao.querySelector(".home-input-titulo");
         const inputFile = cartao.querySelector(".home-input-file");
-        const inputDesc = cartao.querySelector(".home-input-desc"); // Apenas depoimentos tem esse
+        const inputDesc = cartao.querySelector(".home-input-desc");
         const inputIndex = cartao.querySelector(".home-edit-index");
 
-        if (!inputTitulo || inputTitulo.value.trim() === "") {
-          alert("O título/nome é obrigatório.");
-          return;
-        }
-
+        if (!inputTitulo || inputTitulo.value.trim() === "") { alert("O título/nome é obrigatório."); return; }
         const titulo = inputTitulo.value;
         const descricao = inputDesc ? inputDesc.value : "";
         const file = inputFile.files[0];
         const indexEdicao = inputIndex.value;
-
         let urlFinal = "https://via.placeholder.com/50?text=IMG";
 
-        // Se for Edição
         if (indexEdicao !== "") {
           const itemAtual = homeData[categoria][parseInt(indexEdicao)];
-          if (file) {
-            urlFinal = URL.createObjectURL(file);
-          } else {
-            urlFinal = itemAtual.fotoURL; // Mantém antiga
-          }
-
+          if (file) urlFinal = URL.createObjectURL(file);
+          else urlFinal = itemAtual.fotoURL;
           homeData[categoria][parseInt(indexEdicao)] = { titulo, descricao, fotoURL: urlFinal };
           registrarLog(`Editou item na Home (${categoria}): ${titulo}`);
-
-          // Reseta botão para modo "Adicionar"
           btnSalvar.querySelector("span").textContent = "Adicionar";
-          btnSalvar.classList.remove("modo-edicao"); // Opcional, para estilo
           inputIndex.value = "";
           alert("Atualizado com sucesso!");
-
         } else {
-          // Modo Novo Cadastro
-          if (file) {
-            urlFinal = URL.createObjectURL(file);
-          }
-
+          if (file) urlFinal = URL.createObjectURL(file);
           homeData[categoria].push({ titulo, descricao, fotoURL: urlFinal });
           registrarLog(`Adicionou à Home (${categoria}): ${titulo}`);
         }
-
-        // Limpa campos
         inputTitulo.value = "";
         if (inputDesc) inputDesc.value = "";
-        inputFile.value = ""; // Limpa input file
-
+        inputFile.value = "";
         renderizarHomeWidgets();
       }
 
-      // 2. BOTÃO EDITAR (Lápis na lista)
       const btnEditar = target.closest(".editar-home");
       if (btnEditar) {
         const categoria = btnEditar.dataset.cat;
         const index = btnEditar.dataset.index;
         const item = homeData[categoria][index];
         const cartao = gridHome.querySelector(`.cartao[data-categoria="${categoria}"]`);
-
-        // Popula os campos do cartão
-        const inputTitulo = cartao.querySelector(".home-input-titulo");
-        const inputDesc = cartao.querySelector(".home-input-desc");
-        const inputIndex = cartao.querySelector(".home-edit-index");
-        const btnSalvar = cartao.querySelector(".btn-salvar-home");
-
-        inputTitulo.value = item.titulo;
-        if (inputDesc) inputDesc.value = item.descricao || "";
-        inputIndex.value = index;
-
-        // Muda visualmente o botão para indicar edição
-        btnSalvar.querySelector("span").textContent = "Salvar Alteração";
-
-        // Foca no input
-        inputTitulo.focus();
+        cartao.querySelector(".home-input-titulo").value = item.titulo;
+        if (cartao.querySelector(".home-input-desc")) cartao.querySelector(".home-input-desc").value = item.descricao || "";
+        cartao.querySelector(".home-edit-index").value = index;
+        cartao.querySelector(".btn-salvar-home span").textContent = "Salvar Alteração";
+        cartao.querySelector(".home-input-titulo").focus();
       }
 
-      // 3. BOTÃO APAGAR (Lixeira na lista)
       const btnApagar = target.closest(".apagar-home");
       if (btnApagar) {
         if (confirm("Remover este item da Home?")) {
           const categoria = btnApagar.dataset.cat;
           const index = parseInt(btnApagar.dataset.index);
-
           const nomeItem = homeData[categoria][index].titulo;
           homeData[categoria].splice(index, 1);
-
           registrarLog(`Removeu da Home (${categoria}): ${nomeItem}`);
-
-          // Se estava editando este item, cancela a edição
-          const cartao = gridHome.querySelector(`.cartao[data-categoria="${categoria}"]`);
-          const inputIndex = cartao.querySelector(".home-edit-index");
-          if (inputIndex.value == index) {
-            cartao.querySelector(".btn-salvar-home span").textContent = "Adicionar";
-            cartao.querySelector(".home-input-titulo").value = "";
-            inputIndex.value = "";
-          }
-
           renderizarHomeWidgets();
         }
       }
     });
   }
 
-  // Inicializa a Home vazia (ou carrega dados se tivesse backend)
-  renderizarHomeWidgets();
-
   // =================================================================
-  // 9. NAVEGAÇÃO DE SUB-ABAS (Editar Site)
+  // 9. NAVEGAÇÃO DE SUB-ABAS
   // =================================================================
   const botoesSubAba = document.querySelectorAll(".botao-sub-aba");
   const conteudosSubAba = document.querySelectorAll(".conteudo-sub-aba");
@@ -1089,10 +1052,323 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Renderizações Iniciais
+  // =================================================================
+  // 10. LÓGICA DO WIDGET "EVENTOS DE HOJE" (Visão Geral)
+  // =================================================================
+  function atualizarWidgetEventosHoje() {
+    const containerEventos = document.getElementById("lista-eventos-hoje");
+    const spanData = document.getElementById("data-hoje-extenso");
+
+    if (!containerEventos) return;
+
+    const hoje = new Date();
+
+    if (spanData) {
+      spanData.textContent = hoje.toLocaleDateString("pt-BR", { weekday: 'long', day: 'numeric', month: 'long' });
+    }
+
+    containerEventos.innerHTML = "";
+    const eventosDoDia = agendamentos.filter(agendamento => isMesmoDia(agendamento.data, hoje));
+
+    if (eventosDoDia.length === 0) {
+      containerEventos.innerHTML = `
+        <div style="text-align: center; padding: 20px 0; color: var(--cor-texto-secundario);">
+           <i class="ph-fill ph-calendar-slash" style="font-size: 32px; margin-bottom: 8px; display: block; opacity: 0.5;"></i>
+           Nenhum agendamento para hoje.
+        </div>
+      `;
+    } else {
+      eventosDoDia.forEach(evento => {
+        let corTipo = "var(--cor-acento-secundario)";
+        let nomeTipo = evento.tipo || "Geral";
+
+        if (nomeTipo === 'gravacao') nomeTipo = 'Gravação';
+        if (nomeTipo === 'mixagem') nomeTipo = 'Mixagem';
+        if (nomeTipo === 'reuniao') { nomeTipo = 'Reunião'; corTipo = "#d98236"; }
+
+        const item = document.createElement("div");
+        item.style.cssText = `
+            background-color: var(--cor-fundo-principal); 
+            border: 1px solid var(--cor-borda); 
+            border-left: 4px solid ${corTipo};
+            padding: 12px; 
+            border-radius: 6px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        `;
+        item.innerHTML = `
+            <div>
+                <strong style="display: block; font-size: 15px;">${evento.titulo}</strong>
+                <span style="font-size: 12px; color: var(--cor-texto-secundario);">${evento.obs ? evento.obs : 'Sem observações'}</span>
+            </div>
+            <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; background: #333; padding: 4px 8px; border-radius: 4px;">
+                ${nomeTipo}
+            </span>
+        `;
+        containerEventos.appendChild(item);
+      });
+    }
+  }
+
+  // =================================================================
+  // 11. LÓGICA DO ALERTA DE ATRASOS (Visão Geral)
+  // =================================================================
+  function atualizarAlertaAtrasos() {
+    const alerta = document.getElementById("alerta-contas-atrasadas");
+    if (!alerta) return;
+
+    // A função atualizarTabelaDespesas já atualiza os status baseada na data
+    const temAtraso = despesas.some(d => d.status === 'atrasado');
+
+    if (temAtraso) {
+      alerta.style.display = "flex";
+    } else {
+      alerta.style.display = "none";
+    }
+  }
+
+  // =================================================================
+  // 12. LÓGICA DE CLIENTES (LISTAGEM, BUSCA E EDIÇÃO)
+  // =================================================================
+  const tabelaClientesBody = document.querySelector("#tabela-clientes tbody");
+  const inputBuscaCliente = document.getElementById("busca-cliente");
+
+  // Elementos do Modal de Edição
+  const modalEditarCliente = document.getElementById("modal-editar-cliente");
+  const btnFecharModalCliente = document.getElementById("modal-fechar-editar-cliente");
+  const formEditarCliente = document.getElementById("form-editar-cliente");
+
+  // Containers de campos específicos
+  const divCamposPF = document.getElementById("campos-edit-pf");
+  const divCamposPJ = document.getElementById("campos-edit-pj");
+
+  // Inputs do Modal
+  const inputEditIndex = document.getElementById("edit-cliente-index");
+  const inputEditTipo = document.getElementById("edit-cliente-tipo-atual");
+  // PF
+  const inputEditNome = document.getElementById("edit-cliente-nome");
+  const inputEditCPF = document.getElementById("edit-cliente-cpf");
+  const inputEditNascimento = document.getElementById("edit-cliente-nascimento");
+  // PJ
+  const inputEditRazao = document.getElementById("edit-cliente-razao");
+  const inputEditCNPJ = document.getElementById("edit-cliente-cnpj");
+  // Comuns
+  const inputEditEmail = document.getElementById("edit-cliente-email");
+  const inputEditTelefone = document.getElementById("edit-cliente-telefone");
+  const inputEditCEP = document.getElementById("edit-cliente-cep");
+  const inputEditLogradouro = document.getElementById("edit-cliente-logradouro");
+  const inputEditNumero = document.getElementById("edit-cliente-numero");
+  const inputEditBairro = document.getElementById("edit-cliente-bairro");
+  const inputEditCidade = document.getElementById("edit-cliente-cidade");
+  const inputEditUF = document.getElementById("edit-cliente-uf");
+  const inputEditSenha = document.getElementById("edit-cliente-senha");
+
+  // Dados Mockados expandidos para suportar endereço e senha
+  let listaClientes = [
+    {
+      tipo: "PF",
+      nome: "João Silva",
+      cpf: "123.456.789-00",
+      nascimento: "1990-05-15",
+      email: "joao@email.com",
+      telefone: "(11) 99999-9999",
+      cep: "01001-000", logradouro: "Rua das Flores", numero: "123", bairro: "Centro", cidade: "São Paulo", uf: "SP",
+      senha: "senha123"
+    },
+    {
+      tipo: "PJ",
+      razao: "Empresa Eventos Ltda",
+      cnpj: "12.345.678/0001-99",
+      email: "contato@eventos.com",
+      telefone: "(11) 3030-4040",
+      cep: "20020-020", logradouro: "Av. Paulista", numero: "1000", bairro: "Bela Vista", cidade: "São Paulo", uf: "SP",
+      senha: "empresa123"
+    }
+  ];
+
+  function atualizarTabelaClientes() {
+    if (!tabelaClientesBody) return;
+    tabelaClientesBody.innerHTML = "";
+    const termo = inputBuscaCliente ? inputBuscaCliente.value.toLowerCase() : "";
+
+    listaClientes.forEach((cliente, index) => {
+      // Define nome e documento baseado no tipo para exibição na tabela
+      const displayNome = cliente.tipo === "PF" ? cliente.nome : cliente.razao;
+      const displayDoc = cliente.tipo === "PF" ? cliente.cpf : cliente.cnpj;
+
+      const textoNome = displayNome.toLowerCase();
+      const textoEmail = cliente.email.toLowerCase();
+      const textoDoc = displayDoc.replace(/\D/g, '');
+
+      if (termo === "" || textoNome.includes(termo) || textoEmail.includes(termo) || textoDoc.includes(termo)) {
+        const linha = document.createElement("tr");
+        const corBadge = cliente.tipo === 'PJ' ? '#d98236' : 'var(--cor-acento-secundario)';
+
+        linha.innerHTML = `
+            <td>
+                <strong>${displayNome}</strong><br>
+                <small style="color: var(--cor-texto-secundario); font-size: 12px;">${displayDoc}</small>
+            </td>
+            <td>${cliente.email}</td>
+            <td>${cliente.telefone}</td>
+            <td>
+                <span style="background: ${corBadge}; color: #111; padding: 2px 8px; border-radius: 4px; font-weight: 600; font-size: 12px;">
+                    ${cliente.tipo}
+                </span>
+            </td>
+            <td>
+              <button class="botao-acao editar-cliente" data-index="${index}" title="Editar Cliente">
+                <i class="ph-fill ph-pencil-simple"></i>
+              </button>
+              <button class="botao-acao apagar-cliente" data-index="${index}" title="Remover Cliente" style="margin-left: 8px;">
+                <i class="ph-fill ph-trash"></i>
+              </button>
+            </td>
+          `;
+        tabelaClientesBody.appendChild(linha);
+      }
+    });
+  }
+
+  // Função para abrir o modal e preencher dados
+  function abrirModalEditarCliente(index) {
+    const cliente = listaClientes[index];
+
+    // Reseta display
+    divCamposPF.style.display = "none";
+    divCamposPJ.style.display = "none";
+
+    // Preenche dados comuns
+    inputEditIndex.value = index;
+    inputEditTipo.value = cliente.tipo;
+    inputEditEmail.value = cliente.email;
+    inputEditTelefone.value = cliente.telefone || "";
+    inputEditCEP.value = cliente.cep || "";
+    inputEditLogradouro.value = cliente.logradouro || "";
+    inputEditNumero.value = cliente.numero || "";
+    inputEditBairro.value = cliente.bairro || "";
+    inputEditCidade.value = cliente.cidade || "";
+    inputEditUF.value = cliente.uf || "";
+    inputEditSenha.value = cliente.senha || "";
+
+    // Lógica condicional PF vs PJ
+    if (cliente.tipo === "PF") {
+      divCamposPF.style.display = "block";
+      inputEditNome.value = cliente.nome;
+      inputEditCPF.value = cliente.cpf;
+      inputEditNascimento.value = cliente.nascimento || "";
+
+      // Remove obrigatoriedade de campos PJ
+      inputEditRazao.required = false;
+      inputEditCNPJ.required = false;
+      // Adiciona obrigatoriedade PF (opcional, conforme sua regra de negócio)
+      inputEditNome.required = true;
+    } else {
+      divCamposPJ.style.display = "block";
+      inputEditRazao.value = cliente.razao;
+      inputEditCNPJ.value = cliente.cnpj;
+
+      // Remove obrigatoriedade de campos PF
+      inputEditNome.required = false;
+      inputEditCPF.required = false;
+      // Adiciona obrigatoriedade PJ
+      inputEditRazao.required = true;
+    }
+
+    modalEditarCliente.style.display = "flex";
+  }
+
+  // Evento de Submit do Formulário de Edição
+  if (formEditarCliente) {
+    formEditarCliente.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const index = inputEditIndex.value;
+      const tipo = inputEditTipo.value;
+
+      // Objeto base atualizado
+      const clienteAtualizado = {
+        ...listaClientes[index], // Mantém dados antigos que não estão no form se houver
+        tipo: tipo,
+        email: inputEditEmail.value,
+        telefone: inputEditTelefone.value,
+        cep: inputEditCEP.value,
+        logradouro: inputEditLogradouro.value,
+        numero: inputEditNumero.value,
+        bairro: inputEditBairro.value,
+        cidade: inputEditCidade.value,
+        uf: inputEditUF.value,
+        senha: inputEditSenha.value
+      };
+
+      if (tipo === "PF") {
+        clienteAtualizado.nome = inputEditNome.value;
+        clienteAtualizado.cpf = inputEditCPF.value;
+        clienteAtualizado.nascimento = inputEditNascimento.value;
+      } else {
+        clienteAtualizado.razao = inputEditRazao.value;
+        clienteAtualizado.cnpj = inputEditCNPJ.value;
+      }
+
+      // Salva na lista
+      listaClientes[index] = clienteAtualizado;
+
+      if (window.registrarLog) window.registrarLog(`Cliente editado: ${tipo === 'PF' ? clienteAtualizado.nome : clienteAtualizado.razao}`);
+
+      atualizarTabelaClientes();
+      modalEditarCliente.style.display = "none";
+      alert("Dados do cliente atualizados com sucesso!");
+    });
+  }
+
+  // Eventos de Fechar Modal
+  if (btnFecharModalCliente) {
+    btnFecharModalCliente.addEventListener("click", () => {
+      modalEditarCliente.style.display = "none";
+    });
+  }
+  if (modalEditarCliente) {
+    modalEditarCliente.addEventListener("click", (e) => {
+      if (e.target === modalEditarCliente) modalEditarCliente.style.display = "none";
+    });
+  }
+
+  // Eventos na Tabela (Editar e Excluir)
+  if (tabelaClientesBody) {
+    tabelaClientesBody.addEventListener("click", (e) => {
+      // Botão Editar
+      const btnEditar = e.target.closest(".editar-cliente");
+      if (btnEditar) {
+        const index = parseInt(btnEditar.dataset.index);
+        abrirModalEditarCliente(index);
+      }
+
+      // Botão Excluir
+      const btnApagar = e.target.closest(".apagar-cliente");
+      if (btnApagar) {
+        if (confirm("Deseja remover este cliente da base?")) {
+          const index = parseInt(btnApagar.dataset.index);
+          const nomeRemovido = listaClientes[index].tipo === 'PF' ? listaClientes[index].nome : listaClientes[index].razao;
+          listaClientes.splice(index, 1);
+          if (window.registrarLog) window.registrarLog(`Cliente removido: ${nomeRemovido}`);
+          atualizarTabelaClientes();
+        }
+      }
+    });
+  }
+
+  if (inputBuscaCliente) inputBuscaCliente.addEventListener("input", atualizarTabelaClientes);
+
+  // Inicializa tabela
+  atualizarTabelaClientes();
+  // --- INICIALIZAÇÕES FINAIS ---
   renderizarLogs();
   atualizarTabelaFuncionarios();
   atualizarTabelaReceitas();
-  atualizarTabelaDespesas();
-  renderizarGaleria(); // Galeria Inicia
+  atualizarTabelaDespesas(); // Chama atualizarAlertaAtrasos internamente
+  renderizarGaleria();
+  renderizarHomeWidgets();
+  atualizarWidgetEventosHoje(); // Widget Visão Geral
+  atualizarTabelaClientes(); // Tabela Clientes
 });

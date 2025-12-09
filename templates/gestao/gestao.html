@@ -52,24 +52,39 @@
     <main class="conteudo-principal">
       <section id="secao-visao-geral" class="pagina-conteudo ativa">
         <header class="cabecalho-secao">
+
           <h1>Visão Geral</h1>
           <button class="botao-principal" id="botao-novo-agendamento-rapido">
             <i class="ph-fill ph-plus-circle"></i>
             <span>Novo Agendamento</span>
           </button>
         </header>
+
+        <div id="alerta-contas-atrasadas"
+          style="display: none; background-color: rgba(255, 107, 107, 0.15); border: 1px solid #ff6b6b; color: #ff6b6b; padding: 15px; border-radius: 8px; margin-bottom: 25px; align-items: center; gap: 12px;">
+          <i class="ph-fill ph-warning-circle" style="font-size: 24px;"></i>
+          <div>
+            <strong style="display: block; font-size: 16px;">Atenção: Contas Atrasadas!</strong>
+            <span style="font-size: 14px; opacity: 0.9;">Existem despesas vencidas. Verifique a aba Financeiro.</span>
+          </div>
+        </div>
+
         <div class="area-widgets">
           <div class="cartao">
             <h3>Faturamento (Mês)</h3>
             <p class="valor" id="faturamento-dashboard">R$ 0,00</p>
           </div>
-          <div class="cartao">
-            <h3>Projetos Ativos</h3>
-            <p class="valor">12</p>
-          </div>
-          <div class="cartao">
-            <h3>Contratos a Vencer</h3>
-            <p class="valor">3</p>
+
+          <div class="cartao" style="flex-grow: 2; min-width: 300px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+              <h3>Eventos de Hoje</h3>
+              <span id="data-hoje-extenso"
+                style="color: var(--cor-acento-principal); font-size: 14px; font-weight: 600;"></span>
+            </div>
+
+            <div id="lista-eventos-hoje" style="display: flex; flex-direction: column; gap: 10px;">
+              <p style="color: var(--cor-texto-secundario);">Carregando agenda...</p>
+            </div>
           </div>
         </div>
       </section>
@@ -125,6 +140,10 @@
             <input type="date" id="receita-data-agendada" />
           </div>
           <div class="campo-formulario">
+            <label for="receita-obs">Obs (Opcional)</label>
+            <input type="text" id="receita-obs" placeholder="Detalhes extras..." />
+          </div>
+          <div class="campo-formulario">
             <label for="receita-valor">Valor</label>
             <input type="number" step="0.01" id="receita-valor" placeholder="1200.00" required />
           </div>
@@ -150,6 +169,7 @@
                 <th>Cliente</th>
                 <th>Data Emissão</th>
                 <th>Data Agendada</th>
+                <th>Obs</th>
                 <th>Valor (R$)</th>
                 <th>Ações</th>
               </tr>
@@ -157,7 +177,7 @@
             <tbody></tbody>
             <tfoot>
               <tr>
-                <td colspan="4">Total</td>
+                <td colspan="5">Total</td>
                 <td id="receita-total">R$ 0,00</td>
                 <td></td>
               </tr>
@@ -181,6 +201,10 @@
           <div class="campo-formulario">
             <label for="despesa-data-vencimento">Data Vencimento</label>
             <input type="date" id="despesa-data-vencimento" />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-obs">Obs (Opcional)</label>
+            <input type="text" id="despesa-obs" placeholder="Detalhes extras..." />
           </div>
           <div class="campo-formulario">
             <label for="despesa-valor">Valor</label>
@@ -214,6 +238,7 @@
               <th>Data Emissão</th>
               <th>Vencimento</th>
               <th>Status</th>
+              <th>Obs</th>
               <th>Valor (R$)</th>
               <th>Ações</th>
             </tr>
@@ -221,7 +246,7 @@
           <tbody></tbody>
           <tfoot>
             <tr>
-              <td colspan="4">Total</td>
+              <td colspan="5">Total</td>
               <td id="despesa-total">R$ 0,00</td>
               <td></td>
             </tr>
@@ -232,11 +257,31 @@
       <section id="secao-clientes" class="pagina-conteudo">
         <header class="cabecalho-secao">
           <h1>Clientes</h1>
-          <a href="gestao/cadastro-cliente.html" class="botao-principal" target="_blank">
+          <a href="cadastro-cliente.html" class="botao-principal" target="_blank">
             <i class="ph-fill ph-plus-circle"></i><span>Novo Cliente</span>
           </a>
         </header>
-        <p class="placeholder-conteudo">WIP: Grade de Clientes</p>
+
+        <div
+          style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+          <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
+          <input type="text" id="busca-cliente" placeholder="Buscar por nome, email ou CPF/CNPJ..."
+            style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
+        </div>
+
+        <table class="tabela-dados" id="tabela-clientes">
+          <thead>
+            <tr>
+              <th>Nome / Documento</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Tipo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
       </section>
 
       <section id="secao-funcionarios" class="pagina-conteudo">
@@ -247,8 +292,27 @@
           </button>
         </header>
 
-        <div class="container-blocos-funcionarios" id="container-blocos-funcionarios">
+        <div
+          style="margin-bottom: 15px; display: flex; align-items: center; gap: 10px; background-color: var(--cor-fundo-elementos); padding: 10px; border-radius: 8px; border: 1px solid var(--cor-borda);">
+          <i class="ph-fill ph-magnifying-glass" style="font-size: 20px; color: var(--cor-texto-secundario);"></i>
+          <input type="text" id="busca-funcionario" placeholder="Buscar por nome, cargo ou CPF..."
+            style="background: transparent; border: none; color: var(--cor-texto-principal); width: 100%; font-size: 16px; font-family: inherit; outline: none;">
         </div>
+
+        <table class="tabela-dados" id="tabela-funcionarios">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Cargo</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
       </section>
 
       <section id="secao-contratos" class="pagina-conteudo">
@@ -684,32 +748,25 @@
   <div class="modal-overlay" id="modal-novo-funcionario">
     <div class="modal-conteudo">
       <header class="modal-cabecalho">
-        <h2>Novo Funcionário</h2>
+        <h2 id="titulo-modal-funcionario">Novo Funcionário</h2>
         <button class="modal-fechar" id="modal-fechar-funcionario">
           &times;
         </button>
       </header>
       <form class="formulario-modal" id="form-novo-funcionario">
+
+        <input type="hidden" id="funcionario-index-edicao">
+
         <div class="campo-formulario">
           <label for="funcionario-nome">Nome</label>
           <input type="text" id="funcionario-nome" required />
         </div>
+
         <div class="campo-formulario">
-          <label for="funcionario-email">Email</label>
-          <input type="email" id="funcionario-email" required />
+          <label for="funcionario-cpf">CPF</label>
+          <input type="text" id="funcionario-cpf" placeholder="000.000.000-00" maxlength="14" required />
         </div>
-        <div class="campo-formulario">
-          <label for="funcionario-telefone">Telefone (Opcional)</label>
-          <input type="tel" id="funcionario-telefone" />
-        </div>
-        <div class="campo-formulario">
-          <label for="funcionario-senha">Senha</label>
-          <input type="password" id="funcionario-senha" required />
-        </div>
-        <div class="campo-formulario">
-          <label for="funcionario-confirmar-senha">Confirmar Senha</label>
-          <input type="password" id="funcionario-confirmar-senha" required />
-        </div>
+
         <div class="campo-formulario">
           <label for="funcionario-cargo">Cargo</label>
           <select id="funcionario-cargo" required>
@@ -722,7 +779,28 @@
             <option value="rh">RH</option>
           </select>
         </div>
-        <button type="submit" class="botao-principal">
+
+        <div class="campo-formulario">
+          <label for="funcionario-email">Email</label>
+          <input type="email" id="funcionario-email" required />
+        </div>
+
+        <div class="campo-formulario">
+          <label for="funcionario-telefone">Telefone (Opcional)</label>
+          <input type="tel" id="funcionario-telefone" placeholder="(99) 99999-9999" />
+        </div>
+
+        <div class="campo-formulario">
+          <label for="funcionario-senha">Senha</label>
+          <input type="password" id="funcionario-senha" required />
+        </div>
+
+        <div class="campo-formulario">
+          <label for="funcionario-confirmar-senha">Confirmar Senha</label>
+          <input type="password" id="funcionario-confirmar-senha" required />
+        </div>
+
+        <button type="submit" class="botao-principal" id="btn-salvar-funcionario">
           Salvar Funcionário
         </button>
       </form>
@@ -738,10 +816,107 @@
         </button>
       </header>
       <div class="modal-corpo">
+        <p><strong>CPF:</strong> <span id="modal-detalhes-cpf"></span></p>
+
         <p><strong>Email:</strong> <span id="modal-detalhes-email"></span></p>
         <p><strong>Cargo:</strong> <span id="modal-detalhes-cargo"></span></p>
         <p><strong>Telefone:</strong> <span id="modal-detalhes-telefone"></span></p>
       </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-editar-cliente">
+    <div class="modal-conteudo" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
+      <header class="modal-cabecalho">
+        <h2>Editar Cliente</h2>
+        <button class="modal-fechar" id="modal-fechar-editar-cliente">&times;</button>
+      </header>
+
+      <form class="formulario-modal" id="form-editar-cliente">
+        <input type="hidden" id="edit-cliente-index">
+        <input type="hidden" id="edit-cliente-tipo-atual">
+        <div id="campos-edit-pf">
+          <div class="campo-formulario">
+            <label for="edit-cliente-nome">Nome Completo</label>
+            <input type="text" id="edit-cliente-nome">
+          </div>
+          <div class="campo-formulario" style="display: flex; gap: 10px;">
+            <div style="flex: 1;">
+              <label for="edit-cliente-cpf">CPF</label>
+              <input type="text" id="edit-cliente-cpf" maxlength="14">
+            </div>
+            <div style="flex: 1;">
+              <label for="edit-cliente-nascimento">Data de Nascimento</label>
+              <input type="date" id="edit-cliente-nascimento">
+            </div>
+          </div>
+        </div>
+
+        <div id="campos-edit-pj" style="display: none;">
+          <div class="campo-formulario">
+            <label for="edit-cliente-razao">Razão Social</label>
+            <input type="text" id="edit-cliente-razao">
+          </div>
+          <div class="campo-formulario">
+            <label for="edit-cliente-cnpj">CNPJ</label>
+            <input type="text" id="edit-cliente-cnpj" maxlength="18">
+          </div>
+        </div>
+
+        <div class="campo-formulario" style="display: flex; gap: 10px;">
+          <div style="flex: 1;">
+            <label for="edit-cliente-email">Email</label>
+            <input type="email" id="edit-cliente-email" required>
+          </div>
+          <div style="flex: 1;">
+            <label for="edit-cliente-telefone">Telefone</label>
+            <input type="text" id="edit-cliente-telefone">
+          </div>
+        </div>
+
+        <h3 style="font-size: 16px; margin-top: 10px; border-bottom: 1px solid var(--cor-borda); padding-bottom: 5px;">
+          Endereço</h3>
+
+        <div class="campo-formulario" style="display: flex; gap: 10px;">
+          <div style="width: 120px;">
+            <label for="edit-cliente-cep">CEP</label>
+            <input type="text" id="edit-cliente-cep" maxlength="9">
+          </div>
+          <div style="flex: 1;">
+            <label for="edit-cliente-logradouro">Logradouro (Rua/Av)</label>
+            <input type="text" id="edit-cliente-logradouro">
+          </div>
+        </div>
+
+        <div class="campo-formulario" style="display: flex; gap: 10px;">
+          <div style="width: 100px;">
+            <label for="edit-cliente-numero">Número</label>
+            <input type="text" id="edit-cliente-numero">
+          </div>
+          <div style="flex: 1;">
+            <label for="edit-cliente-bairro">Bairro</label>
+            <input type="text" id="edit-cliente-bairro">
+          </div>
+        </div>
+
+        <div class="campo-formulario" style="display: flex; gap: 10px;">
+          <div style="flex: 1;">
+            <label for="edit-cliente-cidade">Cidade</label>
+            <input type="text" id="edit-cliente-cidade">
+          </div>
+          <div style="width: 80px;">
+            <label for="edit-cliente-uf">UF</label>
+            <input type="text" id="edit-cliente-uf" maxlength="2">
+          </div>
+        </div>
+
+        <div class="campo-formulario">
+          <label for="edit-cliente-senha">Senha</label>
+          <input type="text" id="edit-cliente-senha" placeholder="Nova senha (ou mantenha a atual)">
+        </div>
+
+        <button type="submit" class="botao-principal">Salvar Alterações</button>
+      </form>
     </div>
   </div>
 
