@@ -171,23 +171,28 @@ body.dark-mode .item-menu.ativo {
 
 /* Botão de Tema */
 .btn-tema-toggle {
-  background: var(--cor-bg-card);
+  background: var(--cor-bg-hover);
   border: 1px solid var(--cor-borda);
-  color: var(--cor-text-main);
-  padding: 10px;
-  border-radius: 8px;
+  color: var(--cor-text-muted);
+  padding: 10px 15px;
+  border-radius: 50px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
 }
 
 .btn-tema-toggle:hover {
   border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+  background: var(--cor-bg-card);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .btn-sair {

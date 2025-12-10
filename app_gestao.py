@@ -138,18 +138,42 @@ def novo_funcionario():
 @app.route("/gestao/agendamento/novo", methods=['POST'])
 def novo_agendamento():
     conn = get_db()
-    # Inserindo dados mínimos necessários. ID Cliente 1 é usado como padrão/genérico.
+    cliente_id = request.form.get('cliente')
+    if not cliente_id:
+        flash("Cliente deve ser selecionado", "error")
+        return redirect(url_for('dashboard'))
+
+    # Buscar dados do cliente selecionado
+    cliente = None
+    pf = conn.execute("SELECT id_clientes_fisico as id, nome, email, tel_cel, 'PF' as tipo FROM tb_clientes_fisico WHERE id_clientes_fisico = ?", (cliente_id,)).fetchone()
+    if pf:
+        cliente = pf
+    else:
+        pj = conn.execute("SELECT id_clientes_juridicos as id, razao_social as nome, email, tel_cel, 'PJ' as tipo FROM tb_clientes_juridicos WHERE id_clientes_juridicos = ?", (cliente_id,)).fetchone()
+        if pj:
+            cliente = pj
+
+    if not cliente:
+        flash("Cliente não encontrado", "error")
+        return redirect(url_for('dashboard'))
+
+    # Inserir agendamento com dados do cliente
     conn.execute("""
         INSERT INTO tb_reg_agendamentos (id_cliente, nome, data_agend, servico, obs, valor_total, status, tipo_cliente, email, tel_cel, horario, forma_pagamento, status_pagamento)
-        VALUES (1, ?, ?, ?, ?, 0.0, 'Agendado', 'Balcão', 'N/A', 'N/A', '00:00', 'N/A', 'Pendente')
+        VALUES (?, ?, ?, ?, ?, 0.0, 'Agendado', ?, ?, ?, '00:00', 'N/A', 'Pendente')
     """, (
-        request.form['titulo'], # name="titulo" (Usado como Nome do Cliente/Evento visualmente)
+        cliente_id,
+        cliente['nome'],  # Nome do cliente
         request.form['data'],   # name="data"
-        request.form['tipo'],   # name="tipo"
-        request.form.get('obs', '') # name="obs"
+        request.form['tipo'],   # name="tipo" (serviço)
+        request.form.get('obs', ''), # name="obs"
+        cliente['tipo'],  # Tipo do cliente (PF/PJ)
+        cliente['email'],
+        cliente['tel_cel']
     ))
     conn.commit()
     conn.close()
+    flash("Agendamento criado com sucesso", "success")
     return redirect(url_for('dashboard'))
 
 # --- SALVAR NOVO CONTRATO (UPLOAD) ---

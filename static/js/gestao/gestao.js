@@ -200,7 +200,7 @@ document.addEventListener("DOMContentLoaded", () => {
       agendamentos = dados.map(ag => ({
         id: ag.id_reg_agendamentos,
         data: new Date(ag.data_agend),
-        titulo: ag.nome,
+        titulo: 'Cliente: ' + ag.nome + ' - Serviço: ' + ag.servico,
         tipo: ag.servico,
         obs: ag.obs,
         ...ag
@@ -218,6 +218,19 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       inputDataAgendamento.value = '';
     }
+
+    // Populate client dropdown
+    const selectCliente = document.getElementById("agendamento-cliente");
+    if (selectCliente) {
+      selectCliente.innerHTML = '<option value="">Selecione um cliente</option>';
+      listaClientes.forEach(cliente => {
+        const option = document.createElement("option");
+        option.value = cliente.id;
+        option.textContent = `${cliente.nome} (${cliente.tipo})`;
+        selectCliente.appendChild(option);
+      });
+    }
+
     if (modalAgendamento) modalAgendamento.style.display = "flex";
   };
 
@@ -367,8 +380,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!titulo || !dataString) return;
 
+      const selectCliente = document.getElementById("agendamento-cliente");
+      const clienteId = selectCliente ? selectCliente.value : "";
+      const cliente = listaClientes.find(c => c.id == clienteId);
+      const nomeCliente = cliente ? cliente.nome : 'Cliente não selecionado';
+      const tituloCompleto = `Cliente: ${nomeCliente} - Serviço: ${tipo}`;
+
       const novaData = new Date(dataString + 'T00:00:00');
-      agendamentos.push({ data: novaData, titulo: titulo, tipo: tipo, obs: obs });
+      agendamentos.push({ data: novaData, titulo: tituloCompleto, tipo: tipo, obs: obs, cliente_id: clienteId });
 
       fecharModalAgendamento();
       dataExibida = new Date(novaData.getFullYear(), novaData.getMonth(), 1);

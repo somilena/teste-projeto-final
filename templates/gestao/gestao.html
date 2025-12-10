@@ -601,24 +601,26 @@
       <form class="formulario-modal" id="form-novo-agendamento" action="{{ url_for('novo_agendamento') }}"
         method="POST">
         <div class="campo-formulario">
-          <label>Título</label>
-          <input type="text" id="agendamento-titulo" name="titulo" required />
+          <label>Cliente</label>
+          <select id="agendamento-cliente" name="cliente" required>
+            <option value="">Selecione um cliente</option>
+          </select>
         </div>
         <div class="campo-formulario">
           <label>Data</label>
           <input type="date" id="agendamento-data" name="data" required />
         </div>
         <div class="campo-formulario">
-          <label>Obs</label>
-          <textarea id="agendamento-obs" name="obs" rows="2"></textarea>
-        </div>
-        <div class="campo-formulario">
-          <label>Tipo</label>
+          <label>Serviço</label>
           <select id="agendamento-tipo" name="tipo">
             <option value="Gravação">Gravação</option>
             <option value="Mixagem">Mixagem</option>
             <option value="Reunião">Reunião</option>
           </select>
+        </div>
+        <div class="campo-formulario">
+          <label>Obs</label>
+          <textarea id="agendamento-obs" name="obs" rows="2"></textarea>
         </div>
         <button type="submit" class="botao-principal">Salvar Agendamento</button>
       </form>
