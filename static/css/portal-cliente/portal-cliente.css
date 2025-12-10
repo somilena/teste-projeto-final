@@ -163,23 +163,31 @@ body.dark-mode .nav-item.ativo {
 
 /* Botão de Tema */
 .btn-tema-toggle {
-  background: var(--cor-bg-card);
+  background: var(--cor-bg-hover);
   border: 1px solid var(--cor-borda);
-  color: var(--cor-text-main);
-  padding: 10px;
-  border-radius: 8px;
+  color: var(--cor-text-muted);
+  padding: 10px 15px;
+  border-radius: 50px;
+  /* Forma de pílula */
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   font-size: 13px;
-  font-weight: 500;
-  transition: all 0.2s;
+  font-weight: 600;
+  /* Fonte mais forte */
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  /* Espaçamento entre letras */
 }
 
 .btn-tema-toggle:hover {
   border-color: var(--cor-primaria);
+  color: var(--cor-primaria);
+  background: var(--cor-bg-card);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
 }
 
 .btn-sair {
@@ -326,7 +334,7 @@ body.dark-mode .header-banner {
   font-weight: 700;
   font-size: 13px;
   font-family: "Inter", sans-serif;
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 10px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -434,20 +442,23 @@ body.dark-mode .btn-novo-agendamento:hover {
 
 /* Botão Reagendar */
 .btn-reagendar {
-  background: transparent;
-  border: 1px solid var(--cor-borda);
-  color: var(--cor-text-muted);
-  padding: 8px 15px;
+  background: var(--cor-bg-hover);
+  border: 1px solid var(--cor-primaria);
+  color: var(--cor-primaria);
+  padding: 8px 20px;
   border-radius: 50px;
   cursor: pointer;
   font-size: 12px;
-  transition: all 0.2s;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-family: "Inter", sans-serif;
 }
 
 .btn-reagendar:hover:not(.desativado) {
-  border-color: var(--cor-primaria);
-  color: var(--cor-primaria);
-  background: var(--cor-bg-hover);
+  background: var(--cor-primaria);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(201, 107, 42, 0.3);
 }
 
 .btn-reagendar.desativado {

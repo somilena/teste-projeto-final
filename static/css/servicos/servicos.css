@@ -967,3 +967,28 @@
   background: rgba(201, 107, 42, 0.1);
   text-decoration: none;
 }
+
+/* Estilo para o link "Acessar Portal do Cliente" */
+.link-portal-cliente {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 20px;
+  background-color: var(--cor-primaria); /* Cor de fundo */
+  color: #fff; /* Cor do texto */
+  border-radius: 50px; /* форме arredondada */
+  text-decoration: none;
+  font-weight: 700;
+  transition: background-color 0.3s, transform 0.3s;
+  box-shadow: 0 4px 12px rgba(201, 107, 42, 0.4); /* Sombra suave */
+}
+
+.link-portal-cliente i {
+  margin-right: 8px; /* Espaço entre o ícone e o texto */
+}
+
+.link-portal-cliente:hover {
+  background-color: var(--cor-primaria-hover); /* Cor de fundo no hover */
+  transform: translateY(-2px); /* Леве подъём no hover */
+  box-shadow: 0 6px 15px rgba(201, 107, 42, 0.5); /* Sombra mais intensa no hover */
+}
