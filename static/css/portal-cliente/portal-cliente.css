@@ -1,7 +1,7 @@
 /* ============================================= */
 /* PORTAL CLIENTE - TEMA HÍBRIDO (CLARO/ESCURO) */
 /* ============================================= */
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
 :root {
   /* --- TEMA CLARO (Padrão - Baseado na imagem branca) --- */
@@ -44,12 +44,14 @@ body.dark-mode {
 }
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: var(--cor-bg-body);
   color: var(--cor-text-main);
   height: 100vh;
   overflow: hidden;
-  transition: background-color 0.3s, color 0.3s; /* Transição suave */
+  transition: background-color 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .layout-wrapper {
@@ -71,14 +73,22 @@ body {
 .logo-area {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin-bottom: 40px;
   font-weight: 700;
-  font-size: 20px;
+  font-size: 22px;
   color: var(--cor-primaria);
+  letter-spacing: -0.5px;
 }
+
+.logo-area img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
 .logo-area i {
-  font-size: 24px;
+  font-size: 28px;
 }
 
 .nav-moderna ul {
@@ -217,45 +227,72 @@ body.dark-mode .nav-item.ativo {
   background: linear-gradient(
     135deg,
     #f5a623 0%,
-    #d97a31 100%
-  ); /* Laranja vivo */
-  border-radius: 16px;
-  padding: 30px;
+    #d97a31 50%,
+    #c96b2a 100%
+  ); /* Laranja vivo com gradiente suave */
+  border-radius: 20px;
+  padding: 40px;
   color: #fff; /* Sempre branco no banner */
-  box-shadow: 0 10px 20px rgba(245, 166, 35, 0.2);
+  box-shadow: 0 12px 32px rgba(245, 166, 35, 0.25);
   margin-bottom: 40px;
   position: relative;
   overflow: hidden;
 }
+
+.header-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: pulse 8s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
 /* No dark mode, o banner fica um pouco mais sóbrio */
 body.dark-mode .header-banner {
-  background: linear-gradient(135deg, #c96b2a 0%, #a0501a 100%);
+  background: linear-gradient(135deg, #c96b2a 0%, #a0501a 50%, #8a4015 100%);
   border: 1px solid var(--cor-borda);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 .header-info h1 {
-  font-size: 28px;
-  margin-bottom: 5px;
+  font-size: 32px;
+  margin-bottom: 8px;
   color: #fff;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  position: relative;
+  z-index: 1;
 }
 .header-info p {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 15px;
+  font-weight: 400;
+  position: relative;
+  z-index: 1;
 }
 
 .btn-novo-agendamento {
   background: #fff;
   color: var(--cor-primaria);
   text-decoration: none;
-  padding: 12px 25px;
+  padding: 12px 28px;
   border-radius: 50px;
   font-weight: 700;
   font-size: 14px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: all 0.3s;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  letter-spacing: 0.3px;
 }
 body.dark-mode .btn-novo-agendamento {
   background: #000;
@@ -263,6 +300,7 @@ body.dark-mode .btn-novo-agendamento {
 }
 .btn-novo-agendamento:hover {
   transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
 }
 
 /* --- LISTA DE AGENDAMENTOS --- */

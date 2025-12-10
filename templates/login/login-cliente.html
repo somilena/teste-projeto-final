@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Portal do Cliente</title>
-  <link rel="icon" href="/assets/img/icon/cliente.png">
+  <link rel="icon" href="{{ url_for('static', filename='img/icon/cliente.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login/login-cliente.css') }}">
 
 </head>
@@ -14,7 +14,7 @@
   <div class="container-centralizado">
     <div class="cartao-autenticacao">
 
-      <img src="{{ url_for('static', filename='/img/icon/logo-icon.png') }}" alt="Logo Cumaru Produções" class="perfil-avatar" />
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo ProdCumaru" class="perfil-avatar" />
       
       <h1 class="titulo-autenticacao" id="titulo-principal-autenticacao">Portal do Cliente</h1>
       <p class="subtitulo-autenticacao" id="subtitulo-login-cadastro">Acesse seus projetos e agendamentos</p>

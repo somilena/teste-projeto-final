@@ -1,5 +1,37 @@
 document.addEventListener("DOMContentLoaded", () => {
   // =================================================================
+  // 0. LÓGICA DE TEMA (CLARO/ESCURO)
+  // =================================================================
+  const btnTema = document.getElementById("btn-tema-toggle");
+  if (btnTema) {
+    const body = document.body;
+    const iconeTema = btnTema.querySelector("i");
+    const textoTema = btnTema.querySelector("span");
+
+    // Verifica preferência salva
+    const temaSalvo = localStorage.getItem("prodcumaru_tema");
+    if (temaSalvo === "dark") {
+      body.classList.add("dark-mode");
+      if (iconeTema) iconeTema.classList.replace("ph-moon", "ph-sun");
+      if (textoTema) textoTema.textContent = "Modo Claro";
+    }
+
+    btnTema.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+
+      if (body.classList.contains("dark-mode")) {
+        localStorage.setItem("prodcumaru_tema", "dark");
+        if (iconeTema) iconeTema.classList.replace("ph-moon", "ph-sun");
+        if (textoTema) textoTema.textContent = "Modo Claro";
+      } else {
+        localStorage.setItem("prodcumaru_tema", "light");
+        if (iconeTema) iconeTema.classList.replace("ph-sun", "ph-moon");
+        if (textoTema) textoTema.textContent = "Modo Escuro";
+      }
+    });
+  }
+
+  // =================================================================
   // 1. LÓGICA DE NAVEGAÇÃO (Troca de Abas/Seções do Menu Principal)
   // =================================================================
   const itensMenu = document.querySelectorAll(".item-menu");
@@ -19,6 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
       const secaoAlvo = document.getElementById("secao-" + paginaAlvoID);
       if (secaoAlvo) {
         secaoAlvo.classList.add("ativa");
+      }
+
+      // Atualiza título na topbar
+      const tituloPagina = document.getElementById("titulo-pagina");
+      if (tituloPagina) {
+        const textoItem = item.querySelector("span");
+        if (textoItem) {
+          tituloPagina.textContent = textoItem.textContent;
+        }
       }
 
       // --- LÓGICAS ESPECÍFICAS POR ABA ---

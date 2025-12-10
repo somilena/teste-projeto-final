@@ -5,14 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portal do Cliente | ProdCumaru</title>
       <link rel="stylesheet" href="{{ url_for('static', filename='css/portal-cliente/portal-cliente.css') }}">
-    <link rel="icon" href="/assets/img/icon/cliente.png" />
+    <link rel="icon" href="{{ url_for('static', filename='img/icon/cliente.png') }}" />
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
   </head>
   <body class="body-portal-moderno">
     <div class="layout-wrapper">
       <aside class="sidebar-moderna">
         <div class="logo-area">
-          <i class="ph-fill ph-headphones"></i>
+          <img src="{{ url_for('static', filename='img/logo.png') }}" alt="ProdCumaru" />
           <span>ProdCumaru</span>
         </div>
 
@@ -52,7 +52,7 @@
           <h2 id="titulo-pagina">Meus Agendamentos</h2>
           <div class="user-profile">
             <img
-              src="/assets/img/icon/cliente.png"
+              src="{{ url_for('static', filename='img/icon/cliente.png') }}"
               alt="User"
               id="img-perfil-header"
             />
@@ -96,7 +96,7 @@
               <div class="perfil-header">
                 <div class="foto-wrapper">
                   <img
-                    src="/assets/img/icon/cliente.png"
+                    src="{{ url_for('static', filename='img/icon/cliente.png') }}"
                     alt="Foto Perfil"
                     class="foto-grande"
                     id="img-perfil-grande"

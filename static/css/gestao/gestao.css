@@ -1,16 +1,40 @@
-/* 1. VARIÁVEIS DE COR E GLOBAIS */
-/* FONTE ATUALIZADA */
-@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap");
+/* ============================================= */
+/* GESTÃO - TEMA HÍBRIDO (CLARO/ESCURO) - IGUAL AO PORTAL CLIENTE */
+/* ============================================= */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
 
 :root {
-  --cor-fundo-principal: #1a1a1a;
-  --cor-fundo-sidebar: #1f1d1b;
-  --cor-fundo-elementos: #2a2826;
-  --cor-acento-principal: #d98236;
-  --cor-acento-secundario: #00b8a9;
-  --cor-texto-principal: #f5f5f5;
-  --cor-texto-secundario: #a0a0a0;
-  --cor-borda: #403b38;
+  /* --- TEMA CLARO (Padrão) --- */
+  --cor-bg-body: #f4f6f8;
+  --cor-bg-sidebar: #ffffff;
+  --cor-bg-card: #ffffff;
+  --cor-bg-hover: #fff8f0; /* Laranja bem clarinho */
+
+  --cor-text-main: #333333;
+  --cor-text-muted: #8898aa;
+
+  --cor-borda: #e9ecef;
+  --sombra-card: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+
+  /* Cores da Marca (Fixas) */
+  --cor-primaria: #c96b2a; /* Laranja Cumaru */
+  --cor-primaria-hover: #e08e45;
+  --cor-verde: #2dce89;
+  --cor-vermelho: #f5365c;
+}
+
+/* --- TEMA ESCURO (Ativado pela classe .dark-mode) --- */
+body.dark-mode {
+  --cor-bg-body: #050505;
+  --cor-bg-sidebar: #0f0f10;
+  --cor-bg-card: #141414;
+  --cor-bg-hover: #1f1f1f;
+
+  --cor-text-main: #ffffff;
+  --cor-text-muted: #a0a0a0;
+
+  --cor-borda: #2a2a2a;
+  --sombra-card: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 * {
@@ -20,149 +44,267 @@
 }
 
 body {
-  /* FONTE ATUALIZADA */
-  font-family: "Figtree", sans-serif;
-  background-color: var(--cor-fundo-principal);
-  color: var(--cor-texto-principal);
-  line-height: 1.6;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--cor-bg-body);
+  color: var(--cor-text-main);
+  height: 100vh;
+  overflow: hidden;
+  transition: background-color 0.3s, color 0.3s;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* 2. LAYOUT PRINCIPAL (Sem mudanças) */
+.layout-wrapper,
 .container-principal {
   display: flex;
-  min-height: 100vh;
+  height: 100%;
 }
 
-/* 3. BARRA LATERAL (Sem mudanças) */
+/* --- SIDEBAR --- */
+.sidebar-moderna,
 .barra-lateral {
   width: 260px;
-  background-color: var(--cor-fundo-sidebar);
+  background: var(--cor-bg-sidebar);
   border-right: 1px solid var(--cor-borda);
-  padding: 24px;
   display: flex;
   flex-direction: column;
+  padding: 25px;
+  transition: background 0.3s, border-color 0.3s;
 }
 
+.logo-area,
 .logo-sistema {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 24px;
-  font-weight: 600;
-  /* Peso ajustado */
-  color: var(--cor-texto-principal);
-  margin-bottom: 30px;
+  gap: 12px;
+  margin-bottom: 40px;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--cor-primaria);
+  letter-spacing: -0.5px;
 }
 
+.logo-area img,
+.logo-sistema img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.logo-area i,
 .logo-sistema i {
-  font-size: 30px;
-  color: var(--cor-acento-principal);
+  font-size: 28px;
 }
 
-.menu-navegacao {
-  flex: 1;
-}
-
+.nav-moderna ul,
 .menu-navegacao ul {
   list-style: none;
+  margin-bottom: 30px;
+}
+.nav-categoria {
+  font-size: 11px;
+  text-transform: uppercase;
+  color: var(--cor-text-muted);
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: block;
+  letter-spacing: 1px;
 }
 
+.nav-item,
+.item-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 15px;
+  color: var(--cor-text-muted);
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  margin-bottom: 5px;
+  text-decoration: none;
+}
+.nav-item i,
+.item-menu a i {
+  font-size: 20px;
+}
+
+.nav-item a,
 .item-menu a {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 10px;
-  margin-bottom: 8px;
+  width: 100%;
   text-decoration: none;
-  color: var(--cor-texto-secundario);
+  color: inherit;
+}
+
+.nav-item:hover,
+.nav-item.ativo,
+.item-menu:hover,
+.item-menu.ativo {
+  background-color: var(--cor-bg-hover);
+  color: var(--cor-primaria);
+  font-weight: 600;
+}
+/* No dark mode, o hover é diferente */
+body.dark-mode .nav-item:hover,
+body.dark-mode .nav-item.ativo,
+body.dark-mode .item-menu:hover,
+body.dark-mode .item-menu.ativo {
+  color: #fff;
+  border-left: 3px solid var(--cor-primaria);
+}
+
+.logout-area {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Botão de Tema */
+.btn-tema-toggle {
+  background: var(--cor-bg-card);
+  border: 1px solid var(--cor-borda);
+  color: var(--cor-text-main);
+  padding: 10px;
   border-radius: 8px;
-  transition: all 0.25s ease;
-  /* Transição mais suave */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.btn-tema-toggle:hover {
+  border-color: var(--cor-primaria);
 }
 
-.item-menu a i {
-  font-size: 22px;
+.btn-sair {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--cor-text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 10px;
+  transition: color 0.2s;
+}
+.btn-sair:hover {
+  color: var(--cor-vermelho);
 }
 
-.item-menu a:hover {
-  background-color: var(--cor-fundo-elementos);
-  color: var(--cor-texto-principal);
-  transform: translateX(3px);
-  /* Leve movimento */
-}
-
-.item-menu.ativo a {
-  background-color: var(--cor-acento-principal);
-  color: var(--cor-fundo-sidebar);
-  font-weight: 700;
-}
-
-.item-menu.ativo a i {
-  color: var(--cor-fundo-sidebar);
-}
-
-/* 4. CONTEÚDO PRINCIPAL (Sem mudanças) */
+/* --- MAIN CONTENT --- */
+.main-content,
 .conteudo-principal {
   flex: 1;
-  padding: 24px 30px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--cor-bg-body);
+}
+
+.topbar-moderna {
+  height: 80px;
+  background: var(--cor-bg-sidebar);
+  border-bottom: 1px solid var(--cor-borda);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  transition: background 0.3s, border-color 0.3s;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.topbar-moderna h2 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--cor-text-main);
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-profile img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 2px solid var(--cor-primaria);
+  object-fit: cover;
+  transition: all 0.3s;
+  box-shadow: 0 2px 8px rgba(201, 107, 42, 0.2);
+}
+.user-profile img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(201, 107, 42, 0.3);
+}
+.user-profile span {
+  font-weight: 600;
+  color: var(--cor-text-main);
+  font-size: 15px;
+}
+
+.content-wrapper {
+  flex: 1;
+  padding: 40px;
   overflow-y: auto;
 }
 
-.pagina-conteudo {
-  display: none;
-}
-
-.pagina-conteudo.ativa {
-  display: block;
-}
-
+/* --- CABEÇALHO DE SEÇÃO --- */
 .cabecalho-secao {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  border-bottom: 1px solid var(--cor-borda);
   padding-bottom: 16px;
+  border-bottom: 1px solid var(--cor-borda);
 }
 
 .cabecalho-secao h1 {
-  font-size: 30px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 600;
 }
 
-/* Tamanho aumentado */
-
+/* --- BOTÕES --- */
 .botao-principal {
-  background-color: var(--cor-acento-principal);
-  color: #111;
+  background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-hover) 100%);
+  color: #fff;
   border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 12px 28px;
+  border-radius: 50px;
   font-weight: 600;
-  /* Peso ajustado */
+  font-size: 14px;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(201, 107, 42, 0.3);
+  letter-spacing: 0.3px;
 }
-
-/* EFEITO DE HOVER ATUALIZADO */
+body.dark-mode .botao-principal {
+  background: linear-gradient(135deg, var(--cor-primaria) 0%, var(--cor-primaria-hover) 100%);
+  color: #fff;
+}
 .botao-principal:hover {
-  filter: brightness(1.1);
-  transform: scale(1.03);
-  /* Efeito de escala */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(201, 107, 42, 0.4);
+  background: linear-gradient(135deg, var(--cor-primaria-hover) 0%, var(--cor-primaria) 100%);
 }
-
 .botao-principal:active {
-  transform: scale(0.98);
-  /* Efeito de clique */
-  transition-duration: 0.1s;
+  transform: translateY(0);
 }
 
-/* 5. WIDGETS (VISÃO GERAL) (ATUALIZADO) */
+/* --- WIDGETS E CARDS --- */
 .area-widgets {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -171,36 +313,392 @@ body {
 }
 
 .cartao {
-  background-color: var(--cor-fundo-elementos);
+  background-color: var(--cor-bg-card);
   border: 1px solid var(--cor-borda);
-  padding: 20px;
-  border-radius: 12px;
-  /* Mais arredondado */
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  /* Sombra sutil */
-  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-  /* Animação */
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: var(--sombra-card);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.cartao::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--cor-primaria), var(--cor-primaria-hover));
+  opacity: 0;
+  transition: opacity 0.3s;
 }
 
 .cartao:hover {
-  transform: translateY(-3px);
-  /* Flutuar */
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-  /* Sombra mais forte */
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  border-color: var(--cor-primaria);
+}
+
+.cartao:hover::before {
+  opacity: 1;
 }
 
 .cartao h3 {
   font-size: 16px;
-  color: var(--cor-texto-secundario);
+  color: var(--cor-text-muted);
   margin-bottom: 12px;
   text-transform: uppercase;
   font-weight: 600;
-  /* Mais peso */
   letter-spacing: 0.5px;
-  /* Mais espaçamento */
 }
 
-/* Toast notifications */
+.cartao .valor {
+  font-size: 42px;
+  font-weight: 800;
+  color: var(--cor-text-main);
+  letter-spacing: -1px;
+  margin-top: 8px;
+  background: linear-gradient(135deg, var(--cor-primaria), var(--cor-primaria-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* --- FORMULÁRIOS --- */
+.formulario-secao {
+  background-color: var(--cor-bg-card);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  border: 1px solid var(--cor-borda);
+  box-shadow: var(--sombra-card);
+}
+
+.campo-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.campo-formulario label {
+  font-weight: 600;
+  color: var(--cor-text-muted);
+  font-size: 14px;
+}
+
+.campo-formulario input[type="text"],
+.campo-formulario input[type="number"],
+.campo-formulario input[type="date"],
+.campo-formulario input[type="email"],
+.campo-formulario input[type="tel"],
+.campo-formulario input[type="file"],
+.campo-formulario select,
+.campo-formulario textarea {
+  background: var(--cor-bg-hover);
+  border: 1px solid var(--cor-borda);
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: var(--cor-text-main);
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  transition: all 0.2s;
+  font-weight: 400;
+}
+
+.campo-formulario input:focus,
+.campo-formulario select:focus,
+.campo-formulario textarea:focus {
+  border-color: var(--cor-primaria);
+  outline: none;
+  background: var(--cor-bg-card);
+}
+
+/* --- TABELAS --- */
+.tabela-dados {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--cor-bg-card);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--cor-borda);
+  box-shadow: var(--sombra-card);
+}
+
+.tabela-dados th,
+.tabela-dados td {
+  padding: 14px 18px;
+  text-align: left;
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+.tabela-dados thead th {
+  background-color: var(--cor-bg-hover);
+  color: var(--cor-text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.tabela-dados tbody tr {
+  transition: background 0.2s;
+  background-color: var(--cor-bg-card);
+}
+
+.tabela-dados tbody tr:hover {
+  background-color: var(--cor-bg-hover);
+}
+
+.tabela-dados tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.tabela-dados tfoot td {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--cor-text-main);
+  background-color: var(--cor-bg-hover);
+}
+
+.tabela-dados .botao-acao {
+  background: none;
+  border: none;
+  color: var(--cor-text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+.tabela-dados .botao-acao:hover {
+  color: var(--cor-vermelho);
+}
+
+/* --- CALENDÁRIO --- */
+.container-calendario {
+  background-color: var(--cor-bg-card);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--cor-borda);
+  box-shadow: var(--sombra-card);
+}
+
+.calendario-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendario-header h2 {
+  color: var(--cor-primaria);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.calendario-header button {
+  background: none;
+  border: none;
+  color: var(--cor-text-main);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.calendario-header button:hover {
+  color: var(--cor-primaria);
+}
+
+.calendario-dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 10px;
+}
+
+.calendario-dias-semana div {
+  text-align: center;
+  font-weight: 600;
+  color: var(--cor-text-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  padding: 10px 0;
+}
+
+.calendario-grid-dias {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.dia-calendario {
+  min-height: 120px;
+  padding: 8px;
+  border: 1px solid var(--cor-borda);
+  border-radius: 8px;
+  background-color: var(--cor-bg-hover);
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.dia-calendario.passado {
+  background-color: transparent;
+  color: var(--cor-text-muted);
+  opacity: 0.5;
+}
+
+.dia-calendario.hoje {
+  border-color: var(--cor-primaria);
+  background-color: var(--cor-bg-hover);
+  box-shadow: 0 0 0 2px var(--cor-primaria);
+}
+
+.dia-calendario.selecionado {
+  border-color: var(--cor-primaria);
+  background-color: rgba(201, 107, 42, 0.1);
+  box-shadow: 0 0 0 2px var(--cor-primaria);
+}
+
+.dia-calendario.futuro {
+  background-color: transparent;
+  color: var(--cor-text-muted);
+  opacity: 0.5;
+}
+
+.evento-calendario {
+  font-size: 12px;
+  padding: 4px;
+  background-color: var(--cor-primaria);
+  color: #fff;
+  border-radius: 4px;
+  margin-top: 5px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding-right: 20px;
+}
+
+.evento-calendario .titulo-evento {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+}
+
+.apagar-evento {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+.evento-calendario:hover .apagar-evento {
+  opacity: 1;
+}
+
+.apagar-evento:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+/* --- MODAL --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-conteudo {
+  background: var(--cor-bg-card);
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+  width: 90%;
+  max-width: 500px;
+  color: var(--cor-text-main);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-cabecalho {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--cor-borda);
+  padding-bottom: 12px;
+}
+
+.modal-cabecalho h2 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.modal-fechar {
+  background: none;
+  border: none;
+  color: var(--cor-text-muted);
+  font-size: 24px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.modal-fechar:hover {
+  color: var(--cor-text-main);
+}
+
+.formulario-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-corpo {
+  padding: 10px 0 20px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.modal-corpo p {
+  font-size: 16px;
+  color: var(--cor-text-muted);
+  line-height: 1.5;
+}
+
+.modal-corpo p strong {
+  color: var(--cor-text-main);
+  font-weight: 600;
+  margin-right: 8px;
+  min-width: 80px;
+  display: inline-block;
+}
+
+/* --- TOAST NOTIFICATIONS --- */
 #toast-container {
   position: fixed;
   top: 20px;
@@ -221,6 +719,7 @@ body {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   font-weight: 600;
   opacity: 0.98;
+  transition: opacity 0.4s;
 }
 
 .toast.info {
@@ -243,527 +742,10 @@ body {
   font-weight: 400;
   font-size: 12px;
   color: rgba(0, 0, 0, 0.6);
-  margin-top: 4px
+  margin-top: 4px;
 }
 
-.cartao .valor {
-  font-size: 36px;
-  /* Maior */
-  font-weight: 700;
-}
-
-/* 6. FORMULÁRIOS DAS SEÇÕES (ATUALIZADO) */
-.formulario-secao {
-  background-color: var(--cor-fundo-elementos);
-  padding: 20px;
-  border-radius: 12px;
-  /* Mais arredondado */
-  margin-bottom: 24px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: 16px;
-}
-
-.campo-formulario {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex-grow: 1;
-}
-
-.campo-formulario label {
-  font-weight: 600;
-  color: var(--cor-texto-secundario);
-  font-size: 14px;
-}
-
-.campo-formulario input[type="text"],
-.campo-formulario input[type="number"],
-.campo-formulario input[type="file"],
-.campo-formulario select,
-.campo-formulario textarea {
-  background-color: var(--cor-fundo-principal);
-  border: 1px solid var(--cor-borda);
-  color: var(--cor-texto-principal);
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-family: "Figtree", sans-serif;
-  /* Fonte aplicada */
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  /* Transição */
-}
-
-.campo-formulario input:focus,
-.campo-formulario select:focus,
-.campo-formulario textarea:focus {
-  outline: none;
-  border-color: var(--cor-acento-principal);
-  box-shadow: 0 0 0 3px rgba(217, 130, 54, 0.3);
-  /* Sombra do laranja */
-}
-
-.formulario-secao .botao-principal {
-  height: 48px;
-}
-
-/* 7. TABELAS DE DADOS (ATUALIZADO) */
-.tabela-dados {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: var(--cor-fundo-elementos);
-  border-radius: 12px;
-  /* Mais arredondado */
-  overflow: hidden;
-}
-
-/* ... (Resto da tabela sem mudanças) ... */
-.tabela-dados th,
-.tabela-dados td {
-  padding: 14px 18px;
-  text-align: left;
-  border-bottom: 1px solid var(--cor-borda);
-}
-
-.tabela-dados thead th {
-  background-color: var(--cor-fundo-principal);
-  color: var(--cor-acento-principal);
-  font-size: 14px;
-  text-transform: uppercase;
-}
-
-.tabela-dados tbody tr:hover {
-  background-color: var(--cor-fundo-principal);
-}
-
-.tabela-dados tfoot td {
-  font-weight: 700;
-  font-size: 18px;
-  color: var(--cor-texto-principal);
-}
-
-.tabela-dados tfoot #receita-total {
-  color: var(--cor-acento-secundario);
-}
-
-.tabela-dados tfoot #despesa-total {
-  color: #ff6b6b;
-}
-
-.tabela-dados .botao-acao {
-  background: none;
-  border: none;
-  color: var(--cor-texto-secundario);
-  cursor: pointer;
-  font-size: 16px;
-  /* Um pouco maior */
-}
-
-.tabela-dados .botao-acao:hover {
-  color: #ff6b6b;
-}
-
-/* 8. CALENDÁRIO (ATUALIZADO) */
-.container-calendario {
-  background-color: var(--cor-fundo-elementos);
-  border-radius: 12px;
-  /* Mais arredondado */
-  padding: 20px;
-}
-
-/* ... (Resto do calendário sem mudanças) ... */
-.calendario-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.calendario-header h2 {
-  color: var(--cor-acento-principal);
-}
-
-.calendario-header button {
-  background: none;
-  border: none;
-  color: var(--cor-texto-principal);
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.calendario-dias-semana {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  margin-bottom: 10px;
-}
-
-.calendario-dias-semana div {
-  text-align: center;
-  font-weight: 600;
-  color: var(--cor-texto-secundario);
-  font-size: 14px;
-}
-
-.calendario-grid-dias {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 5px;
-}
-
-.dia-calendario {
-  min-height: 120px;
-  padding: 8px;
-  border: 1px solid var(--cor-borda);
-  border-radius: 8px;
-  /* Arredondado */
-  background-color: var(--cor-fundo-principal);
-  font-weight: 600;
-}
-
-.dia-calendario.passado {
-  background-color: transparent;
-  color: var(--cor-texto-secundario);
-  opacity: 0.5;
-}
-
-.dia-calendario.hoje {
-  border-color: var(--cor-acento-principal);
-  background-color: #3a322b;
-}
-
-.evento-calendario {
-  font-size: 12px;
-  padding: 4px;
-  background-color: var(--cor-acento-secundario);
-  color: #111;
-  border-radius: 4px;
-  margin-top: 5px;
-  font-weight: 500;
-}
-
-/* 9. MODAL (POP-UP) (ATUALIZADO) */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-conteudo {
-  background-color: var(--cor-fundo-elementos);
-  padding: 24px;
-  border-radius: 12px;
-  /* Mais arredondado */
-  width: 90%;
-  max-width: 500px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-
-/* ... (Resto do modal sem mudanças) ... */
-.modal-cabecalho {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--cor-borda);
-  padding-bottom: 12px;
-  margin-bottom: 20px;
-}
-
-.modal-fechar {
-  background: none;
-  border: none;
-  color: var(--cor-texto-secundario);
-  font-size: 28px;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.formulario-modal {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.formulario-modal .botao-principal {
-  align-self: flex-end;
-}
-
-/* 10. PLACEHOLDERS (Sem mudanças) */
-.placeholder-conteudo {
-  color: var(--cor-texto-secundario);
-  font-size: 18px;
-  text-align: center;
-  padding: 40px;
-  border: 2px dashed var(--cor-borda);
-  border-radius: 8px;
-}
-
-/* 11. ESTILOS ADICIONAIS DO CALENDÁRIO (NOVOS) */
-
-/* Torna os dias do mês atual clicáveis */
-.dia-calendario:not(.passado):not(.futuro) {
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-/* Efeito hover para dias clicáveis */
-.dia-calendario:not(.passado):not(.futuro):hover {
-  background-color: var(--cor-fundo-principal);
-}
-
-/* Dia de outro mês (para preenchimento) */
-.dia-calendario.futuro {
-  background-color: transparent;
-  color: var(--cor-texto-secundario);
-  opacity: 0.5;
-}
-
-/* Dia selecionado pelo usuário */
-.dia-calendario.selecionado {
-  border-color: var(--cor-acento-secundario);
-  background-color: rgba(0, 184, 169, 0.2);
-  /* Fundo com cor de acento */
-  box-shadow: 0 0 0 2px var(--cor-acento-secundario);
-  /* Borda mais forte */
-}
-
-/* Ajusta o número do dia para melhor posicionamento de eventos */
-.dia-calendario span.numero-dia {
-  display: block;
-  margin-bottom: 4px;
-}
-
-/* 12. ESTILOS PARA APAGAR EVENTO (NOVOS) */
-
-.evento-calendario {
-  /* ... (estilos existentes) ... */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  /* Necessário para posicionar o botão */
-  padding-right: 20px;
-  /* Espaço para o botão não sobrepor o texto */
-}
-
-/* Esconde o título completo se for muito grande */
-.evento-calendario .titulo-evento {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 90%;
-}
-
-.apagar-evento {
-  position: absolute;
-  right: 4px;
-  top: 50%;
-  transform: translateY(-50%);
-
-  background: none;
-  border: none;
-  color: var(--cor-texto-secundario);
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-  line-height: 1;
-  padding: 2px 4px;
-  border-radius: 4px;
-
-  /* Começa invisível */
-  opacity: 0.2;
-  transition: opacity 0.2s ease, background-color 0.2s ease;
-}
-
-/* Mostra o botão ao passar o mouse no evento */
-.evento-calendario:hover .apagar-evento {
-  opacity: 1;
-}
-
-.apagar-evento:hover {
-  background-color: var(--cor-fundo-principal);
-  color: #ff6b6b;
-  /* Vermelho para indicar perigo */
-}
-
-/* 13. BLOCOS DE FUNCIONÁRIOS (ATUALIZADO) */
-
-.container-blocos-funcionarios {
-  display: grid;
-  /* MODIFICAÇÃO: Garante 3 colunas em desktop */
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-.bloco-funcionario {
-  /* Baseado no estilo .cartao */
-  background-color: var(--cor-fundo-elementos);
-  border: 1px solid var(--cor-borda);
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-  position: relative;
-  /* Para posicionar o botão de apagar */
-  cursor: pointer;
-}
-
-.bloco-funcionario:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-}
-
-.bloco-funcionario h3 {
-  font-size: 20px;
-  /* Um pouco maior que o widget */
-  font-weight: 700;
-  color: var(--cor-texto-principal);
-  margin-bottom: 8px;
-  /* Garante que o botão não sobreponha */
-  padding-right: 25px;
-}
-
-.bloco-funcionario .email-funcionario {
-  font-size: 14px;
-  color: var(--cor-texto-secundario);
-  margin-bottom: 16px;
-  /* Mais espaço antes do cargo */
-  word-break: break-all;
-  /* Quebra emails longos */
-}
-
-.bloco-funcionario .cargo-funcionario {
-  font-size: 14px;
-  font-weight: 600;
-  padding: 4px 10px;
-  border-radius: 6px;
-  /* Usando a cor de acento secundário */
-  background-color: var(--cor-acento-secundario);
-  color: #111;
-  text-transform: capitalize;
-  /* "adm" -> "Adm" */
-}
-
-/* Botão de apagar (copiado do .tabela-dados .botao-acao) */
-.bloco-funcionario .apagar-funcionario {
-  background: none;
-  border: none;
-  color: var(--cor-texto-secundario);
-  cursor: pointer;
-  font-size: 18px;
-  /* Um pouco maior */
-
-  /* Posicionamento */
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  opacity: 0.5;
-  transition: opacity 0.2s ease;
-}
-
-.bloco-funcionario:hover .apagar-funcionario {
-  opacity: 1;
-  /* Mostra no hover do card */
-}
-
-.bloco-funcionario .apagar-funcionario:hover {
-  color: #ff6b6b;
-  /* Vermelho no hover do botão */
-}
-
-/* Placeholder para quando o grid estiver vazio */
-.placeholder-blocos {
-  color: var(--cor-texto-secundario);
-  text-align: center;
-  grid-column: 1 / -1;
-  /* Ocupa toda a largura do grid */
-  padding: 40px 0;
-}
-
-
-/* 14. MEDIA QUERIES PARA RESPONSIVIDADE (NOVO) */
-
-/* MODIFICAÇÃO: Ajuste dos blocos de funcionários */
-@media (max-width: 992px) {
-
-  /* 992px é um ponto de quebra comum para tablets */
-  .container-blocos-funcionarios {
-    /* Muda para 2 colunas */
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-
-  /* 600px é um ponto de quebra comum para smartphones */
-  .container-blocos-funcionarios {
-    /* Muda para 1 coluna */
-    grid-template-columns: 1fr;
-  }
-}
-
-/* 15. ESTILOS DO MODAL DE DETALHES */
-.modal-corpo {
-  padding: 10px 0 20px 0;
-  /* Espaçamento interno */
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  /* Espaço entre os itens (email, cargo, etc.) */
-}
-
-.modal-corpo p {
-  font-size: 16px;
-  color: var(--cor-texto-secundario);
-  line-height: 1.5;
-}
-
-.modal-corpo p strong {
-  color: var(--cor-texto-principal);
-  font-weight: 600;
-  margin-right: 8px;
-  min-width: 80px;
-  /* Alinha os valores */
-  display: inline-block;
-}
-
-/* 16. Estilo para Despesas Atrasadas */
-/* Aplica a cor vermelha nas células e no select da linha que tiver a classe .atrasado */
-.tabela-dados tbody tr.atrasado td,
-.tabela-dados tbody tr.atrasado select {
-  color: #ff6b6b !important;
-  /* Cor de erro/atenção */
-  font-weight: 600;
-}
-
-/* 17. ESTILOS PARA TABELA DE PRODUTOS */
-.img-produto-tabela {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid var(--cor-borda);
-}
-
-.status-disponivel {
-  color: var(--cor-acento-secundario);
-  font-weight: 600;
-}
-
-.status-indisponivel {
-  color: #ff6b6b;
-  /* Cor de erro/atenção definida anteriormente */
-  font-weight: 600;
-}
-
-/* 18. ESTILOS DAS SUB-ABAS (EDITAR SITE) */
+/* --- SUB-ABAS --- */
 .navegacao-sub-abas {
   display: flex;
   gap: 10px;
@@ -775,7 +757,7 @@ body {
 .botao-sub-aba {
   background: none;
   border: none;
-  color: var(--cor-texto-secundario);
+  color: var(--cor-text-muted);
   font-size: 16px;
   font-weight: 600;
   padding: 8px 16px;
@@ -785,23 +767,20 @@ body {
 }
 
 .botao-sub-aba:hover {
-  background-color: var(--cor-fundo-elementos);
-  color: var(--cor-texto-principal);
+  background-color: var(--cor-bg-hover);
+  color: var(--cor-text-main);
 }
 
 .botao-sub-aba.ativo {
-  background-color: var(--cor-acento-principal);
-  color: #111;
-  /* Contraste com o laranja */
+  background-color: var(--cor-primaria);
+  color: #fff;
 }
 
-/* Esconde todas as sub-seções por padrão */
 .conteudo-sub-aba {
   display: none;
   animation: fadeIn 0.3s ease;
 }
 
-/* Mostra apenas a ativa */
 .conteudo-sub-aba.ativo {
   display: block;
 }
@@ -811,94 +790,89 @@ body {
     opacity: 0;
     transform: translateY(5px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-/* --- PERSONALIZAÇÃO DA ABA HOME (EDITAR SITE) --- */
-
-/* Configuração do Grid para 4 colunas */
-#sub-home .area-widgets,
-#grid-home-widgets {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  /* Força exatas 4 colunas */
-  gap: 25px;
-  /* Aumenta um pouco o espaço entre eles */
+/* --- PÁGINAS DE CONTEÚDO --- */
+.pagina-conteudo {
+  display: none;
 }
 
-/* Aumenta o tamanho visual dos cartões nesta seção */
-#sub-home .cartao {
-  min-height: 280px;
-  /* Altura mínima maior para ficarem "maiores" */
-  padding: 30px;
-  /* Mais espaçamento interno (respiro) */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  /* Distribui bem o conteúdo verticalmente */
+.pagina-conteudo.ativa {
+  display: block;
 }
 
-/* Títulos dos cartões maiores */
-#sub-home .cartao h3 {
-  font-size: 18px;
-  margin-bottom: 15px;
+/* Ajuste para garantir que o conteúdo não fique escondido */
+.content-wrapper .pagina-conteudo.ativa {
+  display: block;
 }
 
-/* --- RESPONSIVIDADE (Para não quebrar em telas menores) --- */
-/* Em telas médias (laptops menores/tablets), muda para 2 por linha */
-@media (max-width: 1400px) {
+/* --- BUSCA --- */
+input[type="text"][id^="busca-"] {
+  background: transparent;
+  border: none;
+  color: var(--cor-text-main);
+  width: 100%;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+}
 
-  #sub-home .area-widgets,
-  #grid-home-widgets {
+/* --- STATUS SELECT --- */
+.status-select-despesa,
+.status-select-produto {
+  background: var(--cor-bg-hover);
+  border: 1px solid var(--cor-borda);
+  padding: 5px;
+  border-radius: 4px;
+  color: var(--cor-text-main);
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.status-select-despesa:focus,
+.status-select-produto:focus {
+  border-color: var(--cor-primaria);
+  outline: none;
+}
+
+/* --- DESPESAS ATRASADAS --- */
+.tabela-dados tbody tr.atrasado td,
+.tabela-dados tbody tr.atrasado select {
+  color: var(--cor-vermelho) !important;
+  font-weight: 600;
+}
+
+/* --- ALERTA --- */
+#alerta-contas-atrasadas {
+  background-color: var(--cor-vermelho);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+/* --- RESPONSIVIDADE --- */
+@media (max-width: 992px) {
+  .area-widgets {
     grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Em celulares, muda para 1 por linha */
-@media (max-width: 700px) {
-
-  #sub-home .area-widgets,
-  #grid-home-widgets {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* --- PERSONALIZAÇÃO DA ABA GALERIA --- */
-
-/* Força o grid da galeria a ter sempre 4 colunas, 
-   independentemente de quantos itens existam */
-#grid-galeria-items {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  /* 4 colunas de tamanho igual */
-  gap: 20px;
-}
-
-/* RESPONSIVIDADE:
-     Ajusta o número de colunas conforme a tela diminui,
-     para que os itens não fiquem muito apertados. */
-
-@media (max-width: 1200px) {
-  #grid-galeria-items {
-    grid-template-columns: repeat(3, 1fr);
-    /* 3 por linha em laptops menores */
-  }
-}
-
-@media (max-width: 900px) {
-  #grid-galeria-items {
-    grid-template-columns: repeat(2, 1fr);
-    /* 2 por linha em tablets */
   }
 }
 
 @media (max-width: 600px) {
-  #grid-galeria-items {
+  .area-widgets {
     grid-template-columns: 1fr;
-    /* 1 por linha em celulares */
+  }
+  
+  .content-wrapper {
+    padding: 20px;
+  }
+  
+  .topbar-moderna {
+    padding: 0 20px;
   }
 }

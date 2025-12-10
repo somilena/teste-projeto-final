@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SGA Staff</title>
-  <link rel="icon" href="/assets/img/sga-staff.png">
+  <link rel="icon" href="{{ url_for('static', filename='img/sga-staff.png') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/login/login-staff.css') }}">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
@@ -14,7 +14,7 @@
   <div class="container-centralizado">
     <div class="cartao-autenticacao">
       <div class="logo-sistema">
-        <img src="{{ url_for('static', filename='/img/sga-staff.png') }}" alt="Logo SGA Staff" class="logo-imagem-sga">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo ProdCumaru" class="logo-imagem-sga">
       </div>
       <p class="subtitulo-autenticacao" id="subtitulo-login-cadastro">
         Acesse sua conta profissional
