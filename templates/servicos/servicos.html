@@ -405,10 +405,10 @@
         </p>
 
         <div class="acoes-sucesso">
-          <a href="/pages/login/login-cliente.html" class="botao-primario botao-portal">
+          <a href="{{ url_for('portal') }}" class="botao-primario botao-portal">
             <i class="fas fa-user"></i> Acessar Portal do Cliente
           </a>
-          <a href="/index.html" class="link-voltar-home">Voltar para Home</a>
+          <a href="{{ url_for('home') }}" class="link-voltar-home">Voltar para Home</a>
         </div>
       </div>
     </div>
@@ -441,8 +441,8 @@
         </p>
       </div>
       <div class="cart-footer-buttons">
-        <a href="/pages/loja/carrinho.html" class="btn btn-secondary">Ver meu carrinho</a>
-        <a href="/pages/loja/checkout.html" id="checkout-btn" class="btn btn-primary">Ir para o checkout</a>
+        <a href="{{ url_for('servicos') }}" class="btn btn-secondary">Continuar Comprando</a>
+        <a href="{{ url_for('servicos') }}" id="checkout-btn" class="btn btn-primary">Ver Serviços</a>
       </div>
     </div>
   </aside>

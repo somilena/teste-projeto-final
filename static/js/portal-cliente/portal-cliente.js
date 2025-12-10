@@ -106,14 +106,12 @@ document.addEventListener("DOMContentLoaded", () => {
                           <span>ID: #${agenda.id.toString().slice(-4)}</span>
                       </div>
                       <div class="agendamento-servico">${agenda.servico}</div>
-                      <div><span class="status-badge confirmado">${
-                        agenda.status
-                      }</span></div>
+                      <div><span class="status-badge confirmado">${agenda.status
+          }</span></div>
                       <div>
                           <button class="btn-reagendar ${classeBtn}" 
-                                  onclick="abrirReagendamento('${
-                                    agenda.id
-                                  }', '${agenda.servico}')">
+                                  onclick="abrirReagendamento('${agenda.id
+          }', '${agenda.servico}')">
                               ${textoBtn}
                           </button>
                       </div>
@@ -149,7 +147,118 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- 4. MODAL E PERFIL ---
+  // --- 4. MODAL NOVO AGENDAMENTO ---
+  const modalNovoAgendamento = document.getElementById("modal-novo-agendamento-portal");
+  const btnAbrirNovoAgendamento = document.getElementById("btn-novo-agendamento-portal");
+  const btnFecharNovoAgendamento = document.getElementById("modal-fechar-novo-agendamento");
+  const formNovoAgendamento = document.getElementById("form-novo-agendamento-portal");
+
+  if (btnAbrirNovoAgendamento) {
+    btnAbrirNovoAgendamento.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (modalNovoAgendamento) {
+        modalNovoAgendamento.style.display = "flex";
+        // Focar no primeiro campo
+        setTimeout(() => {
+          const primeiroCampo = document.getElementById("agendamento-servico");
+          if (primeiroCampo) primeiroCampo.focus();
+        }, 100);
+      }
+    });
+  }
+
+  if (btnFecharNovoAgendamento) {
+    btnFecharNovoAgendamento.addEventListener("click", () => {
+      if (modalNovoAgendamento) modalNovoAgendamento.style.display = "none";
+    });
+  }
+
+  if (modalNovoAgendamento) {
+    modalNovoAgendamento.addEventListener("click", (e) => {
+      if (e.target === modalNovoAgendamento) modalNovoAgendamento.style.display = "none";
+    });
+  }
+
+  if (formNovoAgendamento) {
+    formNovoAgendamento.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const servico = document.getElementById("agendamento-servico");
+      const data = document.getElementById("agendamento-data-portal");
+      const horario = document.getElementById("agendamento-horario");
+      const obs = document.getElementById("agendamento-obs-portal");
+
+      if (!servico || !servico.value || !data || !data.value || !horario || !horario.value) {
+        alert("Por favor, preencha todos os campos obrigatórios.");
+        return;
+      }
+
+      // Formatar data
+      const dataObj = new Date(data.value + 'T00:00:00');
+      const dataFormatada = dataObj.toLocaleDateString("pt-BR");
+      const dataCompleta = `${dataFormatada} às ${horario.value}`;
+
+      // Criar novo agendamento
+      const novoAgendamento = {
+        id: Date.now(),
+        servico: servico.value,
+        data: dataCompleta,
+        status: "Confirmado",
+        obs: obs ? obs.value : ""
+      };
+
+      // Salvar no localStorage
+      const agendamentos = JSON.parse(localStorage.getItem("prodcumaru_agendamentos")) || [];
+      agendamentos.push(novoAgendamento);
+      localStorage.setItem("prodcumaru_agendamentos", JSON.stringify(agendamentos));
+
+      // Fechar modal
+      if (modalNovoAgendamento) modalNovoAgendamento.style.display = "none";
+
+      // Limpar formulário
+      formNovoAgendamento.reset();
+
+      // Recarregar lista de agendamentos
+      if (listaBody) {
+        listaBody.innerHTML = "";
+        const agendamentosAtualizados = JSON.parse(localStorage.getItem("prodcumaru_agendamentos")) || [];
+
+        if (agendamentosAtualizados.length === 0) {
+          listaBody.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--cor-text-muted);">Você ainda não tem agendamentos.</div>';
+        } else {
+          agendamentosAtualizados.reverse().forEach((agenda) => {
+            const ativo = podeReagendar(agenda.data);
+            const classeBtn = ativo ? "" : "desativado";
+            const textoBtn = ativo ? "Reagendar" : "Fixo (< 48h)";
+
+            const html = `
+              <div class="agendamento-row">
+                <div class="agendamento-data">
+                  <strong>${agenda.data}</strong>
+                  <span>ID: #${agenda.id.toString().slice(-4)}</span>
+                </div>
+                <div class="agendamento-servico">${agenda.servico}</div>
+                <div><span class="status-badge confirmado">${agenda.status}</span></div>
+                <div>
+                  <button class="btn-reagendar ${classeBtn}" 
+                          onclick="abrirReagendamento('${agenda.id}', '${agenda.servico}')">
+                    ${textoBtn}
+                  </button>
+                </div>
+              </div>
+            `;
+            listaBody.insertAdjacentHTML("beforeend", html);
+          });
+        }
+      }
+
+      // Mostrar mensagem de sucesso
+      alert("Agendamento criado com sucesso!");
+    });
+  }
+
+  // --- 5. MODAL E PERFIL ---
   const modal = document.getElementById("modal-reagendamento");
   const btnFecharModal = document.getElementById("modal-fechar");
 

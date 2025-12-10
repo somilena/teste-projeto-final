@@ -413,6 +413,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // (Opcional) Simula o login automático no SessionStorage para facilitar
       sessionStorage.setItem("usuario_logado", JSON.stringify(novoUsuario));
+      localStorage.setItem("usuario_logado_demo", JSON.stringify(novoUsuario));
+
+      // Salva também a senha (em produção, isso seria feito no backend)
+      if (senhaInput && senhaInput.value) {
+        novoUsuario.senha = senhaInput.value;
+        novoUsuario.telefone = telefoneInput ? telefoneInput.value : "";
+      }
     });
   }
 });

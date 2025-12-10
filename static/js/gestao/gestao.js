@@ -1605,6 +1605,164 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Inicializa tabela
   atualizarTabelaClientes();
+
+  // =================================================================
+  // 13. LÓGICA DE NOVO CLIENTE (MODAL)
+  // =================================================================
+  const modalNovoCliente = document.getElementById("modal-novo-cliente");
+  const botaoAbrirModalCliente = document.getElementById("botao-novo-cliente");
+  const botaoFecharModalCliente = document.getElementById("modal-fechar-cliente");
+  const formNovoCliente = document.getElementById("form-novo-cliente");
+  const btnSalvarCliente = document.getElementById("btn-salvar-cliente");
+
+  // Função para alternar campos PF/PJ
+  window.toggleCamposCliente = function () {
+    const tipoPF = document.getElementById("tipo-pf-modal");
+    const tipoPJ = document.getElementById("tipo-pj-modal");
+    const camposPF = document.getElementById("campos-pf-modal");
+    const camposPJ = document.getElementById("campos-pj-modal");
+
+    if (!tipoPF || !camposPF) return;
+
+    if (tipoPF.checked) {
+      camposPF.style.display = "block";
+      if (camposPJ) camposPJ.style.display = "none";
+      const nome = document.getElementById("cliente-nome");
+      const cpf = document.getElementById("cliente-cpf");
+      const nasc = document.getElementById("cliente-nascimento");
+      const razao = document.getElementById("cliente-razao-social");
+      const cnpj = document.getElementById("cliente-cnpj");
+      if (nome) nome.required = true;
+      if (cpf) cpf.required = true;
+      if (nasc) nasc.required = true;
+      if (razao) razao.required = false;
+      if (cnpj) cnpj.required = false;
+    } else {
+      if (camposPF) camposPF.style.display = "none";
+      if (camposPJ) camposPJ.style.display = "block";
+      const nome = document.getElementById("cliente-nome");
+      const cpf = document.getElementById("cliente-cpf");
+      const nasc = document.getElementById("cliente-nascimento");
+      const razao = document.getElementById("cliente-razao-social");
+      const cnpj = document.getElementById("cliente-cnpj");
+      if (nome) nome.required = false;
+      if (cpf) cpf.required = false;
+      if (nasc) nasc.required = false;
+      if (razao) razao.required = true;
+      if (cnpj) cnpj.required = true;
+    }
+  };
+
+  const abrirModalNovoCliente = () => {
+    if (formNovoCliente) formNovoCliente.reset();
+    document.getElementById("tipo-pf-modal").checked = true;
+    toggleCamposCliente();
+    if (modalNovoCliente) modalNovoCliente.style.display = "flex";
+  };
+
+  const fecharModalNovoCliente = () => {
+    if (modalNovoCliente) modalNovoCliente.style.display = "none";
+    if (formNovoCliente) formNovoCliente.reset();
+  };
+
+  if (botaoAbrirModalCliente) botaoAbrirModalCliente.addEventListener("click", abrirModalNovoCliente);
+  if (botaoFecharModalCliente) botaoFecharModalCliente.addEventListener("click", fecharModalNovoCliente);
+
+  if (modalNovoCliente) {
+    modalNovoCliente.addEventListener("click", (e) => {
+      if (e.target === modalNovoCliente) fecharModalNovoCliente();
+    });
+  }
+
+  // Formatação de CPF
+  const inputCpfCliente = document.getElementById("cliente-cpf");
+  if (inputCpfCliente) {
+    inputCpfCliente.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.substring(0, 11);
+      let formattedValue = value;
+      if (value.length > 9) formattedValue = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+      else if (value.length > 6) formattedValue = value.replace(/^(\d{3})(\d{3})(\d{3})/, '$1.$2.$3');
+      else if (value.length > 3) formattedValue = value.replace(/^(\d{3})(\d{3})/, '$1.$2');
+      e.target.value = formattedValue;
+    });
+  }
+
+  // Formatação de CNPJ
+  const inputCnpjCliente = document.getElementById("cliente-cnpj");
+  if (inputCnpjCliente) {
+    inputCnpjCliente.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.substring(0, 14);
+      let formattedValue = value;
+      if (value.length > 12) formattedValue = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+      else if (value.length > 8) formattedValue = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})/, '$1.$2.$3/$4');
+      else if (value.length > 5) formattedValue = value.replace(/^(\d{2})(\d{3})(\d{3})/, '$1.$2.$3');
+      else if (value.length > 2) formattedValue = value.replace(/^(\d{2})(\d{3})/, '$1.$2');
+      e.target.value = formattedValue;
+    });
+  }
+
+  // Formatação de CEP
+  const inputCepCliente = document.getElementById("cliente-cep");
+  if (inputCepCliente) {
+    inputCepCliente.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.substring(0, 8);
+      if (value.length > 5) value = value.replace(/^(\d{5})(\d{3})/, '$1-$2');
+      e.target.value = value;
+    });
+  }
+
+  // Formatação de Telefone
+  const inputTelCliente = document.getElementById("cliente-telefone");
+  if (inputTelCliente) {
+    inputTelCliente.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.substring(0, 11);
+      let formattedValue = value;
+      if (value.length > 10) formattedValue = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+      else if (value.length > 6) formattedValue = value.replace(/^(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+      else if (value.length > 2) formattedValue = value.replace(/^(\d{2})(\d{0,4})/, '($1) $2');
+      e.target.value = formattedValue;
+    });
+  }
+
+  // Submit do formulário
+  if (formNovoCliente) {
+    formNovoCliente.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(formNovoCliente);
+
+      try {
+        setButtonLoading(btnSalvarCliente, true, 'Salvando...');
+        const response = await fetch('/gestao/cliente/salvar', {
+          method: 'POST',
+          body: formData,
+          credentials: 'same-origin'
+        });
+
+        if (!response.ok) throw new Error('Erro ao salvar cliente');
+
+        if (window.registrarLog) {
+          const tipo = formData.get('tipo-pessoa') === 'pf' ? 'PF' : 'PJ';
+          const nome = formData.get('tipo-pessoa') === 'pf' ? formData.get('nome') : formData.get('razao_social');
+          window.registrarLog(`Cliente cadastrado (${tipo}): ${nome}`);
+        }
+
+        showToast('Cliente cadastrado com sucesso!', 'success');
+        fecharModalNovoCliente();
+        await carregarClientes();
+      } catch (erro) {
+        console.error('Erro ao salvar cliente:', erro);
+        showToast('Erro ao cadastrar cliente.', 'error', erro.message || '');
+      } finally {
+        setButtonLoading(btnSalvarCliente, false);
+      }
+    });
+  }
+
   // --- INICIALIZAÇÕES FINAIS ---
   renderizarLogs();
 
