@@ -774,6 +774,99 @@
     </div>
   </div>
 
+  <div class="modal-overlay" id="modal-novo-cliente">
+    <div class="modal-conteudo" style="max-width: 600px; max-height: 90vh; overflow-y: auto;">
+      <header class="modal-cabecalho">
+        <h2 id="titulo-modal-cliente">Novo Cliente</h2>
+        <button class="modal-fechar" id="modal-fechar-cliente">&times;</button>
+      </header>
+      <form class="formulario-modal" id="form-novo-cliente" action="{{ url_for('salvar_cliente_externo') }}"
+        method="POST">
+        <div class="campo-formulario">
+          <label>Tipo de Pessoa</label>
+          <div style="display: flex; gap: 15px; margin-top: 8px;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="radio" name="tipo-pessoa" value="pf" id="tipo-pf-modal" checked
+                onchange="toggleCamposCliente()">
+              <span>Pessoa Física</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="radio" name="tipo-pessoa" value="pj" id="tipo-pj-modal" onchange="toggleCamposCliente()">
+              <span>Pessoa Jurídica</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Campos Pessoa Física -->
+        <div id="campos-pf-modal">
+          <div class="campo-formulario">
+            <label>Nome Completo *</label>
+            <input type="text" id="cliente-nome" name="nome" required />
+          </div>
+          <div class="campo-formulario">
+            <label>CPF *</label>
+            <input type="text" id="cliente-cpf" name="cpf" placeholder="000.000.000-00" maxlength="14" required />
+          </div>
+          <div class="campo-formulario">
+            <label>Data de Nascimento *</label>
+            <input type="date" id="cliente-nascimento" name="nascimento" required />
+          </div>
+        </div>
+
+        <!-- Campos Pessoa Jurídica -->
+        <div id="campos-pj-modal" style="display: none;">
+          <div class="campo-formulario">
+            <label>Razão Social *</label>
+            <input type="text" id="cliente-razao-social" name="razao_social" />
+          </div>
+          <div class="campo-formulario">
+            <label>CNPJ *</label>
+            <input type="text" id="cliente-cnpj" name="cnpj" placeholder="00.000.000/0001-00" maxlength="18" />
+          </div>
+        </div>
+
+        <!-- Campos Comuns -->
+        <div class="campo-formulario">
+          <label>Email *</label>
+          <input type="email" id="cliente-email" name="email" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Telefone *</label>
+          <input type="tel" id="cliente-telefone" name="telefone" placeholder="(DD) 9XXXX-XXXX" required />
+        </div>
+        <div class="campo-formulario">
+          <label>CEP *</label>
+          <input type="text" id="cliente-cep" name="cep" placeholder="00000-000" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Logradouro (Rua/Av) *</label>
+          <input type="text" id="cliente-logradouro" name="logradouro" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Número *</label>
+          <input type="text" id="cliente-numero" name="numero" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Bairro *</label>
+          <input type="text" id="cliente-bairro" name="bairro" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Cidade *</label>
+          <input type="text" id="cliente-cidade" name="cidade" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Estado (UF) *</label>
+          <input type="text" id="cliente-estado" name="estado" placeholder="DF" maxlength="2" required />
+        </div>
+        <div class="campo-formulario">
+          <label>Senha *</label>
+          <input type="password" id="cliente-senha" name="senha" required />
+        </div>
+        <button type="submit" id="btn-salvar-cliente" class="botao-principal">Salvar Cliente</button>
+      </form>
+    </div>
+  </div>
+
   <script src="{{ url_for('static', filename='js/gestao/gestao.js') }}"></script>
 </body>
 
