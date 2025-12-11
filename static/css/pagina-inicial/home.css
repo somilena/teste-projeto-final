@@ -1,0 +1,1576 @@
+/* ============================================= */
+/* ARQUIVO: home.css */
+/* Estilos específicos da página Home */
+/* ============================================= */
+
+/* ============================================= */
+/* --- AJUSTES GERAIS DE LAYOUT DA HOME --- */
+/* ============================================= */
+
+/* Esconde todos os subtítulos das seções (ex: "MUSIC DEMO") */
+.titulo-secao .subtitulo-secao {
+  display: none;
+}
+
+/* Alarga o conteúdo de todas as seções-padrão na home */
+.container-secao,
+.container-grid {
+  max-width: 1400px;
+  /* Aumentado de 1200px para 1400px */
+}
+
+/* --- SOBRESCREVE O HEADER SÓ PARA A HOME --- */
+/* No seu home.css */
+.cabecalho {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  width: 100%;
+
+  /* --- ADICIONE ESTA LINHA --- */
+  padding: 28px 80px;
+  /* Força a Home a começar grande */
+
+  background-color: transparent;
+  border-bottom: none;
+  transition: background-color 0.4s ease, padding 0.4s ease;
+}
+
+.cabecalho.scrolled {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid #333;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+
+  /* --- ADICIONE ESTAS LINHAS PARA "ENCOLHER" --- */
+  position: fixed;
+  /* Precisa ser fixo ao rolar */
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 80px;
+  /* <-- Padding vertical MENOR */
+}
+
+/* ADICIONE ESTA NOVA REGRA */
+.cabecalho.scrolled .logo-imagem {
+  height: 45px;
+  /* <-- Altura MENOR para o logo */
+  transition: height 0.4s ease;
+  /* Transição suave */
+}
+
+/* ============================================= */
+/* --- ESTILOS DA SEÇÃO "HERO" (VERSÃO CORRETA) --- */
+/* ============================================= */
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  /* Habilita flexbox para centralização */
+  align-items: center;
+  /* Centraliza verticalmente */
+  justify-content: center;
+  /* Centraliza horizontalmente */
+  position: relative;
+  overflow: hidden;
+
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+    url("../../img/fundo-pagina-studio.png");
+
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+}
+
+/* --- NOVOS ESTILOS PARA O CONTEÚDO CENTRALIZADO --- */
+.hero-content-centered {
+  text-align: center;
+  /* Centraliza o texto */
+  color: var(--cor-texto-principal);
+  /* Garante cor branca */
+  max-width: 800px;
+  /* Limita a largura para o texto não ficar muito longo */
+  padding: 0 20px;
+  /* Padding nas laterais em telas menores */
+  position: relative;
+  /* Para garantir z-index acima do fundo */
+  z-index: 2;
+  /* Fica acima do fundo */
+
+  /* Adiciona padding no topo para o header fixo não cobrir o texto */
+  padding-top: 100px;
+}
+
+.hero-content-centered .subtitulo-hero {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--cor-terciaria);
+  /* Cor roxa da referência */
+  margin-bottom: 20px;
+  display: block;
+  /* Para a margem funcionar */
+}
+
+.hero-content-centered h1 {
+  font-size: 60px;
+  /* Tamanho do título */
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 40px;
+  /* Espaço antes do botão */
+  color: var(--cor-texto-principal);
+  /* Branco */
+}
+
+/* ============================================= */
+/* --- SEÇÃO "SERVIÇOS" ... */
+/* ============================================= */
+
+/* --- ESTILOS DA SEÇÃO "SERVIÇOS" --- */
+.secao-servicos {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.servicos-grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.servico-card {
+  background-color: var(--cor-fundo-secundario);
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.servico-card:hover {
+  transform: translateY(-10px);
+  background-color: #222;
+}
+
+.servico-icone {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--cor-primaria);
+  color: var(--cor-texto-principal);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  margin: 0 auto 25px auto;
+  border: 5px solid var(--cor-fundo);
+  outline: 2px solid var(--cor-primaria);
+}
+
+.servico-card h3 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.servico-card p {
+  color: var(--cor-texto-secundario);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+/* --- ESTILOS DA SEÇÃO "PODCAST EM DESTAQUE" --- */
+/* 1. Regra para a SEÇÃO (para ocupar 100% da altura) */
+.secao-podcast {
+  min-height: 100vh;
+  /* Faz a seção ocupar a altura toda da tela */
+  display: flex;
+  align-items: center;
+  /* Centraliza o conteúdo verticalmente */
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.podcast-grade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 25px;
+}
+
+.podcast-card {
+  background-color: var(--cor-fundo);
+}
+
+.podcast-imagem {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.podcast-imagem img {
+  width: 100%;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+/* --- BOTÃO VOLTAR AO TOPO (HOME APENAS) --- */
+.btn-topo {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.72);
+  color: #fff;
+  border-radius: 50%;
+  z-index: 2000;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.btn-topo.show {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+  transform: translateY(0);
+}
+
+.btn-topo i {
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .btn-topo {
+    right: 16px;
+    bottom: 16px;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.overlay-play {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 50px;
+  color: var(--cor-texto-principal);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.podcast-card:hover .overlay-play {
+  opacity: 1;
+}
+
+.podcast-card:hover .podcast-imagem img {
+  transform: scale(1.1);
+}
+
+.podcast-info {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 0 5px;
+}
+
+.podcast-info span {
+  display: block;
+  font-size: 14px;
+  color: var(--cor-texto-secundario);
+}
+
+.podcast-info h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+  margin-top: 5px;
+}
+
+.podcast-play-btn {
+  font-size: 32px;
+  color: var(--cor-texto-secundario);
+  transition: color 0.3s ease;
+}
+
+.podcast-play-btn:hover {
+  color: var(--cor-primaria);
+}
+
+.secao-como-funciona {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+.como-funciona-grade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+}
+
+/* ============================================= */
+/* --- ESTILOS DA SEÇÃO "COMO FUNCIONA" (4 CARDS) --- */
+/* ============================================= */
+
+/* A cor de fundo CINZA já é aplicada pela regra de 
+   fundos alternados no final do arquivo */
+
+/* Grade de 4 colunas */
+.como-funciona-grade {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+  margin-top: 50px;
+  /* Espaço extra abaixo do título */
+}
+
+.como-funciona-card {
+  text-align: center;
+  padding: 30px 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  /* Fundo cinza para se destacar do fundo da seção */
+  background-color: var(--cor-fundo-secundario);
+}
+
+.como-funciona-icone {
+  font-size: 50px;
+  /* Tamanho do ícone */
+  color: var(--cor-texto-secundario);
+  margin-bottom: 30px;
+  transition: color 0.3s ease;
+}
+
+.como-funciona-card h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.como-funciona-card p {
+  font-size: 16px;
+  color: var(--cor-texto-secundario);
+  line-height: 1.5;
+  transition: color 0.3s ease;
+}
+
+/* Efeito de Hover (Laranja) */
+.como-funciona-card:hover {
+  background-color: var(--cor-primaria);
+  transform: scale(1.05);
+}
+
+/* Muda a cor de TUDO dentro do card para branco no hover */
+.como-funciona-card:hover .como-funciona-icone,
+.como-funciona-card:hover h3,
+.como-funciona-card:hover p {
+  color: var(--cor-texto-principal);
+}
+
+/* --- ESTILOS DA SEÇÃO "MEMBROS DA BANDA" --- */
+.secao-membros {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.membros-grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.membro-card {
+  text-align: center;
+}
+
+.membro-imagem {
+  margin-bottom: 25px;
+  overflow: hidden;
+}
+
+.membro-imagem img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.membro-card:hover .membro-imagem img {
+  transform: scale(1.05);
+}
+
+.membro-info span {
+  display: block;
+  font-size: 14px;
+  color: var(--cor-texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+}
+
+.membro-info h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+}
+
+/* --- ESTILOS DA SEÇÃO "SOBRE NÓS" --- */
+.secao-sobre-nos {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+  padding: 120px 0;
+}
+
+.sobre-nos-conteudo h2 {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+  margin-top: 10px;
+}
+
+.sobre-nos-estatisticas {
+  display: flex;
+  gap: 40px;
+  margin: 40px 0;
+}
+
+.stat-numero {
+  display: block;
+  font-size: 56px;
+  font-weight: 700;
+  color: var(--cor-primaria);
+  line-height: 1.1;
+}
+
+.stat-label {
+  display: block;
+  font-size: 16px;
+  color: var(--cor-texto-secundario);
+  margin-top: 5px;
+}
+
+.sobre-nos-imagem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sobre-nos-circulo-gradiente {
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center,
+      var(--cor-gradiente-1) 0%,
+      var(--cor-gradiente-2) 70%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.sobre-nos-circulo-gradiente img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+/* --- ESTILOS DA SEÇÃO "VÍDEO PROMOCIONAL" --- */
+.secao-video {
+  /* Troque a URL pela sua imagem de fundo */
+  background-image: linear-gradient(to right,
+      rgba(29, 106, 108, 0.8),
+      rgba(212, 95, 62, 0.8)),
+    url("../../img/fundo-pagina-studio1.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  padding: 120px 0;
+  text-align: center;
+  position: relative;
+}
+
+.video-conteudo h2 {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+  margin-top: 10px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.3;
+}
+
+.botao-play-video {
+  display: inline-flex;
+  width: 100px;
+  height: 100px;
+  background-color: #fff;
+  color: #000;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-top: 30px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.botao-play-video:hover {
+  background-color: var(--cor-primaria);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* --- ESTILOS DA SEÇÃO "PLAYER DE PODCAST" --- */
+.secao-player {
+  padding-top: 80px;
+  padding-bottom: 80px;
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+  /* A seção usa .container-grid (global) */
+}
+
+.player-imagem img {
+  width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.player-conteudo h2 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.player-audio {
+  margin: 30px 0;
+}
+
+.player-audio audio {
+  width: 100%;
+}
+
+.player-descricao {
+  color: var(--cor-texto-secundario);
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.player-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* ============================================= */
+/* --- SEÇÃO VÍDEOS DE ESTUDO DE CASO (Carrossel - VISUAL CORRETO) --- */
+/* ============================================= */
+
+.secao-case-studies {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+  padding: 80px 0;
+  /* Remove padding lateral */
+  position: relative;
+}
+
+.case-studies-container {
+  max-width: 100%;
+  /* Ocupa toda a largura */
+  margin: 0 auto;
+  position: relative;
+}
+
+.case-studies-wrapper {
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+  white-space: nowrap;
+  /* Padding na esquerda (igual ao header) e direita (para o botão) */
+  padding: 20px 160px 20px 80px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.case-studies-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* O CARD (container principal) */
+.case-card {
+  width: 480px;
+  height: 300px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+
+.case-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* A IMAGEM DE FUNDO */
+.case-card-imagem {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.4s ease, filter 0.4s ease;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.case-card-imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transition: transform 0.4s ease;
+}
+
+/* Gradiente escuro na base (como na ref) */
+.case-card::before {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75) 0%, transparent 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+.case-card:hover .case-card-imagem img {
+  transform: scale(1.05);
+}
+
+/* Removidas as regras de background-image antigas pois agora usamos <img> */
+
+/* Duração (20 MINS) */
+.case-card span {
+  color: var(--cor-texto-principal);
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 3;
+  /* Fica na frente de tudo */
+  padding-bottom: 8px;
+}
+
+/* Linha branca abaixo da duração */
+.case-card span::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 30px;
+  height: 2px;
+  background-color: #fff;
+}
+
+/* Título (Vocals acapella) */
+.case-card h3 {
+  font-size: 24px;
+  /* Ajustado */
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+  line-height: 1.2;
+  margin: 0;
+  position: relative;
+  z-index: 3;
+}
+
+/* Botão de Play (VISUAL CORRETO - CÍRCULO BRANCO) */
+.case-card-play-inline {
+  position: absolute;
+  bottom: 25px;
+  right: 25px;
+  z-index: 3;
+  width: 45px;
+  /* Menor */
+  height: 45px;
+  background-color: #fff;
+  /* Branco */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  /* Ícone preto */
+  font-size: 16px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.case-card-play-inline:hover {
+  transform: scale(1.1);
+}
+
+/* Remove o anel laranja/giratório */
+.case-card-play-inline::before {
+  display: none;
+}
+
+/* NAVEGAÇÃO (Setas) - VISUAL CORRETO SIMPLES */
+.case-studies-nav {
+  position: absolute;
+  top: 50%;
+  /* Centraliza verticalmente */
+  transform: translateY(-50%);
+  right: 80px;
+  /* Alinha com o padding do header */
+  display: flex;
+  gap: 15px;
+  z-index: 10;
+
+  /* Estilo do container cinza (como na ref) */
+  background-color: #1a1a1a;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Seta (remove todo o CSS de anel giratório) */
+.nav-arrow {
+  background: transparent;
+  color: var(--cor-texto-secundario);
+  border: none;
+  border-radius: 0;
+  width: auto;
+  height: auto;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: static;
+  /* Remove posicionamento */
+  overflow: visible;
+}
+
+.nav-arrow i {
+  position: static;
+}
+
+.nav-arrow:hover {
+  background: transparent;
+  color: var(--cor-primaria);
+  /* Fica laranja no hover */
+}
+
+/* Esconde a seta "esquerda" (como na ref) */
+.nav-arrow#scroll-left {
+  display: none;
+}
+
+/* Remove o gradiente giratório */
+.nav-arrow::before {
+  display: none;
+}
+
+.nav-arrow:hover::before {
+  display: none;
+}
+
+/* (A @keyframes spin não é mais necessária e pode ser apagada) */
+
+/* --- SEÇÃO BANNER DE CTA --- */
+.secao-cta-banner {
+  /* (Substitui a .secao-video antiga) */
+  /* Você precisa da imagem de fundo: image_ea9998.jpg */
+  background-image: linear-gradient(to right,
+      rgba(212, 95, 62, 0.7),
+      rgba(27, 106, 108, 0.7)),
+    url("../../img/fundo-pagina-studio2.png");
+  /* <-- TROQUE AQUI */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  text-align: center;
+}
+
+.secao-cta-banner .container-secao {
+  padding: 120px 20px;
+}
+
+.cta-conteudo h2 {
+  font-size: 52px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.cta-conteudo p {
+  font-size: 20px;
+  color: var(--cor-texto-principal);
+  margin-bottom: 30px;
+}
+
+/* ============================================= */
+/* --- SEÇÃO EPISÓDIOS RECENTES (VISUAL CORRETO) --- */
+/* ============================================= */
+
+.episodios-grade {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.episodio-card {
+  position: relative;
+  /* Para posicionar o conteúdo */
+  height: 350px;
+  /* Altura fixa para os cards */
+  border-radius: 10px;
+  /* Bordas arredondadas */
+  overflow: hidden;
+  /* Corta a imagem e gradiente */
+  display: flex;
+  /* Para alinhar o conteúdo */
+  flex-direction: column;
+  justify-content: flex-end;
+  /* Alinha o texto na base */
+  padding: 30px;
+
+  /* Remove o fundo cinza */
+  /* background-color: var(--cor-fundo-secundario); */
+}
+
+/* A IMAGEM DE FUNDO (que vem do HTML) */
+.episodio-imagem {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  /* Fica no fundo */
+}
+
+.episodio-imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Cobre todo o espaço */
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.episodio-card:hover .episodio-imagem img {
+  transform: scale(1.05);
+  /* Efeito de zoom */
+}
+
+/* GRADIENTE ESCURO (para legibilidade) */
+.episodio-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Gradiente mais forte no topo e na base */
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0.7) 0%,
+      transparent 40%,
+      rgba(0, 0, 0, 0.7) 100%);
+  z-index: 2;
+  /* Fica sobre a imagem */
+}
+
+/* A CAIXINHA DA DATA (Estilo da referência) */
+.episodio-data {
+  position: absolute;
+  top: 30px;
+  /* Espaço do padding */
+  left: 30px;
+  /* Espaço do padding */
+  background-color: #fff;
+  color: #000;
+  width: 60px;
+  height: 60px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 700;
+  padding-top: 10px;
+  line-height: 1.1;
+  z-index: 3;
+  /* Fica na frente de tudo */
+}
+
+.episodio-data span {
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.episodio-data strong {
+  font-size: 24px;
+  display: block;
+}
+
+/* O TEXTO (Episódio e Título) */
+.episodio-info {
+  padding: 0;
+  /* Remove o padding antigo */
+  position: relative;
+  z-index: 3;
+  /* Fica na frente de tudo */
+}
+
+.episodio-meta {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--cor-texto-secundario);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.episodio-info h3 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  margin-top: 5px;
+  line-height: 1.2;
+}
+
+/* --- SEÇÃO DEPOIMENTOS --- */
+.secao-depoimentos {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+.depoimentos-grade {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 50px;
+}
+
+.depoimento-card {
+  /* (O fundo é o da seção) */
+}
+
+.depoimento-card h4 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.depoimento-card p {
+  font-size: 18px;
+  color: var(--cor-texto-secundario);
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.depoimento-autor {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  border-top: 1px solid #333;
+  padding-top: 30px;
+}
+
+.depoimento-autor img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+}
+
+.autor-info strong {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.autor-info span {
+  color: var(--cor-texto-secundario);
+  font-size: 14px;
+}
+
+/* --- SEÇÃO PODCAST FAVORITO (Grade 3 colunas) --- */
+.favorito-grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.favorito-card {
+  /* (Similar ao de produto) */
+}
+
+.favorito-card img {
+  width: 100%;
+  display: block;
+  margin-bottom: 20px;
+  border-radius: 5px;
+}
+
+.favorito-info span {
+  font-size: 14px;
+  color: var(--cor-texto-secundario);
+}
+
+.favorito-info h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-top: 10px;
+  line-height: 1.4;
+}
+
+.favorito-info h3 a {
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+.favorito-info h3 a:hover {
+  color: var(--cor-primaria);
+}
+
+/* --- SEÇÃO ÚLTIMOS PRODUTOS (Loja) --- */
+.secao-produtos {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.produtos-grade {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.produto-imagem {
+  position: relative;
+  background-color: var(--cor-fundo);
+  margin-bottom: 25px;
+}
+
+.produto-imagem img {
+  width: 100%;
+  display: block;
+}
+
+.produto-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background-color: var(--cor-primaria);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.produto-info {
+  text-align: center;
+}
+
+.produto-info h3 {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.produto-info h3 a {
+  color: #fff;
+  transition: color 0.3s ease;
+}
+
+.produto-info h3 a:hover {
+  color: var(--cor-primaria);
+}
+
+.produto-preco {
+  font-size: 16px;
+  color: var(--cor-texto-secundario);
+  margin: 10px 0 20px 0;
+  display: block;
+}
+
+/* O botão .botao-terciario já está no principal.css */
+
+/* --- SEÇÃO APRESENTADORES POPULARES --- */
+.hosts-grade {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+  /* Permite quebra de linha em telas menores */
+}
+
+.host-card {
+  text-align: center;
+  width: 150px;
+  /* Largura do card */
+}
+
+.host-card img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.host-card:hover img {
+  transform: scale(1.05);
+}
+
+.host-card h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* --- SEÇÃO EM COLABORAÇÃO COM --- */
+.secao-colaboracao {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+/* Garante que o título da seção colaboração 
+   tenha o peso e alinhamento corretos */
+.secao-colaboracao .titulo-secao h2 {
+  font-size: 42px;
+  /* Um pouco menor que o padrão de 48px */
+  font-weight: 700;
+  /* Garante que seja negrito */
+  text-align: center;
+  /* Garante a centralização */
+  margin-bottom: 40px;
+  /* Espaço antes dos logos */
+}
+
+.logos-grade {
+  display: flex;
+  justify-content: space-between;
+  /* <-- MUDADO para 'space-between' para melhor distribuição */
+  align-items: center;
+  gap: 20px;
+  /* flex-wrap: wrap; FOI REMOVIDO */
+
+  filter: grayscale(1) opacity(0.6);
+  transition: all 0.3s ease;
+}
+
+.logos-grade:hover {
+  filter: grayscale(0) opacity(1);
+  /* Tira o filtro ao passar o mouse */
+}
+
+.logos-grade img {
+  max-height: 40px;
+  width: auto;
+}
+
+/* ============================================= */
+/* --- SEÇÃO NOSSOS PROGRAMAS (Carrossel) --- */
+/* ============================================= */
+
+.secao-nossos-programas {
+  background-color: var(--cor-fundo);
+  padding: 60px 0 80px 0;
+  /* Menos padding no topo */
+  position: relative;
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+/* Container específico para esta seção */
+.programas-container {
+  max-width: 1920px;
+  /* Largura máxima */
+  margin: 0 auto;
+  position: relative;
+  /* Adiciona padding lateral para respiro */
+  padding: 0 80px;
+}
+
+/* Wrapper que vai rolar */
+.programas-wrapper {
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+  white-space: nowrap;
+  /* Padding inferior para afastar as setas */
+  padding-bottom: 20px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.programas-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* O card do programa */
+.programa-card {
+  width: 380px;
+  /* Largura do card (ajuste se precisar) */
+  flex-shrink: 0;
+  white-space: normal;
+  background-color: var(--cor-fundo-secundario);
+  border-radius: 10px;
+  overflow: hidden;
+  /* Garante que a imagem não vaze */
+  transition: all 0.3s ease;
+  border: 1px solid #222;
+  /* Borda sutil */
+}
+
+.programa-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.programa-imagem img {
+  width: 100%;
+  height: 200px;
+  /* Altura fixa para a imagem */
+  object-fit: cover;
+  /* Cobre o espaço */
+  display: block;
+}
+
+.programa-info {
+  padding: 25px;
+}
+
+.programa-info h3 {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--cor-texto-principal);
+  margin-bottom: 10px;
+}
+
+.programa-info p {
+  font-size: 15px;
+  color: var(--cor-texto-secundario);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  /* Limita a descrição a 3 linhas (opcional) */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* O botão .botao-secundario já está estilizado no principal.css */
+
+/* Navegação (Setas) */
+.programas-nav {
+  position: absolute;
+  bottom: 0px;
+  /* Alinha com o fundo do wrapper */
+  right: 80px;
+  /* Alinha com o padding do container */
+  display: flex;
+  gap: 10px;
+  /* Reutiliza o estilo .nav-arrow do carrossel anterior */
+}
+
+/* (Não precisamos redefinir .nav-arrow se ele já existe no home.css) */
+/* Se .nav-arrow não estiver no home.css, copie as regras dele aqui */
+
+/* Ajuste no ::before do nav-arrow se quiser o mesmo efeito */
+/* .programas-nav .nav-arrow::before { ... } */
+/* .programas-nav .nav-arrow:hover { ... } */
+/* .programas-nav .nav-arrow:hover::before { ... } */
+
+/* ============================================= */
+/* --- FUNDOS ALTERNADOS DAS SECÇÕES (CORREÇÃO) --- */
+/* ============================================= */
+
+/* O fundo do BODY é PRETO, então começamos com CINZA */
+
+/* (Hero tem fundo especial) */
+
+.secao-case-studies {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+.secao-sobre-nos {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.secao-player {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+.secao-podcast {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.secao-servicos {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+.secao-como-funciona {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.secao-episodios-recentes {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+.secao-hosts {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.secao-membros {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+.secao-depoimentos {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.secao-produtos {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+.secao-colaboracao {
+  background-color: var(--cor-fundo);
+  /* PRETO */
+}
+
+.secao-podcast-favorito {
+  background-color: var(--cor-fundo-secundario);
+  /* CINZA */
+}
+
+/* (CTA Banner tem fundo especial) */
+
+/* ============================================= */
+/* --- ESTILOS RESPONSIVOS (HOME) --- */
+/* ============================================= */
+
+/* --- TABLETS E TELAS MENORES (992px) --- */
+@media (max-width: 992px) {
+
+  /* --- AJUSTES GERAIS --- */
+  .container-secao,
+  .container-grid {
+    max-width: 100%;
+    padding: 60px 25px;
+  }
+
+  .titulo-secao h2,
+  .hero-content-centered h1 {
+    font-size: 40px;
+  }
+
+  /* --- HERO --- */
+  .hero {
+    min-height: 80vh;
+  }
+
+  .hero-grid-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding-top: 100px;
+  }
+
+  /* Ajusta o padding do carrossel */
+  .case-studies-wrapper {
+    padding: 20px 25px;
+  }
+
+  .case-studies-nav {
+    top: auto;
+    bottom: -35px;
+    right: 25px;
+    transform: none;
+    background: none;
+    width: auto;
+    height: auto;
+  }
+
+  .nav-arrow#scroll-left {
+    display: inline-flex;
+  }
+
+  .nav-arrow {
+    background-color: var(--cor-fundo-secundario);
+    width: 50px;
+    height: 50px;
+  }
+
+  /* --- SOBRE NÓS --- */
+  .secao-sobre-nos {
+    padding: 60px 0;
+  }
+
+  .sobre-nos-circulo-gradiente {
+    width: 300px;
+    height: 300px;
+  }
+
+  .sobre-nos-estatisticas {
+    gap: 20px;
+  }
+
+  .stat-numero {
+    font-size: 40px;
+  }
+
+  /* --- PLAYER --- */
+  .secao-player .container-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* --- PODCAST DESTAQUE --- */
+  .secao-podcast {
+    min-height: auto;
+  }
+
+  .podcast-grade {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* --- NOSSOS PROGRAMAS (Carrossel) --- */
+  .programas-container {
+    padding: 0 25px;
+  }
+
+  .programas-wrapper {
+    padding-bottom: 80px;
+  }
+
+  .programas-nav {
+    bottom: 20px;
+    right: 25px;
+  }
+
+  /* --- SERVIÇOS --- */
+  .servicos-grade {
+    grid-template-columns: 1fr;
+  }
+
+  /* --- COMO FUNCIONA --- */
+  .como-funciona-grade {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* --- EPISÓDIOS RECENTES --- */
+  .episodios-grade {
+    grid-template-columns: 1fr;
+  }
+
+  /* --- APRESENTADORES (HOSTS) --- */
+  .hosts-grade {
+    justify-content: center;
+  }
+
+  /* --- MEMBROS --- */
+  .membros-grade {
+    grid-template-columns: 1fr;
+  }
+
+  /* --- DEPOIMENTOS --- */
+  .depoimentos-grade {
+    grid-template-columns: 1fr;
+  }
+
+  /* --- PRODUTOS --- */
+  .produtos-grade {
+    grid-template-columns: 1fr;
+  }
+
+  /* --- COLABORAÇÃO --- */
+  .logos-grade {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+  }
+
+  /* --- PODCAST FAVORITO --- */
+  .secao-podcast-favorito {
+    min-height: auto;
+  }
+
+  .favorito-grade {
+    grid-template-columns: 1fr;
+  }
+
+  /* --- BANNER CTA --- */
+  .cta-conteudo h2 {
+    font-size: 36px;
+  }
+}
+
+/* --- CELULARES (600px) --- */
+@media (max-width: 600px) {
+  .hero-content-centered h1 {
+    font-size: 32px;
+  }
+
+  .podcast-grade {
+    grid-template-columns: 1fr;
+  }
+
+  .como-funciona-grade {
+    grid-template-columns: 1fr;
+  }
+
+  .case-studies-wrapper {
+    padding: 20px 25px;
+    gap: 20px;
+  }
+
+  .case-card {
+    width: 280px;
+    height: 250px;
+  }
+}

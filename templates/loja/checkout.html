@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conclua sua compra! - ProdCumaru</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+
+    <link rel="stylesheet" href="/static/css/global.css" />
+    <link rel="stylesheet" href="/static/css/loja/loja.css" />
+    <link rel="stylesheet" href="/static/css/loja/checkout.css" />
+
+    <link rel="icon" href="/img/logo-icon.png" />
+</head>
+
+<body>
+    <header class="cabecalho">
+        <div class="container">
+            <a href="/index.html" class="logo">
+                <img src="/img/logo.png" alt="Logo ProdCumaru" class="logo-imagem" />
+                <small>Produtora Audiovisual</small>
+            </a>
+
+            <div class="navbar-direita" id="navbar-menu">
+                <button class="botao-fechar-menu" id="botao-fechar-menu" aria-label="Fechar menu">×</button>
+                <nav class="menu-principal">
+                    <ul>
+                        <li><a href="/index.html">Home</a></li>
+                        <li><a href="loja.html">Loja</a></li>
+                        <li><a href="/pages/serviços/servicos.html">Serviços</a></li>
+                        <li><a href="/pages/galeria/galeria.html">Galeria</a></li>
+                    </ul>
+                </nav>
+                <div class="icones-header">
+                    <a href="https://www.instagram.com/prodcumaru/" aria-label="Instagram"><i
+                            class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/channel/UC5ONBnjOuICom8noQ78D9_g" aria-label="Youtube"><i
+                            class="fab fa-youtube"></i></a>
+
+                    <a href="carrinho.html" aria-label="Carrinho" class="cart-btn">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count" id="cart-count">0</span>
+                    </a>
+
+                    <div class="login-dropdown-container">
+                        <a href="#" class="login-trigger" aria-label="Login ou Cadastro"><i class="fas fa-user"></i></a>
+                        <div class="submenu-login">
+                            <span class="submenu-login-titulo">FAZER LOGIN</span>
+                            <ul>
+                                <li><a href="/pages/login/login-cliente.html"><i
+                                            class="fas fa-headphones"></i><span>Portal do Cliente</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="checkout-page-container">
+        <h1>Confira</h1>
+
+        <form class="checkout-form">
+            <div class="checkout-main-layout">
+
+                <div class="billing-details-col">
+                    <h2>Detalhes de faturamento</h2>
+
+                    <div class="checkout-login-row">
+                        <div class="person-type-toggle">
+                            <button type="button" class="toggle-btn active" id="btn-pf">Pessoa Física</button>
+                            <button type="button" class="toggle-btn" id="btn-pj">Pessoa Jurídica</button>
+                            <input type="hidden" id="person-type" value="pf">
+                        </div>
+
+                        <a href="/login-cliente" class="login-link-checkout">
+                            Já tem cadastro? <strong>Faça login</strong> para efetuar a compra
+                        </a>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="full-name" id="label-name">Nome Completo <span>*</span></label>
+                        <input type="text" id="full-name" placeholder="Digite seu nome completo" required />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="doc-number" id="label-doc">CPF <span>*</span></label>
+                        <input type="text" id="doc-number" placeholder="000.000.000-00" maxlength="14" required />
+                        <span id="doc-error"
+                            style="color: #ff5555; font-size: 12px; display: none; margin-top: 5px;">Documento
+                            inválido</span>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="postcode">CEP <span>*</span></label>
+                        <input type="text" id="postcode" placeholder="00000-000" maxlength="9" required />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="address-1">Logradouro <span>*</span></label>
+                        <input type="text" id="address-1" placeholder="Rua, Avenida, Travessa..." required />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="address-number">Número <span>*</span></label>
+                            <input type="text" id="address-number" placeholder="123" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="address-district">Bairro <span>*</span></label>
+                            <input type="text" id="address-district" placeholder="Centro" required />
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="address-2">Complemento (opcional)</label>
+                        <input type="text" id="address-2" placeholder="Apto, Bloco, Sala..." />
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="city">Cidade <span>*</span></label>
+                            <input type="text" id="city" placeholder="Sua cidade" required />
+                        </div>
+                        <div class="form-field">
+                            <label for="state">Estado <span>*</span></label>
+                            <input type="text" id="state" placeholder="UF" required />
+                        </div>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="phone">Telefone <span>*</span></label>
+                        <input type="tel" id="phone" placeholder="(xx) xxxxx-xxxx" maxlength="15" required />
+                    </div>
+
+                    <div class="form-field">
+                        <label for="email">E-mail <span>*</span></label>
+                        <input type="email" id="email" placeholder="seu@email.com" required />
+                    </div>
+
+                    <div class="portal-access-box">
+                        <h3>Acesso ao Portal</h3>
+                        <p>Crie uma senha para acompanhar seu pedido.</p>
+
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label for="account-password">Crie uma Senha <span>*</span></label>
+                                <input type="password" id="account-password" placeholder="Digite sua senha" required />
+                            </div>
+                            <div class="form-field">
+                                <label for="account-password-confirm">Confirmar Senha <span>*</span></label>
+                                <input type="password" id="account-password-confirm" placeholder="Repita a senha"
+                                    required />
+                            </div>
+                        </div>
+
+                        <ul class="password-requirements-list" id="password-requirements">
+                            <li id="req-length" class="invalid"><i class="fas fa-times-circle"></i> Mínimo 8 e máximo 70
+                                caracteres.</li>
+                            <li id="req-upper" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos uma letra
+                                maiúscula.</li>
+                            <li id="req-lower" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos uma letra
+                                minúscula.</li>
+                            <li id="req-symbol" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos um
+                                símbolo (* ! # $ % & + - / : ; = ? @ \ |).</li>
+                            <li id="req-number" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos um
+                                número.</li>
+                        </ul>
+
+                        <span id="password-match-error"
+                            style="color: #ff5555; font-size: 13px; display: none; margin-top: 10px;">As senhas não
+                            coincidem.</span>
+                    </div>
+                </div>
+
+                <div class="order-details-col">
+                    <h2>Informações adicionais</h2>
+                    <div class="form-field">
+                        <label for="order-notes">Observações sobre o pedido (opcional)</label>
+                        <textarea id="order-notes" placeholder="Notas especiais para a entrega."></textarea>
+                    </div>
+
+                    <h2>Seu pedido</h2>
+                    <div id="order-review-box">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Produto</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="order-items-body"></tbody>
+                            <tfoot>
+                                <tr>
+                                    <th>Subtotal</th>
+                                    <td><span id="order-subtotal">R$ 0,00</span></td>
+                                </tr>
+                                <tr id="shipping-row">
+                                    <th>Frete</th>
+                                    <td id="order-shipping" style="font-size: 14px; color: var(--muted);">Calcule no CEP
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td><strong id="order-total">R$ 0,00</strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                        <div class="payment-section">
+                            <div class="payment-methods">
+                                <div class="payment-option">
+                                    <input type="radio" name="payment_method" id="pay-card" value="card" checked>
+                                    <label for="pay-card"><i class="far fa-credit-card"></i> Cartão</label>
+
+                                    <div class="payment-details" id="details-card">
+                                        <div class="card-type-selector" style="margin-bottom: 15px;">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="card_type" value="credit" checked> Crédito
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="card_type" value="debit"> Débito
+                                            </label>
+                                        </div>
+                                        <div class="form-field">
+                                            <input type="text" placeholder="Número do Cartão" required>
+                                        </div>
+                                        <div class="form-field">
+                                            <input type="text" placeholder="Nome no Cartão" required>
+                                        </div>
+                                        <div class="form-row" style="margin-bottom: 15px;">
+                                            <div class="form-field">
+                                                <input type="text" placeholder="MM/AA" required>
+                                            </div>
+                                            <div class="form-field">
+                                                <input type="text" placeholder="CVC" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-field" id="installments-container">
+                                            <label for="installments">Parcelas</label>
+                                            <select id="installments">
+                                                <option value="1">1x (sem juros)</option>
+                                                <option value="2">2x (sem juros)</option>
+                                                <option value="3">3x (sem juros)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="payment-option">
+                                    <input type="radio" name="payment_method" id="pay-pix" value="pix">
+                                    <label for="pay-pix"><i class="fas fa-qrcode"></i> Pix (Aprovação imediata)</label>
+                                    <div class="payment-details" id="details-pix" style="display:none;"></div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-place-order">Fazer pedido</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <div id="success-modal" class="success-modal-overlay">
+        <div class="success-modal-content">
+            <div class="success-icon-glow">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>PEDIDO CONFIRMADO!</h2>
+            <div class="success-message-text">
+                <p>Sua compra foi realizada com sucesso e sua conta foi criada.</p>
+                <div class="email-confirmation-box">
+                    Enviamos um e-mail com os detalhes para <strong id="modal-user-email">email@teste.com</strong>.
+                </div>
+            </div>
+
+            <a href="/login-cliente" class="btn-access-portal">
+                <i class="fas fa-user"></i> ACESSAR PORTAL DO CLIENTE
+            </a>
+
+            <a href="/" class="link-back-home">Voltar para Home</a>
+        </div>
+    </div>
+
+    <div id="login-modal-checkout" class="success-modal-overlay" style="z-index: 10001;">
+        <div class="success-modal-content" style="max-width: 400px; padding: 30px;">
+            <span class="lightbox-close" onclick="fecharModalLogin()"
+                style="position:absolute; top:10px; right:15px; color:#fff;">&times;</span>
+            <h2 style="font-size: 20px; margin-bottom: 20px;">Acesse sua conta</h2>
+
+            <form id="form-login-rapido">
+                <div class="form-field">
+                    <label>E-mail</label>
+                    <input type="email" id="quick-email" required>
+                </div>
+                <div class="form-field" style="margin-top: 10px;">
+                    <label>Senha</label>
+                    <input type="password" id="quick-pass" required>
+                </div>
+                <button type="submit" class="btn-place-order" style="margin-top: 20px;">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function abrirModalLoginCheckout() {
+            document.getElementById('login-modal-checkout').classList.add('open');
+        }
+        function fecharModalLogin() {
+            document.getElementById('login-modal-checkout').classList.remove('open');
+        }
+
+        document.getElementById('form-login-rapido').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const mockUser = { nome: "Cliente Teste", email: document.getElementById('quick-email').value };
+            localStorage.setItem("prodcumaru_user", JSON.stringify(mockUser));
+
+            fecharModalLogin();
+            alert("Login realizado! Seus dados foram carregados.");
+            location.reload();
+        });
+    </script>
+
+    <script src="/static/js/loja/checkout.js"></script>
+    <script src="/static/js/loja/loja.js"></script>
+</body>
+
+</html>

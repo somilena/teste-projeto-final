@@ -1,0 +1,340 @@
+/* Estilos específicos para a página carrinho.html */
+
+:root {
+  /* Variáveis importadas do seu loja.css para consistência */
+  --bg: #000;
+  --panel: #0f0f10;
+  --muted: #c9c9c9;
+  --accent: #c96b2a;
+  --white: #fff;
+  --border-color: #2b2b2b;
+  --border-color-light: #333;
+  --red-error: #ff6b6b;
+}
+
+.cart-page-container {
+  max-width: var(--container, 1200px);
+  margin: 40px auto;
+  padding: 20px;
+  font-family: "Poppins", sans-serif; /* Garante a fonte */
+}
+
+/* Título (da imagem) */
+.cart-page-container h1 {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--white); /* Branco e negrito */
+  margin-bottom: 30px;
+  text-align: left; /* Alinhado à esquerda */
+}
+
+/* Mensagem de sucesso (da imagem) */
+.cart-message-success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+
+/* Layout (removido o grid, agora é coluna única) */
+.cart-form-container {
+  width: 100%;
+  margin-bottom: 40px; /* Espaço até o total */
+}
+
+/* Tabela de Carrinho */
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--border-color-light); /* Borda da tabela inteira */
+}
+
+.cart-table thead {
+  border-bottom: 1px solid var(--border-color-light);
+}
+
+.cart-table th {
+  color: var(--muted); /* Cabeçalho cinza */
+  font-weight: 600; /* Peso da fonte */
+  text-transform: none; /* Sem maiúsculas */
+  font-size: 14px;
+  padding: 15px 20px;
+  text-align: left;
+}
+
+.cart-item-row td {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color-light);
+  vertical-align: middle;
+}
+
+/* Célula "Produto" (Botão X, Imagem, Nome) */
+.product-cell {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Botão 'X' para remover (da imagem) */
+.remove-item-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 5px;
+  transition: color 0.2s;
+}
+.remove-item-btn:hover {
+  color: #ff6b6b;
+}
+
+.product-cell img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+  background: #1c1c1c; /* Fundo para imagens transparentes */
+}
+
+.product-name-link {
+  color: var(--white);
+  font-weight: 600; /* Negrito */
+  text-decoration: none;
+  font-size: 16px;
+}
+.product-name-link:hover {
+  color: var(--accent);
+}
+.product-variant {
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 14px;
+}
+
+.product-price,
+.product-subtotal {
+  color: var(--white);
+  font-weight: 500; /* Peso normal */
+  font-size: 16px;
+}
+
+.quantity-input {
+  width: 70px;
+  padding: 10px;
+  background: #1c1c1c;
+  border: 1px solid var(--border-color-light);
+  color: var(--white);
+  text-align: center;
+  border-radius: 4px;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+}
+
+/* Ações (Cupom / Atualizar) */
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  margin-top: 10px;
+  border-top: 1px solid var(--border-color-light);
+}
+
+.coupon-section {
+  display: flex;
+  gap: 10px;
+}
+
+.coupon-section input[type="text"] {
+  padding: 12px 15px;
+  background: #1c1c1c;
+  border: 1px solid var(--border-color-light);
+  color: var(--white);
+  border-radius: 4px;
+  font-family: "Poppins", sans-serif;
+}
+.coupon-section input[type="text"]::placeholder {
+    color: #888;
+}
+
+/* ============================================= */
+/* --- BOTÕES SECUNDÁRIOS (Cupom e Atualizar) --- */
+/* ============================================= */
+.btn-apply-coupon,
+.btn-update-cart {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border-color-light);
+  
+  /* Ajuste de formato e fonte */
+  padding: 12px 30px; /* Mais largo nas laterais */
+  border-radius: 50px; /* Arredondamento total (pílula) */
+  font-family: "Poppins", sans-serif;
+  font-size: 13px; /* Tamanho ajustado para alinhar com o padrão */
+  font-weight: 700;
+  letter-spacing: 1px; /* Espaçamento entre letras igual da loja */
+  text-transform: uppercase;
+  
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-apply-coupon:hover,
+.btn-update-cart:hover {
+    background: #333; /* CINZA NO HOVER */
+    color: var(--white);
+}
+
+/* ============================================= */
+/* --- SEÇÃO TOTAL DO CARRINHO (ATUALIZADA) --- */
+/* ============================================= */
+.cart-totals-container {
+  background: var(--panel); /* Fundo #0f0f10 */
+  padding: 25px;
+  border-radius: 5px;
+  
+  /* --- ESTA É A MUDANÇA --- */
+  max-width: 450px; /* Define uma largura máxima */
+  width: 100%;      /* Permite ser menor em telas pequenas */
+  margin-left: auto; /* Alinha o bloco à direita */
+  margin-right: 0;
+}
+
+.cart-totals-container h2 {
+  font-size: 24px;
+  color: var(--white);
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid var(--border-color-light);
+  font-weight: 700; /* Negrito */
+  text-transform: none;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+.totals-row span:first-child {
+  color: var(--white); /* Label "Subtotal" é branca */
+  font-weight: 700;
+}
+.totals-row span:last-child {
+  color: var(--muted); /* Valor do subtotal é cinza */
+  font-weight: 600;
+}
+
+.totals-row.total-row {
+  font-size: 18px;
+  font-weight: 700;
+}
+.totals-row.total-row span {
+  color: var(--white); /* "Total" e seu valor são brancos */
+}
+
+/* ============================================= */
+/* --- BOTÃO DE CHECKOUT (Botão Principal) --- */
+/* ============================================= */
+.btn-checkout {
+  display: block; /* Garante que ocupe a largura ou se comporte como bloco */
+  background: var(--accent); /* Cor Laranja */
+  color: var(--white);
+  border: none;
+  
+  /* Métricas exatas do botão primário da loja */
+  padding: 15px 30px;
+  border-radius: 50px; /* Arredondamento total */
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  
+  text-align: center;
+  text-decoration: none;
+  margin-top: 25px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.btn-checkout:hover {
+  background: #e08a4a; /* Laranja um pouco mais claro */
+  color: var(--white);
+  transform: translateY(-2px); /* Pequeno efeito de subida ao passar o mouse */
+}
+
+/* Responsividade */
+@media (max-width: 900px) {
+  /* O layout já é de 1 coluna, não precisamos mudar */
+}
+
+@media (max-width: 600px) {
+  .cart-page-container h1 {
+    font-size: 36px;
+  }
+  .cart-table thead {
+    display: none; /* Esconde cabeçalho em telas pequenas */
+  }
+  .cart-item-row {
+    display: grid;
+    grid-template-columns: 80px 1fr; /* Imagem | Resto */
+    gap: 0 15px; /* Sem gap vertical, 15px horizontal */
+    padding: 20px 0;
+  }
+  .cart-item-row td {
+    padding: 0;
+    border: none;
+    display: flex; /* Permite centralizar verticalmente */
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  /* Célula do Produto (coluna 1) */
+  .product-cell {
+    grid-column: 1 / span 2; /* Ocupa as duas colunas */
+    grid-row: 1;
+    flex-direction: row; /* Volta a ser linha */
+    align-items: center;
+    padding-bottom: 15px; /* Espaço antes do preço */
+  }
+  
+  /* Preço (coluna 2) */
+  .product-price {
+    grid-column: 2;
+    grid-row: 2;
+    padding-bottom: 10px;
+  }
+  
+  /* Quantidade (coluna 2) */
+  .product-quantity {
+    grid-column: 2;
+    grid-row: 3;
+    padding-bottom: 10px;
+  }
+  
+  /* Subtotal (escondido) */
+  .product-subtotal {
+    display: none;
+  }
+
+  .cart-actions {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  .coupon-section {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  /* Faz o box de total ocupar 100% no mobile */
+  .cart-totals-container {
+      max-width: 100%;
+  }
+}

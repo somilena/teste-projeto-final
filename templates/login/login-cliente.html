@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portal do Cliente</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/icon/cliente.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login/login-cliente.css') }}">
+
+</head>
+
+<body class="body-login-cadastro">
+  <div class="container-centralizado">
+    <div class="cartao-autenticacao">
+
+      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo ProdCumaru" class="perfil-avatar" />
+      
+      <h1 class="titulo-autenticacao" id="titulo-principal-autenticacao">Portal do Cliente</h1>
+      <p class="subtitulo-autenticacao" id="subtitulo-login-cadastro">Acesse seus projetos e agendamentos</p>
+
+
+      <div id="area-login" class="area-formulario ativa">
+        <h2 class="titulo-formulario">Entrar</h2>
+        <form class="formulario-autenticacao">
+          <div class="campo-formulario-autenticacao">
+            <label for="email-cliente-login">Email</label>
+            <input type="email" id="email-cliente-login" placeholder="seu@email.com" required />
+          </div>
+          <div class="campo-formulario-autenticacao">
+            <label for="senha-cliente-login">Senha</label>
+            <div class="campo-senha">
+              <input type="password" id="senha-cliente-login" placeholder="Sua senha" required />
+              <span class="mostrar-senha" data-target="senha-cliente-login"><i class="ph-bold ph-eye"></i></span>
+            </div>
+          </div>
+          <button type="submit" class="botao-autenticacao">Entrar</button>
+        </form>
+        <p class="link-inferior">
+          Ainda não tem uma conta?
+          <a href="#" id="link-ir-cadastro">Cadastre-se aqui</a>
+        </p>
+      </div>
+
+      <div id="area-cadastro" class="area-formulario">
+        <h2 class="titulo-formulario">Criar Conta</h2>
+        <p class="descricao-formulario">
+          Preencha os dados para criar sua conta de cliente
+        </p>
+
+        <div class="seletor-tipo-pessoa">
+          <input type="radio" id="tipo-pf" name="tipo-pessoa" value="pf" checked>
+          <label for="tipo-pf">Pessoa Física</label>
+          <input type="radio" id="tipo-pj" name="tipo-pessoa" value="pj">
+          <label for="tipo-pj">Pessoa Jurídica</label>
+        </div>
+
+        <form class="formulario-autenticacao">
+          
+          <div id="campos-pf">
+            <div class="campo-formulario-autenticacao">
+              <label for="nome-cliente-cadastro">Nome Completo *</label>
+              <input type="text" id="nome-cliente-cadastro" placeholder="Seu nome completo" required />
+            </div>
+            <div class="campo-formulario-autenticacao">
+              <label for="cpf-cliente-cadastro">CPF *</label>
+              <input type="text" id="cpf-cliente-cadastro" placeholder="000.000.000-00" required maxlength="14" />
+              <span class="feedback-invalido" id="feedback-cpf">CPF inválido</span>
+            </div>
+            <div class="campo-formulario-autenticacao">
+              <label for="nascimento-cliente-cadastro">Data de Nascimento *</label>
+              <input type="date" id="nascimento-cliente-cadastro" required />
+            </div>
+          </div>
+
+          <div id="campos-pj" style="display: none;">
+            <div class="campo-formulario-autenticacao">
+              <label for="razao-social-cadastro">Razão Social *</label>
+              <input type="text" id="razao-social-cadastro" placeholder="Nome da Empresa" />
+            </div>
+            <div class="campo-formulario-autenticacao">
+              <label for="cnpj-cliente-cadastro">CNPJ *</label>
+              <input type="text" id="cnpj-cliente-cadastro" placeholder="00.000.000/0001-00" maxlength="18" />
+              <span class="feedback-invalido" id="feedback-cnpj">CNPJ inválido</span>
+            </div>
+          </div>
+
+          <div class="campo-formulario-autenticacao">
+            <label for="email-cliente-cadastro">Email *</label>
+            <input type="email" id="email-cliente-cadastro" placeholder="seu@email.com" required />
+          </div>
+          <div class="campo-formulario-autenticacao">
+            <label for="telefone-cliente-cadastro">Telefone *</label>
+            <input type="tel" id="telefone-cliente-cadastro" placeholder="(DD) 9XXXX-XXXX" required />
+          </div>
+
+          <div class="campo-formulario-autenticacao">
+            <label for="cep-cliente-cadastro">CEP *</label>
+            <div class="campo-com-botao">
+              <input type="tel" id="cep-cliente-cadastro" placeholder="00000-000" required />
+              <button type="button" id="botao-buscar-cep" class="botao-buscar-cep">Buscar</button>
+            </div>
+          </div>
+          
+          <div class="campo-formulario-autenticacao">
+            <label for="logradouro-cliente-cadastro">Logradouro (Rua/Av) *</label>
+            <input type="text" id="logradouro-cliente-cadastro" placeholder="Rua, Av..." required />
+          </div>
+          
+          <div class="campo-formulario-autenticacao">
+            <label for="numero-cliente-cadastro">Número *</label>
+            <input type="text" id="numero-cliente-cadastro" placeholder="Nº" required />
+          </div>
+
+          <div class="campo-formulario-autenticacao">
+            <label for="bairro-cliente-cadastro">Bairro *</label>
+            <input type="text" id="bairro-cliente-cadastro" placeholder="Bairro" required />
+          </div>
+
+          <div class="campo-formulario-autenticacao">
+            <label for="cidade-cliente-cadastro">Cidade *</label>
+            <input type="text" id="cidade-cliente-cadastro" placeholder="Cidade" required />
+          </div>
+
+          <div class="campo-formulario-autenticacao">
+            <label for="estado-cliente-cadastro">Estado (UF) *</label>
+            <input type="text" id="estado-cliente-cadastro" placeholder="UF" required />
+          </div>
+
+          <div class="campo-formulario-autenticacao">
+            <label for="senha-cliente-cadastro">Senha *</label>
+            <div class="campo-senha">
+              <input type="password" id="senha-cliente-cadastro" placeholder="Mínimo 6 caracteres" required />
+              <span class="mostrar-senha" data-target="senha-cliente-cadastro"><i class="ph-bold ph-eye"></i></span>
+            </div>
+          </div>
+          <div class="campo-formulario-autenticacao">
+            <label for="confirmar-senha-cliente-cadastro">Confirmar Senha *</label>
+            <div class="campo-senha">
+              <input type="password" id="confirmar-senha-cliente-cadastro" placeholder="Confirme sua senha" required />
+              <span class="mostrar-senha" data-target="confirmar-senha-cliente-cadastro"><i
+                  class="ph-bold ph-eye"></i></span>
+            </div>
+          </div>
+          <button type="submit" class="botao-autenticacao">
+            Criar Conta
+          </button>
+        </form>
+        <p class="link-inferior">
+          Já tem uma conta? <a href="#" id="link-ir-login">Faça login aqui</a>
+        </p>
+        <p class="link-rp">
+          Interessado em participar de programas? 
+          <a href="https://wa.me/5561992677680?text=Ol%C3%A1!%20Eu%20gostaria%20de%20tirar%20algumas%20d%C3%BAvidas%20com%20voc%C3%AAs." target="_blank">Fale com RP</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/login/login-cliente.js') }}"></script>
+
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</body>
+
+</html>

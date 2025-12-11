@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}ProdCumaru - Produtora Audiovisual{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/static/css/global.css" />
+<link rel="stylesheet" href="/static/css/loja/loja.css" />
+{% endblock %}
+
+{% block content %}
+
+<section class="page-hero" aria-labelledby="shop-title">
+  <h1 id="shop-title" class="page-title">Loja</h1>
+</section>
+
+<main class="shop-grid" role="main" aria-label="Lista de Produtos" id="products-grid">
+  <p style="color: #fff; grid-column: 1/-1; text-align: center;">Carregando produtos...</p>
+</main>
+
+<div class="pagination" role="navigation" id="pagination"></div>
+
+<aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
+  <header>
+    <strong id="cart-header-title">Seu carrinho</strong>
+    <button id="close-cart" class="btn close-icon-btn"><i class="fa fa-times"></i></button>
+  </header>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-footer-info">
+      <div class="subtotal-row"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
+      <p>Frete calculado na finalização.</p>
+    </div>
+    <div class="cart-footer-buttons">
+      <a href="/carrinho" class="btn btn-secondary">Ver Carrinho</a>
+      <a href="/checkout" class="btn btn-primary">Checkout</a>
+    </div>
+  </div>
+</aside>
+<div class="cart-backdrop" id="cart-backdrop"></div>
+
+<script src="/static/js/loja/loja.js"></script>
+{% endblock %}

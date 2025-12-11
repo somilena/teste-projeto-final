@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Carrinho - ProdCumaru{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/static/css/global.css" />
+<link rel="stylesheet" href="/static/css/loja/loja.css" />
+<link rel="stylesheet" href="/static/css/loja/carrinho.css" />
+{% endblock %}
+
+{% block content %}
+<main class="cart-page-container">
+  <h1>Carrinho</h1>
+
+  <div class="cart-form-container">
+    <form id="cart-form">
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Quantidade</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody id="cart-table-body"></tbody>
+      </table>
+
+      <div class="cart-actions">
+        <button type="button" class="btn-update-cart">
+          Atualizar carrinho
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="cart-totals-container">
+    <h2>Total do carrinho</h2>
+    <div class="totals-row">
+      <span>Subtotal</span>
+      <span id="totals-subtotal">R$ 0,00</span>
+    </div>
+    <div class="totals-row total-row">
+      <span>Total</span>
+      <span id="totals-total">R$ 0,00</span>
+    </div>
+
+    <a href="/checkout" class="btn-checkout">Fazer o Check-out</a>
+  </div>
+</main>
+
+<script src="/static/js/loja/carrinho.js"></script>
+<script src="/static/js/loja/loja.js"></script>
+{% endblock %}

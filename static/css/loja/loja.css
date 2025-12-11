@@ -1,0 +1,246 @@
+/* ================================================================= */
+/* ARQUIVO: loja.css (CORRIGIDO) */
+/* ================================================================= */
+
+:root{
+    --bg:#000;
+    --panel:#0f0f10;
+    --muted:#c9c9c9;
+    --accent:#c96b2a;
+    --white:#fff;
+    --card-bg:#f0f4f6;
+    --container:1200px;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+    margin:0;
+    font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background:var(--bg);
+    color:var(--muted);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.4;
+}
+
+/* NAVBAR */
+.topbar{
+    max-width:var(--container);
+    margin:0 auto;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    padding:28px 20px;
+    color:var(--muted);
+}
+.brand{
+    color:var(--white);
+    font-weight:800;
+    font-size:26px;
+    letter-spacing:0.4px;
+}
+.brand small{display:block;font-weight:400;font-size:12px;color:#9b9b9b;margin-top:3px}
+nav.nav{
+    display:flex;
+    align-items:center;
+    gap:22px;
+    font-size:13px;
+}
+nav.nav a{color:var(--muted); text-decoration:none;}
+nav.nav a.active{color:var(--white); font-weight:700}
+.nav-icons{display:flex;gap:14px;align-items:center}
+.nav-icons a{color:var(--muted); text-decoration:none; font-size:16px}
+
+/* Page header title */
+.page-hero{
+    padding:40px 20px;
+    text-align:center;
+}
+.breadcrumb{color:#8f8f8f;font-size:13px;margin-bottom:8px}
+.page-title{font-size:64px;color:#8e8e8e;margin:6px 0 24px;font-weight:800}
+
+/* Controls */
+.controls{
+    max-width:var(--container);
+    margin:0 auto;
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    gap:20px;
+    padding:8px 20px 36px;
+}
+.results{color:#9b9b9b}
+.sort-select{
+    background:transparent;border:1px solid #2a2a2a;padding:10px 14px;border-radius:6px;color:var(--muted);
+}
+
+/* Grid */
+.shop-grid{
+    max-width: 1600px; 
+    margin:0 auto;
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:34px;
+    padding:10px 50px 60px; 
+}
+
+/* --- ESTILOS DO PRODUTO E CARROSSEL --- */
+.product{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    align-items:flex-start;
+}
+.product .thumb{
+    width:100%;
+    background:#141414; 
+    min-height: 320px; 
+    position:relative; 
+    overflow:hidden;
+    cursor:pointer; 
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.product .thumb img{
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    background-color: var(--card-bg); 
+    position: absolute; 
+    top: 0;
+    left: 0;
+    opacity: 0; 
+    transition: opacity 0.5s ease-in-out; 
+    z-index: 1;
+}
+
+.product .thumb img.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.badge{
+    position:absolute;
+    top:12px;
+    right:12px;
+    background:var(--accent);
+    color:#fff;
+    font-size:12px;
+    padding:8px 10px;
+    border-radius:4px;
+    font-weight:700;
+    letter-spacing:0.6px;
+    z-index: 5;
+}
+
+/* Textos e Botões */
+.product h3{ margin:0; }
+.product h3 a {
+    color:var(--white);
+    font-size:18px;
+    font-weight:700;
+    text-decoration: none;
+}
+.product h3 a:hover { color: var(--accent); }
+
+.product-info-row {
+    display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px;
+}
+.product-info-row .price-info { text-align: right; white-space: nowrap; }
+.product-info-row .old-price{ text-decoration:line-through; color:#7b7b7b; font-size: 14px; }
+.product-info-row .price{ color:var(--white); font-weight:700; font-size: 18px; }
+
+/* --- CORREÇÃO DO CONTAINER DO BOTÃO --- */
+.price-row { 
+    display: flex; 
+    justify-content: flex-start; /* Alinha o botão à esquerda */
+    width: 100%; /* Permite usar toda a largura do card */
+    margin-top: 6px; 
+}
+
+/* --- CORREÇÃO DO BOTÃO PRINCIPAL (Uma só classe) --- */
+.btn-produto, .botao-primario {
+    background: #111; 
+    color: var(--white); 
+    border: none;
+    padding: 15px 30px; 
+    border-radius: 50px; 
+    font-weight: 700; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+    font-size: 14px; 
+    font-family: "Poppins", sans-serif;
+    
+    /* Alterado de width: 100% para fit-content para se adaptar ao texto */
+    width: fit-content; 
+    min-width: 140px; /* Garante um tamanho mínimo elegante */
+    
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    transition: all 0.3s ease; 
+    cursor: pointer;
+    white-space: nowrap; /* Impede quebra de linha */
+}
+
+.btn-produto:hover, .botao-primario:hover { background: #333; }
+
+/* Paginação */
+.pagination{ display:flex; gap:12px; justify-content:center; padding:34px 20px; }
+.page-item{
+    width:44px;height:44px;border-radius:6px;background:#222;border:1px solid #2b2b2b;
+    display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;
+}
+.page-item.active{background:var(--accent); color:#fff}
+
+/* Footer */
+.site-footer{
+    margin-top:60px; background:#131313; padding:48px 20px; color:var(--muted);
+}
+.footer-inner{
+    max-width:var(--container); margin:0 auto; display:grid; grid-template-columns: 1fr 1fr 320px; gap:28px;
+}
+.footer h4{color:#dcdcdc;font-size:14px;margin-bottom:12px}
+.footer p{color:#9b9b9b;line-height:1.6}
+.copyright{
+    max-width:var(--container); margin:26px auto 80px; color:#777; font-size:13px;
+    display:flex; justify-content:space-between; padding:0 20px; align-items:center;
+}
+.add-to-cart-message-loja {
+  display: none; color: #28a745; font-size: 14px; font-weight: 600;
+  margin-top: 10px; align-items: center; gap: 6px; width: 100%;
+}
+.add-to-cart-message-loja.show { display: flex; animation: fadeInMessage 0.3s ease-out; }
+@keyframes fadeInMessage {
+  from { opacity: 0; transform: translateY(-3px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividade */
+@media (max-width: 1400px) { .shop-grid{grid-template-columns:repeat(3,1fr)} }
+@media (max-width: 992px) { .shop-grid{grid-template-columns:repeat(2,1fr)} }
+@media (max-width: 600px) { .shop-grid{grid-template-columns:1fr} }
+
+/* Efeito do Ponto */
+.btn-produto::after, 
+.botao-primario::after {
+    content: ".";
+    display: inline-block;
+    width: auto;
+    margin-left: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.btn-produto:hover::after, 
+.botao-primario:hover::after {
+    opacity: 1;
+    animation: piscar-suave 1s infinite;
+}
+
+@keyframes piscar-suave {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}

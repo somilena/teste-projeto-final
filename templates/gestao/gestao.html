@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Gestão Audiovisual (SGA)</title>
+  <link rel="icon" href="/assets/img/sga-staff.png">
+  <link rel="stylesheet" href="/static/css/gestao/gestao.css" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body>
+  <div class="container-principal">
+    <aside class="barra-lateral">
+      <div class="logo-sistema">
+        <i class="ph-fill ph-waveform"></i>
+        <span>SGA</span>
+      </div>
+      <nav class="menu-navegacao">
+        <ul>
+          <li class="item-menu ativo" data-pagina="visao-geral">
+            <a href="#"><i class="ph-fill ph-house"></i><span>Visão Geral</span></a>
+          </li>
+
+          <li class="item-menu" data-pagina="agendamentos">
+            <a href="#"><i class="ph-fill ph-calendar-check"></i><span>Agendamentos</span></a>
+          </li>
+          <li class="item-menu" data-pagina="receitas">
+            <a href="#"><i class="ph-fill ph-chart-line-up"></i><span>Receitas</span></a>
+          </li>
+          <li class="item-menu" data-pagina="despesas">
+            <a href="#"><i class="ph-fill ph-chart-line-down"></i><span>Despesas</span></a>
+          </li>
+          <li class="item-menu" data-pagina="clientes">
+            <a href="#"><i class="ph-fill ph-users"></i><span>Clientes</span></a>
+          </li>
+          <li class="item-menu" data-pagina="funcionarios">
+            <a href="#"><i class="ph-fill ph-identification-card"></i><span>Funcionários</span></a>
+          </li>
+          <li class="item-menu" data-pagina="contratos">
+            <a href="#"><i class="ph-fill ph-files"></i><span>Contratos</span></a>
+          </li>
+
+          <li class="item-menu" data-pagina="editar-site">
+            <a href="#"><i class="ph-fill ph-pencil-simple-line"></i><span>Editar Site</span></a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="logout-area">
+        <button id="btn-tema-toggle" class="btn-tema-toggle">
+          <i class="ph-bold ph-moon"></i> <span>Modo Escuro</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="conteudo-principal">
+      <section id="secao-visao-geral" class="pagina-conteudo ativa">
+        <header class="cabecalho-secao">
+          <h1>Visão Geral</h1>
+          <button class="botao-principal" id="botao-novo-agendamento-rapido">
+            <i class="ph-fill ph-plus-circle"></i>
+            <span>Novo Agendamento</span>
+          </button>
+        </header>
+
+        <div id="alerta-contas-atrasadas">
+          <i class="ph-fill ph-warning-circle"></i>
+          <div>
+            <strong class="alerta-titulo">Atenção: Contas Atrasadas!</strong>
+            <span class="alerta-desc">Existem despesas vencidas. Verifique a aba Financeiro.</span>
+          </div>
+        </div>
+
+        <div class="area-widgets">
+          <div class="cartao">
+            <h3>Faturamento (Mês)</h3>
+            <p class="valor" id="faturamento-dashboard">R$ 0,00</p>
+          </div>
+
+          <div class="cartao cartao-grande">
+            <div class="cartao-cabecalho">
+              <h3>Eventos de Hoje</h3>
+              <span id="data-hoje-extenso"></span>
+            </div>
+
+            <div id="lista-eventos-hoje">
+              <p class="texto-carregando">Carregando agenda...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="secao-agendamentos" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Agendamentos</h1>
+          <button class="botao-principal" id="botao-novo-agendamento-calendario">
+            <i class="ph-fill ph-plus-circle"></i>
+            <span>Novo Agendamento</span>
+          </button>
+        </header>
+        <div class="container-calendario">
+          <div class="calendario-header">
+            <button id="mes-anterior">&lt;</button>
+            <h2 id="mes-ano-atual">Outubro 2025</h2>
+            <button id="mes-seguinte">&gt;</button>
+          </div>
+          <div class="calendario-dias-semana">
+            <div>Dom</div>
+            <div>Seg</div>
+            <div>Ter</div>
+            <div>Qua</div>
+            <div>Qui</div>
+            <div>Sex</div>
+            <div>Sáb</div>
+          </div>
+          <div class="calendario-grid-dias">
+          </div>
+        </div>
+      </section>
+
+      <section id="secao-receitas" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Receitas</h1>
+        </header>
+        <form class="formulario-secao" id="form-nova-receita">
+          <div class="campo-formulario">
+            <label for="receita-origem">Origem da Receita</label>
+            <input type="text" id="receita-origem" placeholder="Ex: Gravação EP Banda " required />
+          </div>
+          <div class="campo-formulario">
+            <label for="receita-cliente">Cliente Associado</label>
+            <input type="text" id="receita-cliente" placeholder="Nome do cliente" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="receita-data-emissao">Data Emissão</label>
+            <input type="date" id="receita-data-emissao" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="receita-data-agendada">Data Agendada</label>
+            <input type="date" id="receita-data-agendada" />
+          </div>
+          <div class="campo-formulario">
+            <label for="receita-obs">Obs (Opcional)</label>
+            <input type="text" id="receita-obs" placeholder="Detalhes extras..." />
+          </div>
+          <div class="campo-formulario">
+            <label for="receita-valor">Valor</label>
+            <input type="number" step="0.01" id="receita-valor" placeholder="1200.00" required />
+          </div>
+          <button type="submit" class="botao-principal">
+            <i class="ph-fill ph-plus-circle"></i>
+            <span>Adicionar Receita</span>
+          </button>
+        </form>
+
+        <div class="barra-busca">
+          <i class="ph-fill ph-magnifying-glass icone-busca"></i>
+          <input type="text" id="busca-receita" placeholder="Buscar por origem ou cliente..." class="input-busca">
+        </div>
+
+        <table class="tabela-dados" id="tabela-receitas">
+          <thead>
+            <tr>
+              <th>Origem</th>
+              <th>Cliente</th>
+              <th>Data Emissão</th>
+              <th>Data Agendada</th>
+              <th>Obs</th>
+              <th>Valor (R$)</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5">Total</td>
+              <td id="receita-total">R$ 0,00</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <section id="secao-despesas" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Despesas</h1>
+        </header>
+        <form class="formulario-secao" id="form-nova-despesa">
+          <div class="campo-formulario">
+            <label for="despesa-nome">Nome/Origem da Despesa</label>
+            <input type="text" id="despesa-nome" placeholder="Ex: Conta de Luz, Aluguel" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-data-emissao">Data Emissão</label>
+            <input type="date" id="despesa-data-emissao" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-data-vencimento">Data Vencimento</label>
+            <input type="date" id="despesa-data-vencimento" />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-obs">Obs (Opcional)</label>
+            <input type="text" id="despesa-obs" placeholder="Detalhes extras..." />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-valor">Valor</label>
+            <input type="number" step="0.01" id="despesa-valor" placeholder="800.00" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="despesa-status">Status</label>
+            <select id="despesa-status" required>
+              <option value="a_pagar">A Pagar</option>
+              <option value="pago">Pago</option>
+              <option value="atrasado">Atrasado</option>
+            </select>
+          </div>
+          <button type="submit" class="botao-principal">
+            <i class="ph-fill ph-plus-circle"></i>
+            <span>Adicionar Despesa</span>
+          </button>
+        </form>
+
+        <div class="barra-busca">
+          <i class="ph-fill ph-magnifying-glass icone-busca"></i>
+          <input type="text" id="busca-despesa" placeholder="Buscar por nome da despesa..." class="input-busca">
+        </div>
+
+        <table class="tabela-dados" id="tabela-despesas">
+          <thead>
+            <tr>
+              <th>Nome/Origem</th>
+              <th>Data Emissão</th>
+              <th>Vencimento</th>
+              <th>Status</th>
+              <th>Obs</th>
+              <th>Valor (R$)</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5">Total</td>
+              <td id="despesa-total">R$ 0,00</td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <section id="secao-clientes" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Clientes</h1>
+          <button class="botao-principal" id="btn-novo-cliente">
+            <i class="ph-fill ph-plus-circle"></i><span>Novo Cliente</span>
+          </button>
+        </header>
+
+        <div class="barra-busca">
+          <i class="ph-fill ph-magnifying-glass icone-busca"></i>
+          <input type="text" id="busca-cliente" placeholder="Buscar por nome, email ou CPF/CNPJ..." class="input-busca">
+        </div>
+
+        <table class="tabela-dados" id="tabela-clientes">
+          <thead>
+            <tr>
+              <th>Nome / Documento</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Tipo</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="secao-funcionarios" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Funcionários</h1>
+          <button class="botao-principal" id="botao-novo-funcionario">
+            <i class="ph-fill ph-plus-circle"></i><span>Novo Funcionário</span>
+          </button>
+        </header>
+
+        <div class="barra-busca">
+          <i class="ph-fill ph-magnifying-glass icone-busca"></i>
+          <input type="text" id="busca-funcionario" placeholder="Buscar por nome, cargo ou CPF..." class="input-busca">
+        </div>
+
+        <table class="tabela-dados" id="tabela-funcionarios">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>CPF</th>
+              <th>Cargo</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="secao-contratos" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Contratos de Clientes</h1>
+        </header>
+        <form class="formulario-secao" id="form-novo-contrato">
+          <div class="campo-formulario">
+            <label for="contrato-cliente">Cliente Associado</label>
+            <input type="text" id="contrato-cliente" placeholder="Nome do Cliente" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="contrato-titulo">Título do Documento</label>
+            <input type="text" id="contrato-titulo" placeholder="Ex: Contrato Gravação EP" required />
+          </div>
+          <div class="campo-formulario">
+            <label for="contrato-arquivo">Arquivo (PDF)</label>
+            <input type="file" id="contrato-arquivo" accept=".pdf" required />
+          </div>
+          <button type="submit" class="botao-principal">
+            <i class="ph-fill ph-upload-simple"></i>
+            <span>Salvar Contrato</span>
+          </button>
+        </form>
+        <table class="tabela-dados" id="tabela-contratos">
+          <thead>
+            <tr>
+              <th>Título</th>
+              <th>Cliente</th>
+              <th>Data Upload</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </section>
+
+      <section id="secao-editar-site" class="pagina-conteudo">
+        <header class="cabecalho-secao">
+          <h1>Editar Site</h1>
+        </header>
+
+        <div class="navegacao-sub-abas">
+          <button class="botao-sub-aba" data-alvo="sub-home">Home</button>
+          <button class="botao-sub-aba" data-alvo="sub-produtos">Produtos</button>
+          <button class="botao-sub-aba" data-alvo="sub-galeria">Galeria</button>
+          <button class="botao-sub-aba" data-alvo="sub-logs">Logs</button>
+        </div>
+
+        <div id="sub-logs" class="conteudo-sub-aba">
+          <div class="area-widgets margem-inferior">
+            <div class="cartao cartao-flex">
+              <div>
+                <h3>Histórico de Alterações</h3>
+                <p class="texto-secundario">Registro de atividades recentes no site.</p>
+              </div>
+              <button class="botao-principal botao-limpar" onclick="limparLogs()">
+                <i class="ph-fill ph-trash"></i> Limpar
+              </button>
+            </div>
+          </div>
+
+          <table class="tabela-dados" id="tabela-logs">
+            <thead>
+              <tr>
+                <th>Data/Hora</th>
+                <th>Usuário</th>
+                <th>Ação Realizada</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="sub-home" class="conteudo-sub-aba">
+          <div class="area-widgets" id="grid-home-widgets">
+
+            <div class="cartao" data-categoria="banner">
+              <h3>Banner Principal</h3>
+              <p class="texto-secundario mb-15">Destaques do topo.</p>
+              <input type="hidden" class="home-edit-index">
+              <div class="grupo-input">
+                <label class="label-edicao">Título</label>
+                <input type="text" class="campo-formulario home-input-titulo input-full"
+                  placeholder="Ex: Promoção de Verão">
+              </div>
+              <div class="grupo-input">
+                <label class="label-edicao">Imagem</label>
+                <input type="file" class="campo-formulario home-input-file input-full" accept="image/*">
+              </div>
+              <button class="botao-principal btn-salvar-home btn-full-center">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="video">
+              <h3>Seção de Vídeos</h3>
+              <p class="texto-secundario mb-15">Destaques visuais.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div class="grupo-input">
+                <label class="label-edicao">Título do Vídeo</label>
+                <input type="text" class="campo-formulario home-input-titulo input-full"
+                  placeholder="Ex: Teaser Oficial">
+              </div>
+
+              <div class="grupo-input">
+                <label class="label-edicao">Link de Redirecionamento</label>
+                <input type="text" class="campo-formulario home-input-link input-full"
+                  placeholder="https://youtube.com/...">
+              </div>
+
+              <div class="grupo-input">
+                <label class="label-edicao">Capa/Thumbnail</label>
+                <input type="file" class="campo-formulario home-input-file input-full" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home btn-full-center">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="podcast_destaque">
+              <h3>Podcast Destaque</h3>
+              <p class="texto-secundario mb-15">Episódio principal.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div class="grupo-input">
+                <label class="label-edicao">Título</label>
+                <input type="text" class="campo-formulario home-input-titulo input-full"
+                  placeholder="Ex: Cumaru Cast #01">
+              </div>
+
+              <div class="grupo-input">
+                <label class="label-edicao">Link de Redirecionamento</label>
+                <input type="text" class="campo-formulario home-input-link input-full"
+                  placeholder="https://spotify.com/...">
+              </div>
+
+              <div class="grupo-input">
+                <label class="label-edicao">Capa</label>
+                <input type="file" class="campo-formulario home-input-file input-full" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home btn-full-center">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="episodios">
+              <h3>Episódios Recentes</h3>
+              <p class="texto-secundario mb-15">Novos episódios.</p>
+              <input type="hidden" class="home-edit-index">
+
+              <div class="grupo-input">
+                <label class="label-edicao">Título</label>
+                <input type="text" class="campo-formulario home-input-titulo input-full" placeholder="Ex: Ep. #42">
+              </div>
+
+              <div class="grupo-input">
+                <label class="label-edicao">Link de Redirecionamento</label>
+                <input type="text" class="campo-formulario home-input-link input-full" placeholder="https://...">
+              </div>
+
+              <div class="grupo-input">
+                <label class="label-edicao">Capa</label>
+                <input type="file" class="campo-formulario home-input-file input-full" accept="image/*">
+              </div>
+
+              <button class="botao-principal btn-salvar-home btn-full-center">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="apresentadores">
+              <h3>Apresentadores</h3>
+              <p class="texto-secundario mb-15">Time de artistas.</p>
+              <input type="hidden" class="home-edit-index">
+              <div class="grupo-input">
+                <label class="label-edicao">Nome</label>
+                <input type="text" class="campo-formulario home-input-titulo input-full" placeholder="Ex: João Silva">
+              </div>
+              <div class="grupo-input">
+                <label class="label-edicao">Foto</label>
+                <input type="file" class="campo-formulario home-input-file input-full" accept="image/*">
+              </div>
+              <button class="botao-principal btn-salvar-home btn-full-center">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="membros">
+              <h3>Equipe Cumaru</h3>
+              <p class="texto-secundario mb-15">Membros da equipe.</p>
+              <input type="hidden" class="home-edit-index">
+              <div class="grupo-input">
+                <label class="label-edicao">Nome</label>
+                <input type="text" class="campo-formulario home-input-titulo input-full"
+                  placeholder="Ex: Maria Oliveira">
+              </div>
+              <div class="grupo-input">
+                <label class="label-edicao">Foto</label>
+                <input type="file" class="campo-formulario home-input-file input-full" accept="image/*">
+              </div>
+              <button class="botao-principal btn-salvar-home btn-full-center">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="depoimentos">
+              <h3>Depoimentos</h3>
+              <p class="texto-secundario mb-15">O que dizem.</p>
+              <input type="hidden" class="home-edit-index">
+              <div class="grupo-input">
+                <label class="label-edicao">Nome / Título</label>
+                <input type="text" class="campo-formulario home-input-titulo input-full"
+                  placeholder="Ex: Carlos - Incrível!">
+              </div>
+              <div class="grupo-input">
+                <label class="label-edicao">Comentário</label>
+                <textarea class="campo-formulario home-input-desc textarea-resize" rows="2"
+                  placeholder="Comentário..."></textarea>
+              </div>
+              <div class="grupo-input">
+                <label class="label-edicao">Foto</label>
+                <input type="file" class="campo-formulario home-input-file input-full" accept="image/*">
+              </div>
+              <button class="botao-principal btn-salvar-home btn-full-center">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+            <div class="cartao" data-categoria="parceiros">
+              <h3>Parceiros</h3>
+              <p class="texto-secundario mb-15">Colaboradores.</p>
+              <input type="hidden" class="home-edit-index">
+              <div class="grupo-input">
+                <label class="label-edicao">Nome Parceiro</label>
+                <input type="text" class="campo-formulario home-input-titulo input-full" placeholder="Ex: Empresa X">
+              </div>
+              <div class="grupo-input">
+                <label class="label-edicao">Logo</label>
+                <input type="file" class="campo-formulario home-input-file input-full" accept="image/*">
+              </div>
+              <button class="botao-principal btn-salvar-home btn-full-center">
+                <i class="ph-fill ph-plus-circle"></i> <span>Adicionar</span>
+              </button>
+              <div class="lista-home-items"></div>
+            </div>
+
+          </div>
+        </div>
+
+        <div id="sub-produtos" class="conteudo-sub-aba">
+          <form class="formulario-secao" id="form-novo-produto">
+            <div class="campo-formulario">
+              <label for="produto-nome">Nome do Produto</label>
+              <input type="text" id="produto-nome" placeholder="Ex: Camiseta Banda X" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="produto-codigo">Código (SKU)</label>
+              <input type="text" id="produto-codigo" placeholder="Ex: CAM-001" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="produto-tamanho">Tamanho</label>
+              <input type="text" id="produto-tamanho" placeholder="Ex: P, M, G ou 38, 40" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="produto-preco">Preço (R$)</label>
+              <input type="number" step="0.01" id="produto-preco" placeholder="59.90" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="produto-status">Status</label>
+              <select id="produto-status" required>
+                <option value="disponivel">Disponível</option>
+                <option value="indisponivel">Indisponível</option>
+              </select>
+            </div>
+
+            <div class="campo-formulario campo-full">
+              <label for="produto-descricao">Descrição</label>
+              <textarea id="produto-descricao" rows="2" placeholder="Detalhes do produto..."></textarea>
+            </div>
+
+            <div class="campo-formulario campo-full">
+              <label for="produto-foto">Foto do Produto</label>
+              <input type="file" id="produto-foto" accept="image/*" required />
+            </div>
+
+            <button type="submit" class="botao-principal">
+              <i class="ph-fill ph-plus-circle"></i>
+              <span>Adicionar Produto</span>
+            </button>
+          </form>
+
+          <table class="tabela-dados" id="tabela-produtos">
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Cód.</th>
+                <th>Nome</th>
+                <th>Tamanho</th>
+                <th>Preço</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="sub-galeria" class="conteudo-sub-aba">
+
+          <form class="formulario-secao" id="form-galeria">
+            <input type="hidden" id="galeria-index-edicao">
+            <div class="campo-formulario">
+              <label for="galeria-titulo">Título</label>
+              <input type="text" id="galeria-titulo" placeholder="Ex: Show de Verão" required />
+            </div>
+
+            <div class="campo-formulario">
+              <label for="galeria-link">Link de Redirecionamento</label>
+              <input type="text" id="galeria-link" placeholder="https://instagram.com/..." />
+            </div>
+
+            <div class="campo-formulario campo-full">
+              <label for="galeria-imagem">Imagem</label>
+              <input type="file" id="galeria-imagem" accept="image/*" />
+              <small id="aviso-imagem-atual">Deixe vazio para manter a imagem atual.</small>
+            </div>
+
+            <div class="container-botoes">
+              <button type="submit" class="botao-principal" id="btn-salvar-galeria">
+                <i class="ph-fill ph-plus-circle"></i>
+                <span>Adicionar Item</span>
+              </button>
+
+              <button type="button" class="botao-principal" id="btn-cancelar-galeria">
+                Cancelar
+              </button>
+            </div>
+          </form>
+
+          <div id="grid-galeria-items" class="area-widgets">
+          </div>
+
+        </div>
+
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-overlay" id="modal-agendamento">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2>Novo Agendamento</h2>
+        <button class="modal-fechar" id="modal-fechar-agendamento">
+          &times;
+        </button>
+      </header>
+      <form class="formulario-modal" id="form-novo-agendamento">
+        <div class="campo-formulario">
+          <label for="agendamento-titulo">Título</label>
+          <input type="text" id="agendamento-titulo" required />
+        </div>
+        <div class="campo-formulario">
+          <label for="agendamento-data">Data</label>
+          <input type="date" id="agendamento-data" required />
+        </div>
+        <div class="campo-formulario">
+          <label for="agendamento-obs">Obs</label>
+          <textarea id="agendamento-obs" rows="2" placeholder="Detalhes extras..." class="textarea-resize"></textarea>
+        </div>
+        <div class="campo-formulario">
+          <label for="agendamento-tipo">Tipo</label>
+          <select id="agendamento-tipo">
+            <option value="gravacao">Gravação</option>
+            <option value="mixagem">Mixagem</option>
+            <option value="reuniao">Reunião</option>
+          </select>
+        </div>
+        <button type="submit" class="botao-principal">
+          Salvar Agendamento
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-detalhes-agendamento">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2>Detalhes do Agendamento</h2>
+        <button class="modal-fechar" id="modal-fechar-detalhes-agendamento">
+          &times;
+        </button>
+      </header>
+      <div class="modal-corpo">
+        <p><strong>Título:</strong> <span id="detalhes-agendamento-titulo"></span></p>
+        <p><strong>Data:</strong> <span id="detalhes-agendamento-data"></span></p>
+        <p><strong>Obs:</strong> <span id="detalhes-agendamento-obs"></span></p>
+        <p><strong>Tipo:</strong> <span id="detalhes-agendamento-tipo"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-novo-funcionario">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2 id="titulo-modal-funcionario">Novo Funcionário</h2>
+        <button class="modal-fechar" id="modal-fechar-funcionario">
+          &times;
+        </button>
+      </header>
+      <form class="formulario-modal" id="form-novo-funcionario">
+
+        <input type="hidden" id="funcionario-index-edicao">
+
+        <div class="campo-formulario">
+          <label for="funcionario-nome">Nome</label>
+          <input type="text" id="funcionario-nome" required />
+        </div>
+
+        <div class="campo-formulario">
+          <label for="funcionario-cpf">CPF</label>
+          <input type="text" id="funcionario-cpf" placeholder="000.000.000-00" maxlength="14" required />
+        </div>
+
+        <div class="campo-formulario">
+          <label for="funcionario-cargo">Cargo</label>
+          <select id="funcionario-cargo" required>
+            <option value="" disabled selected>Selecione um cargo</option>
+            <option value="adm">Adm</option>
+            <option value="gerente">Gerente</option>
+            <option value="editor">Editor</option>
+            <option value="juridico">Jurídico</option>
+            <option value="contabilidade">Contabilidade</option>
+            <option value="rh">RH</option>
+          </select>
+        </div>
+
+        <div class="campo-formulario">
+          <label for="funcionario-email">Email</label>
+          <input type="email" id="funcionario-email" required />
+        </div>
+
+        <div class="campo-formulario">
+          <label for="funcionario-telefone">Telefone (Opcional)</label>
+          <input type="tel" id="funcionario-telefone" placeholder="(99) 99999-9999" />
+        </div>
+
+        <div class="campo-formulario">
+          <label for="funcionario-senha">Senha</label>
+          <input type="password" id="funcionario-senha" required />
+        </div>
+
+        <div class="campo-formulario">
+          <label for="funcionario-confirmar-senha">Confirmar Senha</label>
+          <input type="password" id="funcionario-confirmar-senha" required />
+        </div>
+
+        <button type="submit" class="botao-principal" id="btn-salvar-funcionario">
+          Salvar Funcionário
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-detalhes-funcionario">
+    <div class="modal-conteudo">
+      <header class="modal-cabecalho">
+        <h2 id="modal-detalhes-nome">Detalhes do Funcionário</h2>
+        <button class="modal-fechar" id="modal-fechar-detalhes-funcionario">
+          &times;
+        </button>
+      </header>
+      <div class="modal-corpo">
+        <p><strong>CPF:</strong> <span id="modal-detalhes-cpf"></span></p>
+
+        <p><strong>Email:</strong> <span id="modal-detalhes-email"></span></p>
+        <p><strong>Cargo:</strong> <span id="modal-detalhes-cargo"></span></p>
+        <p><strong>Telefone:</strong> <span id="modal-detalhes-telefone"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-editar-cliente">
+    <div class="modal-conteudo modal-largo">
+      <header class="modal-cabecalho">
+        <h2>Editar Cliente</h2>
+        <button class="modal-fechar" id="modal-fechar-editar-cliente">&times;</button>
+      </header>
+
+      <form class="formulario-modal" id="form-editar-cliente">
+        <input type="hidden" id="edit-cliente-index">
+        <input type="hidden" id="edit-cliente-tipo-atual">
+        <div id="campos-edit-pf">
+          <div class="campo-formulario">
+            <label for="edit-cliente-nome">Nome Completo</label>
+            <input type="text" id="edit-cliente-nome">
+          </div>
+          <div class="campo-formulario campo-flex">
+            <div class="flex-1">
+              <label for="edit-cliente-cpf">CPF</label>
+              <input type="text" id="edit-cliente-cpf" maxlength="14">
+            </div>
+            <div class="flex-1">
+              <label for="edit-cliente-nascimento">Data de Nascimento</label>
+              <input type="date" id="edit-cliente-nascimento">
+            </div>
+          </div>
+        </div>
+
+        <div id="campos-edit-pj" style="display: none;">
+          <div class="campo-formulario">
+            <label for="edit-cliente-razao">Razão Social</label>
+            <input type="text" id="edit-cliente-razao">
+          </div>
+          <div class="campo-formulario">
+            <label for="edit-cliente-cnpj">CNPJ</label>
+            <input type="text" id="edit-cliente-cnpj" maxlength="18">
+          </div>
+        </div>
+
+        <div class="campo-formulario campo-flex">
+          <div class="flex-1">
+            <label for="edit-cliente-email">Email</label>
+            <input type="email" id="edit-cliente-email" required>
+          </div>
+          <div class="flex-1">
+            <label for="edit-cliente-telefone">Telefone</label>
+            <input type="text" id="edit-cliente-telefone">
+          </div>
+        </div>
+
+        <h3 class="titulo-separador">Endereço</h3>
+
+        <div class="campo-formulario campo-flex">
+          <div class="w-120">
+            <label for="edit-cliente-cep">CEP</label>
+            <input type="text" id="edit-cliente-cep" maxlength="9">
+          </div>
+          <div class="flex-1">
+            <label for="edit-cliente-logradouro">Logradouro (Rua/Av)</label>
+            <input type="text" id="edit-cliente-logradouro">
+          </div>
+        </div>
+
+        <div class="campo-formulario campo-flex">
+          <div class="w-100">
+            <label for="edit-cliente-numero">Número</label>
+            <input type="text" id="edit-cliente-numero">
+          </div>
+          <div class="flex-1">
+            <label for="edit-cliente-bairro">Bairro</label>
+            <input type="text" id="edit-cliente-bairro">
+          </div>
+        </div>
+
+        <div class="campo-formulario campo-flex">
+          <div class="flex-1">
+            <label for="edit-cliente-cidade">Cidade</label>
+            <input type="text" id="edit-cliente-cidade">
+          </div>
+          <div class="w-80">
+            <label for="edit-cliente-uf">UF</label>
+            <input type="text" id="edit-cliente-uf" maxlength="2">
+          </div>
+        </div>
+
+        <div class="campo-formulario">
+          <label for="edit-cliente-senha">Senha</label>
+          <input type="text" id="edit-cliente-senha" placeholder="Nova senha (ou mantenha a atual)">
+        </div>
+
+        <button type="submit" class="botao-principal">Salvar Alterações</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal-novo-cliente">
+    <div class="modal-conteudo modal-largo">
+      <header class="modal-cabecalho">
+        <h2>Novo Cliente</h2>
+        <button class="modal-fechar" id="modal-fechar-novo-cliente">&times;</button>
+      </header>
+
+      <form class="formulario-modal" id="form-novo-cliente">
+
+        <div class="campo-formulario">
+          <label for="novo-cliente-nome">Nome Completo *</label>
+          <input type="text" id="novo-cliente-nome" required>
+        </div>
+
+        <div class="campo-formulario campo-flex">
+          <div class="flex-1">
+            <label for="novo-cliente-cpf">CPF *</label>
+            <input type="text" id="novo-cliente-cpf" maxlength="14" required>
+          </div>
+          <div class="flex-1">
+            <label for="novo-cliente-nascimento">Data de Nascimento *</label>
+            <input type="date" id="novo-cliente-nascimento" required>
+          </div>
+        </div>
+
+        <div class="campo-formulario campo-flex">
+          <div class="flex-1">
+            <label for="novo-cliente-email">Email *</label>
+            <input type="email" id="novo-cliente-email" required>
+          </div>
+          <div class="flex-1">
+            <label for="novo-cliente-telefone">Telefone</label>
+            <input type="text" id="novo-cliente-telefone">
+          </div>
+        </div>
+
+        <h3 class="titulo-separador">Endereço</h3>
+
+        <div class="campo-formulario campo-flex">
+          <div class="w-120">
+            <label for="novo-cliente-cep">CEP *</label>
+            <input type="text" id="novo-cliente-cep" maxlength="9" placeholder="00000-000" required>
+          </div>
+          <div class="flex-1">
+            <label for="novo-cliente-logradouro">Logradouro (Rua/Av) *</label>
+            <input type="text" id="novo-cliente-logradouro" required>
+          </div>
+        </div>
+
+        <div class="campo-formulario campo-flex">
+          <div class="w-100">
+            <label for="novo-cliente-numero">Número *</label>
+            <input type="text" id="novo-cliente-numero" required>
+          </div>
+          <div class="flex-1">
+            <label for="novo-cliente-bairro">Bairro *</label>
+            <input type="text" id="novo-cliente-bairro" required>
+          </div>
+        </div>
+
+        <div class="campo-formulario campo-flex">
+          <div class="flex-1">
+            <label for="novo-cliente-cidade">Cidade *</label>
+            <input type="text" id="novo-cliente-cidade" required>
+          </div>
+          <div class="w-80">
+            <label for="novo-cliente-uf">UF *</label>
+            <input type="text" id="novo-cliente-uf" maxlength="2" required>
+          </div>
+        </div>
+
+        <h3 class="titulo-separador">Acesso</h3>
+
+        <div class="campo-formulario campo-flex">
+          <div class="flex-1">
+            <label for="novo-cliente-senha">Senha *</label>
+            <input type="password" id="novo-cliente-senha" required>
+          </div>
+          <div class="flex-1">
+            <label for="novo-cliente-confirmar-senha">Confirmar Senha *</label>
+            <input type="password" id="novo-cliente-confirmar-senha" required>
+          </div>
+        </div>
+
+        <button type="submit" class="botao-principal">Salvar Cliente</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/static/js/gestao/gestao.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Produto - ProdCumaru{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/static/css/global.css" />
+<link rel="stylesheet" href="/static/css/loja/loja.css" />
+<link rel="stylesheet" href="/static/css/loja/pagina-produto.css" />
+{% endblock %}
+
+{% block content %}
+<main>
+  <div style="max-width: var(--container, 1200px); margin: 0 auto; padding: 20px 20px 0;">
+    <div class="breadcrumb">
+      <a href="/" style="color: #8f8f8f; text-decoration: none">Início</a> /
+      <a href="/loja" style="color: #8f8f8f; text-decoration: none">Loja</a> /
+      <span style="color: var(--white)">Produto</span>
+    </div>
+  </div>
+
+  <section class="product-page-main">
+    <div class="product-image-area">
+      <div class="product-gallery-container">
+
+        <div class="product-thumbs-column">
+        </div>
+
+        <div class="product-thumb-large">
+          <img src="" alt="Produto Principal" id="product-image-main" />
+          <a href="#" id="open-lightbox" class="lightbox-trigger"><i class="fas fa-search"></i></a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="product-info-area">
+      <h1>Carregando...</h1>
+      <span class="price-display">
+        <span class="sale-price">R$ 0,00</span>
+      </span>
+      <p class="description-short">
+        Carregando descrição...
+      </p>
+
+      <div class="product-options">
+        <label>Tamanho: <span id="selected-size-display"
+            style="font-weight:400; color:var(--muted)">Selecione</span></label>
+        <div class="size-selector">
+          <button type="button" class="size-btn" data-size="P">P</button>
+          <button type="button" class="size-btn" data-size="M">M</button>
+          <button type="button" class="size-btn" data-size="G">G</button>
+          <button type="button" class="size-btn" data-size="GG">GG</button>
+        </div>
+        <div id="size-error-msg" style="display:none; color:#ff6b6b; font-size:13px; margin-top:8px;">
+          <i class="fas fa-exclamation-circle"></i> Por favor, selecione um tamanho antes de comprar.
+        </div>
+      </div>
+
+      <form class="quantity-control">
+        <input type="number" value="1" min="1" aria-label="Quantidade" id="qty-input" />
+        <button type="submit" class="add-to-cart-btn">
+          ADICIONAR AO CARRINHO
+        </button>
+      </form>
+
+      <div class="add-to-cart-message" id="add-to-cart-message">
+        <i class="fas fa-check-circle"></i> Adicionado ao carrinho
+      </div>
+
+      <div class="product-meta">
+        <span><strong>Categoria:</strong> <span id="category-display">Geral</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section class="product-tabs-section">
+    <div class="product-tabs">
+      <button class="tab-link active" data-tab="tab-descricao">Descrição</button>
+      <button class="tab-link" data-tab="tab-info">Medidas</button>
+      <button class="tab-link" data-tab="tab-avaliacoes">Avaliações (0)</button>
+    </div>
+
+    <div id="tab-descricao" class="tab-content active">
+      <h3>Descrição</h3>
+      <p>A Camiseta Oversized Cumaru redefine o básico com um corte moderno e estruturado. Ideal para compor looks
+        streetwear ou casuais com máxima qualidade.</p>
+    </div>
+
+    <div id="tab-info" class="tab-content">
+      <h3>Tabela de Medidas</h3>
+      <p>P: 70cm Altura x 52cm Largura<br>M: 72cm Altura x 54cm Largura<br>G: 74cm Altura x 56cm Largura<br>GG: 76cm
+        Altura x 58cm Largura</p>
+    </div>
+
+    <div id="tab-avaliacoes" class="tab-content">
+      <h2 class="reviews-title">Avaliações</h2>
+      <div class="review-list">
+        <p class="no-reviews">Ainda não há avaliações.</p>
+      </div>
+
+      <div class="review-form-wrapper">
+        <h3 class="review-form-title">Avalie este produto</h3>
+        <form class="review-form">
+          <div class="form-field form-field-rating">
+            <label>Sua nota <span>*</span></label>
+            <div class="star-rating-input">
+              <i class="far fa-star" data-rating="1"></i>
+              <i class="far fa-star" data-rating="2"></i>
+              <i class="far fa-star" data-rating="3"></i>
+              <i class="far fa-star" data-rating="4"></i>
+              <i class="far fa-star" data-rating="5"></i>
+            </div>
+            <input type="hidden" id="rating" name="rating" required>
+          </div>
+          <div class="form-field">
+            <label for="comment">Comentário <span>*</span></label>
+            <textarea id="comment" required></textarea>
+          </div>
+          <div class="form-field">
+            <label for="author">Nome <span>*</span></label>
+            <input id="author" type="text" required>
+          </div>
+          <div class="form-field">
+            <label for="email">E-mail <span>*</span></label>
+            <input id="email" type="email" required>
+          </div>
+          <div class="form-submit">
+            <button type="submit" class="submit-btn">ENVIAR</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="related-products-section">
+    <h2>Produtos relacionados</h2>
+    <div class="shop-grid" id="related-grid">
+    </div>
+  </section>
+</main>
+
+<aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
+  <header>
+    <strong id="cart-header-title">Seu carrinho</strong>
+    <button id="close-cart" class="btn close-icon-btn"><i class="fa fa-times"></i></button>
+  </header>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-footer">
+    <div class="cart-footer-info">
+      <div class="subtotal-row"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
+    </div>
+    <div class="cart-footer-buttons">
+      <a href="/carrinho" class="btn btn-secondary">Ver Carrinho</a>
+      <a href="/checkout" class="btn btn-primary">Checkout</a>
+    </div>
+  </div>
+</aside>
+<div class="cart-backdrop" id="cart-backdrop"></div>
+
+<div class="lightbox-overlay" id="image-lightbox">
+  <span class="lightbox-close" id="lightbox-close">×</span>
+  <img src="" alt="Zoom" class="lightbox-content" id="lightbox-image">
+</div>
+
+<script src="/static/js/loja/pagina-produto.js"></script>
+<script src="/static/js/loja/loja.js"></script>
+{% endblock %}
