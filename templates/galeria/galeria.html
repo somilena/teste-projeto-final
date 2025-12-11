@@ -66,80 +66,8 @@
     <a href="#todos-os-projetos" class="btn-primary-dark">VER TODOS OS PROJETOS</a>
   </div>
 </section>
+{% endblock %}
 
-<aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
-  <header>
-    <strong id="cart-header-title">Seu carrinho</strong>
-
-    <button id="close-cart" class="btn close-icon-btn" aria-label="Fechar carrinho">
-      <i class="fa fa-times"></i>
-    </button>
-  </header>
-
-  <section id="galeria" class="galeria-section-dark">
-    <h2 class="section-title-dark">Galeria</h2>
-
-    <div class="galeria-grid-dark">
-      <a href="#projeto-1" class="galeria-item-dark" target="_blank">
-        <img src="{{ url_for('static', filename='/img/galeria.png') }}" alt="Título do Projeto 1" />
-        <div class="overlay-dark">
-          <span class="category-tag-dark">Musica</span>
-          <h3>Me Chama - MASSAY</h3>
-        </div>
-      </a>
-
-      <a href="#projeto-2" class="galeria-item-dark" target="_blank">
-        <img src="{{ url_for('static', filename='/img/galeria 1.png') }}" alt="Título do Projeto 2" />
-        <div class="overlay-dark">
-          <span class="category-tag-dark">Musica</span>
-          <h3>Cumaru Sessions #1 – Beatdojason – “A Cera”</h3>
-        </div>
-      </a>
-
-      <a href="#projeto-3" class="galeria-item-dark" target="_blank">
-        <img src="{{ url_for('static', filename='/img/galeria 3.png') }}" alt="Título do Projeto 3" />
-        <div class="overlay-dark">
-          <span class="category-tag-dark">CUMARU CORTES</span>
-          <h3>COCRIAÇÃO: O PODER DE CRIAR SUA REALIDADE- KLIVIA COSME</h3>
-        </div>
-      </a>
-
-      <a href="#projeto-4" class="galeria-item-dark" target="_blank">
-        <img src="{{ url_for('static', filename='/img/galeria 2.png') }}" alt="Título do Projeto 4" />
-        <div class="overlay-dark">
-          <span class="category-tag-dark">Musica</span>
-          <h3>MC ALM – Corda Balança</h3>
-        </div>
-      </a>
-
-      <a href="#projeto-5" class="galeria-item-dark" target="_blank">
-        <img src="{{ url_for('static', filename='/img/galeria 4.png') }}" alt="Título do Projeto 5" />
-        <div class="overlay-dark">
-          <span class="category-tag-dark">CUMARU TALKS</span>
-          <h3>CO-CRIANDO A REALIDADE</h3>
-        </div>
-      </a>
-
-      <a href="#projeto-6" class="galeria-item-dark" target="_blank">
-        <img src="{{ url_for('static', filename='/img/galeria 5.png') }}" alt="Título do Projeto 6" />
-        <div class="overlay-dark">
-          <span class="category-tag-dark">CUMARU CORTES</span>
-          <h3>
-            ELE SOFREU CENSURA E VIU SEU ATELIER SE DESTRUIR EM CHAMAS -
-            DOUGLAS VIANA E KLIVIA COSME
-          </h3>
-        </div>
-      </a>
-    </div>
-
-    <div class="button-container-dark">
-      <a href="#todos-os-projetos" class="btn-primary-dark">VER TODOS OS PROJETOS</a>
-    </div>
-  </section>
-
-
-  {% endblock %}
-
-  {% block scripts_extra %}
-  <script src="{{ url_for('static', filename='js/galeria/galeria.js') }}"></script>
-  {% endblock %}
+{% block scripts_extra %}
+<script src="{{ url_for('static', filename='js/galeria/galeria.js') }}"></script>
+{% endblock %}

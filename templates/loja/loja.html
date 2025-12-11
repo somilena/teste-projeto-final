@@ -19,24 +19,5 @@
 
 <div class="pagination" role="navigation" id="pagination"></div>
 
-<aside class="cart-drawer" id="cart-drawer" aria-hidden="true">
-  <header>
-    <strong id="cart-header-title">Seu carrinho</strong>
-    <button id="close-cart" class="btn close-icon-btn"><i class="fa fa-times"></i></button>
-  </header>
-  <div class="cart-items" id="cart-items"></div>
-  <div class="cart-footer">
-    <div class="cart-footer-info">
-      <div class="subtotal-row"><span>Subtotal</span><span id="cart-subtotal">R$ 0,00</span></div>
-      <p>Frete calculado na finalização.</p>
-    </div>
-    <div class="cart-footer-buttons">
-      <a href="/carrinho" class="btn btn-secondary">Ver Carrinho</a>
-      <a href="/checkout" class="btn btn-primary">Checkout</a>
-    </div>
-  </div>
-</aside>
-<div class="cart-backdrop" id="cart-backdrop"></div>
-
-<script src="/static/js/loja/loja.js"></script>
+<!-- Drawer/backdrop removidos aqui; usados do base.html -->
 {% endblock %}

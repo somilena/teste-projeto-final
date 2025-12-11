@@ -4,23 +4,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SGA Staff</title>
-  <link rel="icon" href="{{ url_for('static', filename='img/sga-staff.png') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/login/login-staff.css') }}">
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <title>SGA Staff - ProdCumaru</title>
+  <link rel="icon" href="/assets/img/icon/logo-icon.png">
+  
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/static/css/login/login-staff.css" />
 </head>
 
 <body class="body-login-cadastro">
   <div class="container-centralizado">
     <div class="cartao-autenticacao">
+      
       <div class="logo-sistema">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo ProdCumaru" class="logo-imagem-sga">
+        <img src="/assets/img/sga-staff.png" alt="Logo SGA Staff" class="perfil-avatar">
       </div>
+
+      <h1 class="titulo-autenticacao">Portal Staff</h1>
+      
       <p class="subtitulo-autenticacao" id="subtitulo-login-cadastro">
         Acesse sua conta profissional
       </p>
 
-      <div id="area-login" class="area-formulario ativa">
+      <div id="area-login" class="area-formulario ativa" style="display: block;">
         <h2 class="titulo-formulario">Entrar</h2>
         <p class="descricao-formulario">
           Entre com suas credenciais de profissional
@@ -34,63 +41,16 @@
             <label for="senha-staff-login">Senha</label>
             <div class="campo-senha">
               <input type="password" id="senha-staff-login" placeholder="Sua senha" required />
-              <span class="mostrar-senha" data-target="senha-staff-login"><i class="ph-bold ph-eye"></i></span>
+              <span class="mostrar-senha" data-target="senha-staff-login"><i class="far fa-eye"></i></span>
             </div>
           </div>
           <button type="submit" class="botao-autenticacao">Entrar</button>
         </form>
-        <p class="link-inferior">
-          Ainda não tem uma conta?
-          <a href="#" id="link-ir-cadastro">Cadastre-se aqui</a>
-        </p>
       </div>
 
-      <div id="area-cadastro" class="area-formulario">
-        <h2 class="titulo-formulario">Criar Conta</h2>
-        <p class="descricao-formulario">
-          Preencha os dados para criar sua conta profissional
-        </p>
-        <form class="formulario-autenticacao">
-          <div class="campo-formulario-autenticacao">
-            <label for="nome-staff-cadastro">Nome Completo</label>
-            <input type="text" id="nome-staff-cadastro" placeholder="Seu nome completo" required />
-          </div>
-          <div class="campo-formulario-autenticacao">
-            <label for="email-staff-cadastro">Email</label>
-            <input type="email" id="email-staff-cadastro" placeholder="seu@email.com" required />
-          </div>
-          <div class="campo-formulario-autenticacao">
-            <label for="telefone-staff-cadastro">Telefone (opcional)</label>
-            <input type="tel" id="telefone-staff-cadastro" placeholder="(DD) 9XXXX-XXXX" />
-          </div>
-          <div class="campo-formulario-autenticacao">
-            <label for="senha-staff-cadastro">Senha</label>
-            <div class="campo-senha">
-              <input type="password" id="senha-staff-cadastro" placeholder="Mínimo 6 caracteres" required />
-              <span class="mostrar-senha" data-target="senha-staff-cadastro"><i class="ph-bold ph-eye"></i></span>
-            </div>
-          </div>
-          <div class="campo-formulario-autenticacao">
-            <label for="confirmar-senha-staff-cadastro">Confirmar Senha</label>
-            <div class="campo-senha">
-              <input type="password" id="confirmar-senha-staff-cadastro" placeholder="Confirme sua senha" required />
-              <span class="mostrar-senha" data-target="confirmar-senha-staff-cadastro"><i
-                  class="ph-bold ph-eye"></i></span>
-            </div>
-          </div>
-          <button type="submit" class="botao-autenticacao">
-            Criar Conta
-          </button>
-        </form>
-        <p class="link-inferior">
-          Já tem uma conta? <a href="#" id="link-ir-login">Faça login aqui</a>
-        </p>
-      </div>
     </div>
   </div>
 
-    <script src="{{ url_for('static', filename='js/login/login-staff.js') }}"></script>
-
+  <script src="/static/js/login/login-staff.js"></script>
 </body>
-
 </html>

@@ -140,7 +140,7 @@ function updateCartUI() {
         div.innerHTML = `
             <img src="${item.image}" alt="${item.title}">
             <div class="item-info">
-                <a href="/produto/${item.id}" class="item-title">${item.title}</a>
+                <a href="${(window.ROUTES && window.ROUTES.produtoPrefix) ? window.ROUTES.produtoPrefix + item.id : '/produto/' + item.id}" class="item-title">${item.title}</a>
                 ${variantHtml}
                 <span class="item-unit-price">${formatBRL(item.price)}</span>
                 <div class="qty">
@@ -161,9 +161,11 @@ function updateCartUI() {
     }
 
     const subtotalEl = document.getElementById("cart-subtotal");
+    const totalEl = document.getElementById("cart-total");
     if (subtotalEl) {
       const totalVal = state.cart.reduce((s, i) => s + i.price * i.qty, 0);
       subtotalEl.textContent = formatBRL(totalVal);
+      if (totalEl) totalEl.textContent = formatBRL(totalVal);
     }
   }
 }
@@ -196,7 +198,7 @@ function renderProducts() {
         </div>
         
         <div class="product-info-row">
-            <h3><a href="/produto/${p.id}" class="product-title-link">${p.title}</a></h3>
+            <h3><a href="${(window.ROUTES && window.ROUTES.produtoPrefix) ? window.ROUTES.produtoPrefix + p.id : '/produto/' + p.id}" class="product-title-link">${p.title}</a></h3>
             <div class="price-info">
                 <span class="price">${formatBRL(p.price)}</span>
             </div>
@@ -252,7 +254,8 @@ function initProductHover() {
     thumb.style.cursor = "pointer";
     thumb.addEventListener("click", () => {
       const id = product.dataset.id;
-      window.location.href = `/produto/${id}`;
+      const prefix = (window.ROUTES && window.ROUTES.produtoPrefix) ? window.ROUTES.produtoPrefix : '/produto/';
+      window.location.href = prefix + id;
     });
 
     const images = thumb.querySelectorAll('img');

@@ -177,11 +177,15 @@
           <span>Subtotal</span>
           <span id="cart-subtotal">R$ 0,00</span>
         </div>
+        <div class="subtotal-row">
+          <span>Total</span>
+          <span id="cart-total">R$ 0,00</span>
+        </div>
         <p>Frete e impostos calculados na finalização.</p>
       </div>
       <div class="cart-footer-buttons">
-        <a href="/carrinho" class="btn btn-secondary">Ver Carrinho</a>
-        <a href="/checkout" class="btn btn-primary" id="checkout-btn">Finalizar Compra</a>
+        <a href="{{ url_for('carrinho') }}" class="btn btn-secondary">Ver Carrinho</a>
+        <a href="{{ url_for('checkout') }}" class="btn btn-primary" id="checkout-btn">Finalizar Compra</a>
       </div>
     </div>
   </aside>
@@ -190,6 +194,14 @@
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <!-- Controle global do carrinho (drawer, contador, adicionar/remover) -->
   <script src="{{ url_for('static', filename='js/loja/loja.js') }}"></script>
+  <!-- Prefixos de rotas usadas em JS -->
+  <script>
+    window.ROUTES = {
+      produtoPrefix: '/produto/',
+      carrinho: '{{ url_for('carrinho') }}',
+      checkout: '{{ url_for('checkout') }}'
+    };
+  </script>
 
   {% block scripts_extra %}{% endblock %}
 </body>

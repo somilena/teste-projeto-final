@@ -4,21 +4,29 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portal do Cliente</title>
-  <link rel="icon" href="{{ url_for('static', filename='img/icon/cliente.png') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/login/login-cliente.css') }}">
+  <title>Portal do Cliente - ProdCumaru</title>
+  <link rel="icon" href="/static/img/icon/logo-icon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+  
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script type="text/javascript">
+     (function(){
+        emailjs.init({ publicKey: "goVdFclsaAUdwx1uQ" });
+     })();
+  </script>
 
+  <link rel="stylesheet" href="/static/css/login/login-cliente.css" />
 </head>
 
 <body class="body-login-cadastro">
   <div class="container-centralizado">
     <div class="cartao-autenticacao">
 
-      <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo ProdCumaru" class="perfil-avatar" />
+      <img src="/static/img/icon/logo-icon.png" alt="Logo Cumaru Produções" class="perfil-avatar" />
       
-      <h1 class="titulo-autenticacao" id="titulo-principal-autenticacao">Portal do Cliente</h1>
+      <h1 class="titulo-autenticacao">Portal do Cliente</h1>
       <p class="subtitulo-autenticacao" id="subtitulo-login-cadastro">Acesse seus projetos e agendamentos</p>
-
 
       <div id="area-login" class="area-formulario ativa">
         <h2 class="titulo-formulario">Entrar</h2>
@@ -31,7 +39,10 @@
             <label for="senha-cliente-login">Senha</label>
             <div class="campo-senha">
               <input type="password" id="senha-cliente-login" placeholder="Sua senha" required />
-              <span class="mostrar-senha" data-target="senha-cliente-login"><i class="ph-bold ph-eye"></i></span>
+              <span class="mostrar-senha" data-target="senha-cliente-login"><i class="far fa-eye"></i></span>
+            </div>
+            <div class="container-esqueci-senha">
+                <a href="#" id="link-esqueci-senha">Esqueceu sua senha?</a>
             </div>
           </div>
           <button type="submit" class="botao-autenticacao">Entrar</button>
@@ -45,7 +56,7 @@
       <div id="area-cadastro" class="area-formulario">
         <h2 class="titulo-formulario">Criar Conta</h2>
         <p class="descricao-formulario">
-          Preencha os dados para criar sua conta de cliente
+          Preencha os dados para criar sua conta
         </p>
 
         <div class="seletor-tipo-pessoa">
@@ -96,10 +107,8 @@
 
           <div class="campo-formulario-autenticacao">
             <label for="cep-cliente-cadastro">CEP *</label>
-            <div class="campo-com-botao">
-              <input type="tel" id="cep-cliente-cadastro" placeholder="00000-000" required />
-              <button type="button" id="botao-buscar-cep" class="botao-buscar-cep">Buscar</button>
-            </div>
+            <input type="tel" id="cep-cliente-cadastro" placeholder="00000-000" maxlength="9" required />
+            <span class="feedback-cep" id="feedback-cep" style="display: none; font-size: 12px; color: var(--cor-acento-principal); margin-top: 4px;">Buscando endereço...</span>
           </div>
           
           <div class="campo-formulario-autenticacao">
@@ -128,20 +137,30 @@
           </div>
 
           <div class="campo-formulario-autenticacao">
-            <label for="senha-cliente-cadastro">Senha *</label>
+            <label for="senha-cliente-cadastro">Crie uma Senha *</label>
             <div class="campo-senha">
-              <input type="password" id="senha-cliente-cadastro" placeholder="Mínimo 6 caracteres" required />
-              <span class="mostrar-senha" data-target="senha-cliente-cadastro"><i class="ph-bold ph-eye"></i></span>
+              <input type="password" id="senha-cliente-cadastro" placeholder="Digite sua senha" required />
+              <span class="mostrar-senha" data-target="senha-cliente-cadastro"><i class="far fa-eye"></i></span>
             </div>
           </div>
+          
           <div class="campo-formulario-autenticacao">
             <label for="confirmar-senha-cliente-cadastro">Confirmar Senha *</label>
             <div class="campo-senha">
-              <input type="password" id="confirmar-senha-cliente-cadastro" placeholder="Confirme sua senha" required />
-              <span class="mostrar-senha" data-target="confirmar-senha-cliente-cadastro"><i
-                  class="ph-bold ph-eye"></i></span>
+              <input type="password" id="confirmar-senha-cliente-cadastro" placeholder="Repita a senha" required />
+              <span class="mostrar-senha" data-target="confirmar-senha-cliente-cadastro"><i class="far fa-eye"></i></span>
             </div>
           </div>
+
+          <ul class="password-requirements-list" id="password-requirements">
+             <li id="req-length" class="invalid"><i class="fas fa-times-circle"></i> Mínimo 8 e máximo 70 caracteres.</li>
+             <li id="req-upper" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos uma letra maiúscula.</li>
+             <li id="req-lower" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos uma letra minúscula.</li>
+             <li id="req-symbol" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos um símbolo (* ! # $ % & + - / : ; = ? @ \ |).</li>
+             <li id="req-number" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos um número.</li>
+          </ul>
+          <span id="password-match-error" style="color: #ff5555; font-size: 13px; display: none; margin-top: 10px;">As senhas não coincidem.</span>
+
           <button type="submit" class="botao-autenticacao">
             Criar Conta
           </button>
@@ -151,17 +170,41 @@
         </p>
         <p class="link-rp">
           Interessado em participar de programas? 
-          <a href="https://wa.me/5561992677680?text=Ol%C3%A1!%20Eu%20gostaria%20de%20tirar%20algumas%20d%C3%BAvidas%20com%20voc%C3%AAs." target="_blank">Fale com RP</a>
+          <a href="https://wa.me/5561992677680" target="_blank">Fale com RP</a>
         </p>
       </div>
+
+      <div id="area-recuperacao" class="area-formulario">
+        <h2 class="titulo-formulario">Recuperar Senha</h2>
+        <p class="descricao-formulario">
+          Digite o e-mail cadastrado e enviaremos um link para você redefinir sua senha.
+        </p>
+        <form class="formulario-autenticacao">
+            <div class="campo-formulario-autenticacao">
+              <label for="email-recuperacao">Email Cadastrado</label>
+              <input type="email" id="email-recuperacao" placeholder="seu@email.com" required />
+            </div>
+            <button type="submit" class="botao-autenticacao">Enviar Link</button>
+        </form>
+        <p class="link-inferior">
+            Lembrou a senha? <a href="#" id="link-voltar-login-rec">Voltar para Login</a>
+        </p>
+      </div>
+
     </div>
   </div>
 
-  <script src="{{ url_for('static', filename='js/login/login-cliente.js') }}"></script>
+  <div id="modal-sucesso" class="modal-overlay">
+    <div class="modal-conteudo">
+        <div class="modal-icone">
+            <i class="fas fa-check"></i>
+        </div>
+        <h3 class="modal-titulo">Cadastro Realizado!</h3>
+        <p class="modal-texto">Sua conta foi criada com sucesso. Enviamos um e-mail de confirmação para você.</p>
+        <button id="btn-fechar-modal" class="botao-autenticacao">Ir para Login</button>
+    </div>
+  </div>
 
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="/static/js/login/login-cliente.js"></script>
 </body>
-
 </html>

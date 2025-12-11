@@ -1,14 +1,14 @@
-/* 1. VARIÁVEIS DE COR E GLOBAIS (ATUALIZADAS PARA O TEMA DA IMAGEM) */
-@import url("https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap");
-
+/* 1. VARIÁVEIS DE COR E GLOBAIS (PALETA DA LOJA) */
 :root {
-  --cor-fundo-principal: #0a0a0a;
-  --cor-fundo-elementos: #0a0a0a;
-  --cor-acento-principal: #d98236;
-  --cor-texto-principal: #f5f5f5;
-  --cor-texto-secundario: #a0a0a0;
-  --cor-borda: #303030;
+  --cor-fundo-principal: #000000;
+  --cor-fundo-elementos: #0f0f10;
+  --cor-acento-principal: #c96b2a;
+  --cor-texto-principal: #ffffff;
+  --cor-texto-secundario: #c9c9c9;
+  --cor-borda: #333333;
   --cor-fundo-input-claro: #1c1c1c;
+  --cor-erro: #ff5555;
+  --cor-sucesso: #2ecc71;
 }
 
 * {
@@ -17,10 +17,10 @@
   padding: 0;
 }
 
-/* 2. ESTILOS DA PÁGINA (BODY SEM O BRILHO) */
+/* 2. ESTILOS DA PÁGINA */
 .body-login-cadastro {
-  font-family: "Figtree", sans-serif;
-  background-color: var(--cor-fundo-principal); /* Fundo preto */
+  font-family: "Poppins", sans-serif;
+  background-color: var(--cor-fundo-principal);
   color: var(--cor-texto-principal);
   line-height: 1.6;
   display: flex;
@@ -36,89 +36,84 @@
   align-items: center;
   gap: 20px;
   width: 100%;
-  max-width: 450px;
+  max-width: 480px;
 }
 
-/* 3. CARTÃO DE AUTENTICAÇÃO (AGORA COM O BRILHO DENTRO) */
+/* 3. CARTÃO DE AUTENTICAÇÃO */
 .cartao-autenticacao {
-  background-color: var(
-    --cor-fundo-principal
-  ); /* Fundo preto para o gradiente */
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  background-color: var(--cor-fundo-elementos);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
   width: 100%;
   text-align: center;
   border: 1px solid var(--cor-borda);
   transition: all 0.2s ease;
-
-  /* EFEITO DE LUZ (GLOW) MOVIDO PARA DENTRO DO CARTÃO */
+  
+  /* Glow Laranja no topo */
   background-image: radial-gradient(
     circle at center top,
-    rgba(217, 130, 54, 0.4) 0%, /* Cor do brilho */
-    rgba(217, 130, 54, 0.05) 30%,
-    var(--cor-fundo-principal) 60% /* Fundo preto */
+    rgba(201, 107, 42, 0.15) 0%,
+    rgba(15, 15, 16, 0) 50%
   );
-
+  
   overflow: hidden;
   position: relative;
 }
 
 .cartao-autenticacao:hover {
-  border-color: rgb(70, 46, 10);
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3),
-    0 0 10px rgba(217, 130, 54, 0.5);
+  border-color: #444;
 }
 
-/* --- ADIÇÃO DA REGRA PARA O LOGO DO STAFF --- */
-/* Esta regra foi adicionada para estilizar o .logo-autenticacao
-   presente no login-staff.html, usando o tema do login-cliente. */
-.logo-autenticacao {
-  font-size: 48px;
-  color: var(--cor-acento-principal);
-  margin-bottom: 20px;
+/* LOGO / AVATAR */
+.logo-sistema {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
 }
-/* ------------------------------------------- */
 
-/* 4. NOVOS ESTILOS DE PERFIL (Baseado na imagem) */
 .perfil-avatar {
   width: 90px;
   height: 90px;
   border-radius: 50%;
   object-fit: cover;
-  margin: 0 auto 10px auto;
-  box-shadow: 0 0 15px rgba(217, 130, 54, 0.5);
+  margin: 0 auto;
+  box-shadow: 0 0 15px rgba(201, 107, 42, 0.3);
 }
 
-/* ESTILOS .perfil-sociais REMOVIDOS */
-
-/* ESTILOS DO TÍTULO E SUBTÍTULO DO PERFIL */
 .titulo-autenticacao {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
   color: var(--cor-texto-principal);
   margin-bottom: 8px;
 }
 
 .subtitulo-autenticacao {
-  font-size: 16px;
+  font-size: 15px;
   color: var(--cor-texto-secundario);
-  margin-bottom: 20px; /* Espaço após o "Produtora Audiovisual" */
+  margin-bottom: 30px;
 }
 
-/* 5. SEÇÃO DO FORMULÁRIO (Login/Cadastro) */
+/* 5. SEÇÃO DO FORMULÁRIO */
 .area-formulario {
   display: none;
+  animation: fadeIn 0.3s ease;
 }
 .area-formulario.ativa {
   display: block;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .titulo-formulario {
-  font-size: 24px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 700;
   margin-bottom: 10px;
   text-align: left;
+  color: var(--cor-texto-principal);
 }
 
 .descricao-formulario {
@@ -142,8 +137,8 @@
 }
 
 .campo-formulario-autenticacao label {
-  font-weight: 500;
-  color: var(--cor-texto-secundario);
+  font-weight: 600;
+  color: var(--cor-texto-principal);
   font-size: 14px;
 }
 
@@ -152,17 +147,30 @@
   border: 1px solid var(--cor-borda);
   color: var(--cor-texto-principal);
   padding: 12px 15px;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: 4px; /* Estilo da Loja */
+  font-size: 15px;
   width: 100%;
-  font-family: "Figtree", sans-serif;
+  font-family: "Poppins", sans-serif;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* --- CORREÇÃO AUTOFILL (IMPEDE FUNDO BRANCO) --- */
+.campo-formulario-autenticacao input:-webkit-autofill,
+.campo-formulario-autenticacao input:-webkit-autofill:hover, 
+.campo-formulario-autenticacao input:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--cor-texto-principal) !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--cor-fundo-input-claro) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+    border: 1px solid var(--cor-borda) !important;
+    caret-color: var(--cor-texto-principal);
 }
 
 .campo-formulario-autenticacao input:focus {
   outline: none;
-  border-color: var(--cor-acento-principal);
-  box-shadow: 0 0 0 3px rgba(217, 130, 54, 0.3);
+  border-color: var(--cor-texto-principal);
+}
+.campo-formulario-autenticacao input::placeholder {
+  color: #888;
 }
 
 /* Campo de Senha */
@@ -179,18 +187,50 @@
   right: 15px;
   color: var(--cor-texto-secundario);
   cursor: pointer;
-  font-size: 20px;
+  font-size: 18px;
 }
 .mostrar-senha:hover {
   color: var(--cor-acento-principal);
 }
 
-/* 6. BOTÃO PRINCIPAL (ESTILO BOTÃO BRANCO DA IMAGEM) */
+/* --- VALIDAÇÃO DE SENHA (ESCONDIDA POR PADRÃO) --- */
+.password-requirements-list {
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+    font-size: 13px;
+    color: #888;
+    text-align: left;
+    
+    display: none; /* Escondido */
+}
+
+.password-requirements-list.visivel {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.password-requirements-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 6px;
+    transition: color 0.3s ease;
+}
+.password-requirements-list li i {
+    font-size: 14px;
+    margin-top: 2px;
+}
+.password-requirements-list li.invalid { color: var(--cor-erro); }
+.password-requirements-list li.valid { color: var(--cor-sucesso); }
+
+
+/* 6. BOTÃO PRINCIPAL */
 .botao-autenticacao {
-  background-color: var(--cor-texto-principal);
-  color: var(--cor-fundo-principal);
+  background-color: var(--cor-acento-principal);
+  color: var(--cor-texto-principal);
   border: none;
-  padding: 14px 20px;
+  padding: 15px 30px;
   border-radius: 50px;
   font-size: 16px;
   font-weight: 700;
@@ -198,18 +238,21 @@
   width: 100%;
   transition: all 0.2s ease;
   margin-top: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: "Poppins", sans-serif;
 }
 
 .botao-autenticacao:hover {
-  filter: brightness(0.9);
-  transform: scale(1.03);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  background-color: #e08a4a;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 .botao-autenticacao:active {
   transform: scale(0.98);
 }
 
-/* 7. LINK INFERIOR (CADASTRO) */
+/* 7. LINKS INFERIORES */
 .link-inferior {
   font-size: 14px;
   color: var(--cor-texto-secundario);
@@ -218,23 +261,72 @@
 .link-inferior a {
   color: var(--cor-acento-principal);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
 }
 .link-inferior a:hover {
   text-decoration: underline;
 }
 
-/* Estilo atualizado para o logo-sistema */
-.logo-sistema {
-  /* Removemos os estilos de fonte (flex, gap, font-size, etc.) */
-  margin-bottom: 30px; /* Mantém o espaçamento inferior */
-  display: flex; /* Adicionado para centralizar a imagem */
-  justify-content: center; /* Adicionado para centralizar a imagem */
+/* MODAL */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(5px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
-
-/* Nova regra para a imagem do logo */
-.logo-imagem-sga {
-  height: 150px; /* Altura desejada (ajuste se precisar) */
-  width: auto; /* Largura automática para manter proporção */
-  display: block;
+.modal-overlay.visivel {
+    display: flex;
+    opacity: 1;
+}
+.modal-conteudo {
+    background-color: var(--cor-fundo-elementos);
+    border: 1px solid var(--cor-borda);
+    padding: 50px 40px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+    transform: translateY(20px);
+    transition: transform 0.3s ease;
+}
+.modal-overlay.visivel .modal-conteudo {
+    transform: translateY(0);
+}
+.modal-icone {
+    width: 70px;
+    height: 70px;
+    background: var(--cor-acento-principal);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px auto;
+    box-shadow: 0 0 20px rgba(201, 107, 42, 0.5);
+}
+.modal-icone i {
+    font-size: 35px;
+    color: #fff;
+}
+.modal-titulo {
+    font-size: 24px;
+    color: var(--cor-texto-principal);
+    margin-bottom: 15px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+.modal-texto {
+    font-size: 15px;
+    color: var(--cor-texto-secundario);
+    margin-bottom: 30px;
+    line-height: 1.6;
 }

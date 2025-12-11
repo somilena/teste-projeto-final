@@ -199,17 +199,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // ✅ LINKS CORRIGIDOS AQUI
             article.innerHTML = `
-                <div class="thumb" onclick="window.location.href='/produto/${p.id}'" style="cursor:pointer">
+                <div class="thumb" onclick="(function(){ const pref=(window.ROUTES&&window.ROUTES.produtoPrefix)?window.ROUTES.produtoPrefix:'/produto/'; window.location.href=pref+'${p.id}'; })()" style="cursor:pointer">
                     <img src="${p.images[0]}" alt="${p.title}" class="active" style="width:100%; height:100%; object-fit:cover;">
                 </div>
                 
                 <div class="product-info-row">
-                    <h3><a href="/produto/${p.id}" class="product-title-link">${p.title}</a></h3>
+                    <h3><a href="${(window.ROUTES && window.ROUTES.produtoPrefix) ? window.ROUTES.produtoPrefix + p.id : '/produto/' + p.id}" class="product-title-link">${p.title}</a></h3>
                     <div class="price-info"><span class="price">R$ ${p.price.toFixed(2).replace('.', ',')}</span></div>
                 </div>
                 
                 <div class="price-row" style="width: 100%; margin-top: 6px;"> 
-                    <a href="/produto/${p.id}" class="btn btn-produto" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">VER DETALHES</a>
+                    <a href="${(window.ROUTES && window.ROUTES.produtoPrefix) ? window.ROUTES.produtoPrefix + p.id : '/produto/' + p.id}" class="btn btn-produto" style="text-decoration: none; display: flex; justify-content: center; align-items: center;">VER DETALHES</a>
                 </div>
             `;
             grid.appendChild(article);
