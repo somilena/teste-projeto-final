@@ -16,44 +16,19 @@
 </head>
 
 <body>
-    <header class="cabecalho">
-        <div class="container">
-            <a href="/index.html" class="logo">
-                <img src="/img/logo.png" alt="Logo ProdCumaru" class="logo-imagem" />
-                <small>Produtora Audiovisual</small>
+    <header class="cabecalho-checkout">
+        <div class="faixa-checkout">
+            <!-- Logo no canto superior esquerdo -->
+            <a href="{{ url_for('home') }}" aria-label="Página inicial" class="logo-checkout">
+                <img src="{{ url_for('static', filename='img/logo.png') }}" alt="ProdCumaru" />
             </a>
 
-            <div class="navbar-direita" id="navbar-menu">
-                <button class="botao-fechar-menu" id="botao-fechar-menu" aria-label="Fechar menu">×</button>
-                <nav class="menu-principal">
-                    <ul>
-                        <li><a href="/index.html">Home</a></li>
-                        <li><a href="loja.html">Loja</a></li>
-                        <li><a href="/pages/serviços/servicos.html">Serviços</a></li>
-                        <li><a href="/pages/galeria/galeria.html">Galeria</a></li>
-                    </ul>
-                </nav>
-                <div class="icones-header">
-                    <a href="https://www.instagram.com/prodcumaru/" aria-label="Instagram"><i
-                            class="fab fa-instagram"></i></a>
-                    <a href="https://www.youtube.com/channel/UC5ONBnjOuICom8noQ78D9_g" aria-label="Youtube"><i
-                            class="fab fa-youtube"></i></a>
-
-                    <a href="carrinho.html" aria-label="Carrinho" class="cart-btn">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count" id="cart-count">0</span>
-                    </a>
-
-                    <div class="login-dropdown-container">
-                        <a href="#" class="login-trigger" aria-label="Login ou Cadastro"><i class="fas fa-user"></i></a>
-                        <div class="submenu-login">
-                            <span class="submenu-login-titulo">FAZER LOGIN</span>
-                            <ul>
-                                <li><a href="/pages/login/login-cliente.html"><i
-                                            class="fas fa-headphones"></i><span>Portal do Cliente</span></a></li>
-                            </ul>
-                        </div>
-                    </div>
+            <!-- Selo de segurança no canto superior direito -->
+            <div class="selo-seguranca">
+                <i class="fas fa-lock"></i>
+                <div class="texto-seguranca">
+                    <span>Compre com tranquilidade</span>
+                    <strong>Loja 100% segura</strong>
                 </div>
             </div>
         </div>
