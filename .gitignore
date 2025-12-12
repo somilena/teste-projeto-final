@@ -1,3 +1,39 @@
+[General]
+.DS_Store
+.vscode/
+__pycache__/
+*.log
+*.bak
+
+[Python env]
+.venv/
+venv/
+env/
+ENV/
+pip-wheel-metadata/
+
+[Secrets]
+.env
+.env.*
+*.pem
+*.crt
+*.key
+
+[Databases]
+*.db
+*.sqlite
+*.sqlite3
+
+[Uploads & generated]
+uploads/**
+static/uploads/**
+static/img/contratos/**
+
+[Platform/hosting]
+wsgi_*.py
+*.dist-info/
+*.egg-info/
+
 # Bytecode e cache
 __pycache__/
 *.pyc

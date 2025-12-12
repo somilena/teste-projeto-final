@@ -2,7 +2,7 @@
 -- Ajuste conforme necessário; tipos otimizados para Postgres
 
 -- CLIENTES FISICOS
-DROP TABLE IF EXISTS tb_clientes_fisico;
+DROP TABLE IF EXISTS tb_clientes_fisico CASCADE;
 CREATE TABLE tb_clientes_fisico (
   id_clientes_fisico SERIAL PRIMARY KEY,
   nome VARCHAR(100) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE tb_clientes_fisico (
 );
 
 -- CLIENTES JURIDICOS
-DROP TABLE IF EXISTS tb_clientes_juridicos;
+DROP TABLE IF EXISTS tb_clientes_juridicos CASCADE;
 CREATE TABLE tb_clientes_juridicos (
   id_clientes_juridicos SERIAL PRIMARY KEY,
   razao_social VARCHAR(120) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE tb_clientes_juridicos (
 );
 
 -- CONTEUDO
-DROP TABLE IF EXISTS tb_conteudo;
+DROP TABLE IF EXISTS tb_conteudo CASCADE;
 CREATE TABLE tb_conteudo (
   id_conteudo SERIAL PRIMARY KEY,
   nome_conteudo VARCHAR(100) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE tb_conteudo (
 );
 
 -- CONTRATOS
-DROP TABLE IF EXISTS tb_contratos;
+DROP TABLE IF EXISTS tb_contratos CASCADE;
 CREATE TABLE tb_contratos (
   id_contratos SERIAL PRIMARY KEY,
   cliente_ass VARCHAR(120),
@@ -65,7 +65,7 @@ CREATE TABLE tb_contratos (
 );
 
 -- FINANCAS
-DROP TABLE IF EXISTS tb_financas;
+DROP TABLE IF EXISTS tb_financas CASCADE;
 CREATE TABLE tb_financas (
   id_financas SERIAL PRIMARY KEY,
   tipo VARCHAR(45) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE tb_financas (
 );
 
 -- FUNCIONARIOS
-DROP TABLE IF EXISTS tb_funcionarios;
+DROP TABLE IF EXISTS tb_funcionarios CASCADE;
 CREATE TABLE tb_funcionarios (
   id_funcionarios SERIAL PRIMARY KEY,
   nome VARCHAR(120) NOT NULL,
@@ -100,7 +100,7 @@ CREATE TABLE tb_funcionarios (
 );
 
 -- REGISTRO DE AGENDAMENTOS
-DROP TABLE IF EXISTS tb_reg_agendamentos;
+DROP TABLE IF EXISTS tb_reg_agendamentos CASCADE;
 CREATE TABLE tb_reg_agendamentos (
   id_reg_agendamentos SERIAL PRIMARY KEY,
   id_cliente INTEGER NOT NULL,
@@ -120,7 +120,7 @@ CREATE TABLE tb_reg_agendamentos (
 );
 
 -- FORMA DE PAGAMENTO
-DROP TABLE IF EXISTS tb_forma_pag;
+DROP TABLE IF EXISTS tb_forma_pag CASCADE;
 CREATE TABLE tb_forma_pag (
   id_forma_pag SERIAL PRIMARY KEY,
   nome VARCHAR(45) NOT NULL,
@@ -133,7 +133,7 @@ CREATE TABLE tb_forma_pag (
 );
 
 -- SERVICOS
-DROP TABLE IF EXISTS tb_servicos;
+DROP TABLE IF EXISTS tb_servicos CASCADE;
 CREATE TABLE tb_servicos (
   id_servicos SERIAL PRIMARY KEY,
   nome_servicos VARCHAR(120) NOT NULL,
@@ -145,7 +145,7 @@ CREATE TABLE tb_servicos (
 );
 
 -- ITENS PEDIDO
-DROP TABLE IF EXISTS tb_itens_pedido;
+DROP TABLE IF EXISTS tb_itens_pedido CASCADE;
 CREATE TABLE tb_itens_pedido (
   id_itens_pedido SERIAL PRIMARY KEY,
   id_pedido INTEGER NOT NULL,
@@ -159,7 +159,7 @@ CREATE TABLE tb_itens_pedido (
 );
 
 -- PEDIDO
-DROP TABLE IF EXISTS tb_pedido;
+DROP TABLE IF EXISTS tb_pedido CASCADE;
 CREATE TABLE tb_pedido (
   id_pedido SERIAL PRIMARY KEY,
   id_clientes INTEGER,
@@ -185,7 +185,7 @@ CREATE TABLE tb_pedido (
 );
 
 -- PRODUTO
-DROP TABLE IF EXISTS tb_produto;
+DROP TABLE IF EXISTS tb_produto CASCADE;
 CREATE TABLE tb_produto (
   id_produto SERIAL PRIMARY KEY,
   nome_produto VARCHAR(120) NOT NULL,
