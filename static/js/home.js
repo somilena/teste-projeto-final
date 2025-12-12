@@ -52,63 +52,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 });
 
 // --- BOTÃO VOLTAR AO TOPO (apenas na Home) ---
-document.addEventListener('DOMContentLoaded', () => {
-  // Carrega resumo do dashboard
-  fetch('/api/dashboard/summary')
-    .then(r => r.json())
-    .then(data => {
-      renderDashboard(data)
-    })
-    .catch(err => {
-      console.error('Falha ao carregar dashboard', err)
-    })
-});
-
-function renderDashboard(data) {
-  const pedidosCountEl = document.querySelector('#kpi-pedidos-count')
-  const pedidosTotalEl = document.querySelector('#kpi-pedidos-total')
-  const agCountEl = document.querySelector('#kpi-ag-count')
-  const cliCountEl = document.querySelector('#kpi-cli-count')
-
-  if (pedidosCountEl) pedidosCountEl.textContent = data.pedidos?.count ?? 0
-  if (pedidosTotalEl) pedidosTotalEl.textContent = (data.pedidos?.total ?? 0).toFixed(2)
-  if (agCountEl) agCountEl.textContent = data.agendamentos?.count ?? 0
-  if (cliCountEl) cliCountEl.textContent = ((data.clientes?.fisicos ?? 0) + (data.clientes?.juridicos ?? 0))
-
-  const pedidosListEl = document.querySelector('#recent-pedidos')
-  if (pedidosListEl && Array.isArray(data.pedidos?.recentes)) {
-    pedidosListEl.innerHTML = data.pedidos.recentes.map(p => `
-      <li>
-        <span>#${p.id_pedido}</span>
-        <span>${p.nome}</span>
-        <span>R$ ${(p.valor_total || 0).toFixed(2)}</span>
-      </li>
-    `).join('')
-  }
-
-  const agListEl = document.querySelector('#proximos-ag')
-  if (agListEl && Array.isArray(data.agendamentos?.proximos)) {
-    agListEl.innerHTML = data.agendamentos.proximos.map(a => `
-      <li>
-        <span>${a.data_agend} ${a.horario}</span>
-        <span>${a.nome}</span>
-        <span>${a.servico}</span>
-        <span>${a.status}</span>
-      </li>
-    `).join('')
-  }
-
-  const cliListEl = document.querySelector('#recent-clientes')
-  if (cliListEl && Array.isArray(data.clientes?.recentes)) {
-    cliListEl.innerHTML = data.clientes.recentes.map(c => `
-      <li>
-        <span>${c.nome}</span>
-        <span>${c.email}</span>
-        <span>${c.tipo}</span>
-      </li>
-    `).join('')
-  }
-}
+const btnTopo = document.querySelector('#btn-topo');
 console.log('btnTopo encontrado:', btnTopo);
 if (!btnTopo) {
   console.warn('Botão #btn-topo não encontrado no DOM');

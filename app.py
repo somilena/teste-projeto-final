@@ -70,7 +70,10 @@ def api_criar_pedido():
         subtotal = float(pedido.get('subtotal') or 0)
         frete = float(pedido.get('frete') or 0)
         valor_total = float(pedido.get('valor_total') or (subtotal + frete))
-        estado = (pedido.get('estado') or '').upper()[:2]
+        estado_raw = (pedido.get('estado') or '').strip().upper()
+        estado = estado_raw[:2] if len(estado_raw) >= 2 else 'PE'
+        if len(estado) != 2:
+            estado = 'PE'
         # Cria pedido
         cur.execute(
             """
