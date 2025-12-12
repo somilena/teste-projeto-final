@@ -397,7 +397,7 @@ def api_pedido():
         conn.execute('''
             INSERT INTO tb_pedido 
             (id_clientes, data_pedido, nome, cpf, cnpj, cep, logradouro, numero, bairro, complemento, cidade, estado, tel_cel, email, observacao, subtotal, frete, valor_total)
-            VALUES (?, date('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, CURRENT_DATE, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             cliente_id,
             data.get('nome'),
@@ -446,7 +446,7 @@ def api_pedido():
         conn.execute('''
             INSERT INTO tb_financas 
             (tipo, nome, cliente_ass, valor_total, data_emissao, data_vencimento, status, obs)
-            VALUES ('Receita', 'Pedido Loja #' || ?, ?, ?, date('now'), date('now'), 'Pendente', ?)
+            VALUES ('Receita', 'Pedido Loja #' || ?, ?, ?, CURRENT_DATE, CURRENT_DATE, 'Pendente', ?)
         ''', (
             pedido_id,
             data.get('nome'),
@@ -653,11 +653,24 @@ def api_criar_agendamento_cliente():
         return jsonify({'success': False, 'message': 'Não autorizado'}), 401
     data = request.json or {}
     # Validações de data/horário
-    data_agend = data.get('data')
+    data_agend_raw = data.get('data')
     horario = data.get('horario', '00:00')
     servico = data.get('servico')
-    if not data_agend or not servico:
+    if not data_agend_raw or not servico:
         return jsonify({'success': False, 'message': 'Data e serviço são obrigatórios'}), 400
+    
+    # Converte data do formato brasileiro para ISO (YYYY-MM-DD)
+    if ' às ' in str(data_agend_raw):
+        # Formato: "25/12/2025 às 15:00" -> "2025-12-25"
+        data_parte = str(data_agend_raw).split(' às ')[0]
+        try:
+            dia, mes, ano = data_parte.split('/')
+            data_agend = f"{ano}-{mes}-{dia}"
+        except:
+            data_agend = data_agend_raw
+    else:
+        data_agend = data_agend_raw
+    
     try:
         # Data futura e formato válido
         dt_data = datetime.strptime(data_agend, '%Y-%m-%d')
