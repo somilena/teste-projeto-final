@@ -446,8 +446,10 @@ def api_pedido():
         conn.execute('''
             INSERT INTO tb_financas 
             (tipo, nome, cliente_ass, valor_total, data_emissao, data_vencimento, status, obs)
-            VALUES ('Receita', 'Pedido Loja #' || ?, ?, ?, CURRENT_DATE, CURRENT_DATE, 'Pendente', ?)
+            VALUES (?, ? || ?, ?, CURRENT_DATE, CURRENT_DATE, 'Pendente', ?)
         ''', (
+            'Receita',
+            'Pedido Loja #',
             pedido_id,
             data.get('nome'),
             data.get('total', 0.0),

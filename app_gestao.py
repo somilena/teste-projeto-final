@@ -280,7 +280,7 @@ def row_to_dict(row):
                 (cli['id'], cli['nome'], cli['email'], cli['tel_cel'], horario, data_agend, cli['tipo'], servico, data.get('obs', ''), float(data.get('valor', 0.0)), data.get('forma_pagamento', 'N/A'))
             )
             conn.commit()
-            new_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+            new_id = conn.execute("SELECT lastval()").fetchone()[0]
             conn.close()
             return jsonify({'success': True, 'id': new_id})
         except Exception as e:
@@ -465,7 +465,7 @@ def novo_funcionario():
     
     conn.execute("""
         INSERT INTO tb_funcionarios (nome, cpf, email, tel_cel, cargo, senha_aces, data_admis, log_aces, nivel_aces, status)
-        VALUES (?, ?, ?, ?, ?, ?, date('now'), ?, ?, 'Ativo')
+        VALUES (?, ?, ?, ?, ?, ?, CURRENT_DATE, ?, ?, 'Ativo')
     """, (
         request.form['nome'],     # name="nome"
         request.form['cpf'],      # name="cpf"
