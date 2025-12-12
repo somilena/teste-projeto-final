@@ -3,11 +3,51 @@ import os
 import sqlite3
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+try:
+    import psycopg2
+    import psycopg2.extras
+except Exception:
+    psycopg2 = None
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'prodcumaru_secret_key_2025')  # Em produção defina FLASK_SECRET_KEY
 
 def get_db():
+    """Retorna conexão de banco.
+    - Se DATABASE_URL estiver definido: usa Postgres (psycopg2) com rows em dict.
+    - Caso contrário: SQLite local com row_factory.
+    Adapta placeholders '?' -> '%s' e date('now') -> CURRENT_DATE para Postgres.
+    """
+    db_url = os.environ.get('DATABASE_URL')
+    if db_url and psycopg2:
+        class _PGConn:
+            def __init__(self, url):
+                self._conn = psycopg2.connect(url)
+                self._conn.autocommit = False
+            def _convert_sql(self, sql):
+                sql = sql.replace("date('now')", "CURRENT_DATE")
+                # Converte placeholders
+                out = []
+                q_count = 0
+                for ch in sql:
+                    if ch == '?':
+                        out.append('%s')
+                        q_count += 1
+                    else:
+                        out.append(ch)
+                return ''.join(out)
+            def cursor(self):
+                return self._conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            def execute(self, sql, params=tuple()):
+                cur = self.cursor()
+                cur.execute(self._convert_sql(sql), params or tuple())
+                return cur
+            def commit(self):
+                self._conn.commit()
+            def close(self):
+                self._conn.close()
+        return _PGConn(db_url)
+    # Fallback: SQLite
     conn = sqlite3.connect("db_prodcumaru.db")
     conn.row_factory = sqlite3.Row
     return conn

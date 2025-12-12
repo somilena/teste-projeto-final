@@ -3,6 +3,11 @@ import sqlite3
 import os
 from datetime import datetime
 from permissoes import verificar_permissao, obter_secoes_permitidas, listar_niveis_disponiveis, NIVEIS, normalizar_nivel
+try:
+    import psycopg2
+    import psycopg2.extras
+except Exception:
+    psycopg2 = None
 
 # Configurações do App
 app = Flask(__name__, template_folder='templates', static_folder='static')
@@ -15,8 +20,32 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Função para conectar ao banco
 def get_db():
+    """Conexão DB com suporte a Postgres via DATABASE_URL e fallback SQLite."""
+    db_url = os.environ.get('DATABASE_URL')
+    if db_url and psycopg2:
+        class _PGConn:
+            def __init__(self, url):
+                self._conn = psycopg2.connect(url)
+                self._conn.autocommit = False
+            def _convert_sql(self, sql):
+                sql = sql.replace("date('now')", "CURRENT_DATE")
+                out = []
+                for ch in sql:
+                    out.append('%s' if ch == '?' else ch)
+                return ''.join(out)
+            def cursor(self):
+                return self._conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+            def execute(self, sql, params=tuple()):
+                cur = self.cursor()
+                cur.execute(self._convert_sql(sql), params or tuple())
+                return cur
+            def commit(self):
+                self._conn.commit()
+            def close(self):
+                self._conn.close()
+        return _PGConn(db_url)
     conn = sqlite3.connect("db_prodcumaru.db")
-    conn.row_factory = sqlite3.Row # Permite acessar colunas pelo nome (ex: row['nome'])
+    conn.row_factory = sqlite3.Row
     return conn
 
 # ==========================================
