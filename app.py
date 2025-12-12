@@ -62,6 +62,83 @@ def get_db():
 def home():
     return render_template("index.html")
 
+@app.route('/api/dashboard/summary')
+def api_dashboard_summary():
+    try:
+        conn = get_db()
+        cur = conn.cursor()
+        cur.execute("SELECT COUNT(*), COALESCE(SUM(valor_total),0) FROM tb_pedido")
+        pedidos_count, pedidos_total = cur.fetchone()
+        cur.execute("""
+            SELECT id_pedido, nome, valor_total, data_pedido
+            FROM tb_pedido
+            ORDER BY id_pedido DESC
+            LIMIT 5
+        """)
+        ultimos_pedidos = [
+            {
+                'id_pedido': r[0],
+                'nome': r[1],
+                'valor_total': float(r[2]),
+                'data_pedido': r[3].isoformat() if r[3] else None,
+            }
+            for r in cur.fetchall()
+        ]
+        cur.execute("SELECT COUNT(*) FROM tb_reg_agendamentos")
+        ag_count = cur.fetchone()[0]
+        cur.execute("SELECT status, COUNT(*) FROM tb_reg_agendamentos GROUP BY status")
+        ag_por_status = {row[0]: row[1] for row in cur.fetchall()}
+        cur.execute("""
+            SELECT id_reg_agendamentos, nome, servico, data_agend, horario, status
+            FROM tb_reg_agendamentos
+            ORDER BY data_agend ASC, id_reg_agendamentos DESC
+            LIMIT 5
+        """)
+        proximos_ag = [
+            {
+                'id': r[0],
+                'nome': r[1],
+                'servico': r[2],
+                'data_agend': r[3].isoformat() if r[3] else None,
+                'horario': r[4],
+                'status': r[5],
+            }
+            for r in cur.fetchall()
+        ]
+        cur.execute("SELECT COUNT(*) FROM tb_clientes_fisico")
+        cli_fis = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(*) FROM tb_clientes_juridicos")
+        cli_jur = cur.fetchone()[0]
+        cur.execute("""
+            SELECT nome, email, data_cad FROM tb_clientes_fisico ORDER BY id_clientes_fisico DESC LIMIT 5
+        """)
+        ult_cli_fis = [
+            {
+                'nome': r[0],
+                'email': r[1],
+                'data_cad': r[2].isoformat() if r[2] else None,
+                'tipo': 'fisico'
+            } for r in cur.fetchall()
+        ]
+        cur.execute("""
+            SELECT razao_social, email, data_cad FROM tb_clientes_juridicos ORDER BY id_clientes_juridicos DESC LIMIT 5
+        """)
+        ult_cli_jur = [
+            {
+                'nome': r[0],
+                'email': r[1],
+                'data_cad': r[2].isoformat() if r[2] else None,
+                'tipo': 'juridico'
+            } for r in cur.fetchall()
+        ]
+        return jsonify({
+            'pedidos': {'count': pedidos_count, 'total': float(pedidos_total), 'recentes': ultimos_pedidos},
+            'agendamentos': {'count': ag_count, 'por_status': ag_por_status, 'proximos': proximos_ag},
+            'clientes': {'fisicos': cli_fis, 'juridicos': cli_jur, 'recentes': ult_cli_fis + ult_cli_jur}
+        })
+    except Exception as e:
+        print('ERRO DASHBOARD:', e)
+        return jsonify({'error': 'Falha ao carregar dashboard'}), 500
 @app.route("/servicos")
 def servicos():
     return render_template("servicos/servicos.html")
