@@ -14,14 +14,17 @@
   <div class="layout-wrapper">
     <aside class="sidebar-moderna">
       <div class="logo-area">
-        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="ProdCumaru" />
-        <span>ProdCumaru</span>
+        <img src="{{ url_for('static', filename='img/icon/logo-icon.png') }}" alt="ProdCumaru" />
+        <span>Portal do Cliente</span>
       </div>
 
       <nav class="nav-moderna">
         <ul>
           <li class="nav-item ativo" data-pagina="agendamentos">
             <i class="ph-bold ph-calendar-check"></i> Meus Agendamentos
+          </li>
+          <li class="nav-item" data-pagina="compras">
+            <i class="ph-bold ph-shopping-cart"></i> Minhas Compras
           </li>
           <li class="nav-item" data-pagina="perfil">
             <i class="ph-bold ph-user-circle"></i> Meu Perfil
@@ -43,7 +46,7 @@
           <i class="ph-bold ph-moon"></i> <span>Modo Escuro</span>
         </button>
 
-        <a href="{{ url_for('login_cliente') }}" class="btn-sair">
+        <a href="#" class="btn-sair" id="btn-sair-portal">
           <i class="ph-bold ph-sign-out"></i> Sair
         </a>
       </div>
@@ -51,7 +54,12 @@
 
     <main class="main-content">
       <header class="topbar-moderna">
-        <h2 id="titulo-pagina">Meus Agendamentos</h2>
+        <div class="header-left">
+          <a href="/" class="btn-voltar-home" title="Voltar para Home">
+            <i class="ph-bold ph-house"></i>
+          </a>
+          <h2 id="titulo-pagina">Meus Agendamentos</h2>
+        </div>
         <div class="user-profile">
           <img src="{{ url_for('static', filename='img/icon/cliente.png') }}" alt="User" id="img-perfil-header" />
           <span id="nome-header">Cliente</span>
@@ -86,7 +94,28 @@
           </div>
         </div>
 
-        <div id="secao-perfil" class="secao-conteudo" style="display: none">
+        <!-- SEÇÃO: MINHAS COMPRAS -->
+        <div id="secao-compras" class="secao-conteudo oculto">
+          <div class="header-banner">
+            <div class="header-info">
+              <h1>Minhas Compras</h1>
+              <p>Acompanhe seus pedidos da loja online e solicite reembolsos se necessário.</p>
+            </div>
+          </div>
+
+          <div class="lista-compras-container">
+            <div class="list-header-row">
+              <span>Pedido</span>
+              <span>Data</span>
+              <span>Valor</span>
+              <span>Status</span>
+              <span>Ações</span>
+            </div>
+            <div id="lista-compras-body"></div>
+          </div>
+        </div>
+
+        <div id="secao-perfil" class="secao-conteudo oculto">
           <div class="section-perfil">
             <div class="perfil-header">
               <div class="foto-wrapper">
@@ -95,7 +124,7 @@
                 <label for="input-foto" class="btn-trocar-foto" title="Trocar Foto">
                   <i class="ph-bold ph-camera"></i>
                 </label>
-                <input type="file" id="input-foto" accept="image/*" style="display: none" />
+                <input type="file" id="input-foto" accept="image/*" class="input-arquivo-oculto" />
               </div>
               <div class="perfil-info-topo">
                 <h2 id="nome-perfil-topo">Seu Nome</h2>
@@ -110,7 +139,7 @@
               </div>
               <div class="form-group">
                 <label>E-mail</label>
-                <input type="email" id="input-email" disabled style="opacity: 0.5" />
+                <input type="email" id="input-email" disabled class="campo-desabilitado" />
               </div>
               <div class="form-group">
                 <label>Telefone / WhatsApp</label>
@@ -129,7 +158,7 @@
   </div>
 
   <div class="modal-overlay" id="modal-novo-agendamento-portal">
-    <div class="modal-conteudo" style="max-width: 700px;">
+    <div class="modal-conteudo modal-largo">
       <header class="modal-cabecalho">
         <h2>Novo Agendamento</h2>
         <button class="modal-fechar" id="modal-fechar-novo-agendamento">&times;</button>
@@ -148,7 +177,7 @@
         </div>
         <div class="campo-formulario">
           <label>Data Desejada</label>
-          <input type="date" id="agendamento-data-portal" required />
+          <input type="date" id="agendamento-data-portal" min="1900-01-01" max="2099-12-31" required />
         </div>
         <div class="campo-formulario">
           <label>Horário</label>
@@ -174,6 +203,69 @@
     </div>
   </div>
 
+  <!-- MODAL: NOVO AGENDAMENTO -->
+  <div class="modal-overlay" id="modal-novo-agendamento">
+    <div class="modal-conteudo modal-largo">
+      <header class="modal-cabecalho">
+        <h2>Novo Agendamento</h2>
+        <button class="modal-fechar" id="modal-fechar-novo">&times;</button>
+      </header>
+      <form class="formulario-modal" id="form-novo-agendamento">
+
+        <div class="campo-formulario">
+          <label>Selecione o Serviço/Pacote</label>
+          <select id="novo-servico" required>
+            <option value="">Escolha um serviço</option>
+            <option value="Produção de Vídeo Institucional - R$ 2.500,00">Produção de Vídeo Institucional - R$ 2.500,00
+            </option>
+            <option value="Cobertura de Evento - R$ 1.800,00">Cobertura de Evento - R$ 1.800,00</option>
+            <option value="Fotos Profissionais - R$ 800,00">Fotos Profissionais - R$ 800,00</option>
+            <option value="Edição de Vídeo - R$ 600,00">Edição de Vídeo - R$ 600,00</option>
+            <option value="Consultoria Audiovisual - R$ 1.200,00">Consultoria Audiovisual - R$ 1.200,00</option>
+          </select>
+        </div>
+
+        <div class="campo-formulario">
+          <label>Data do Agendamento</label>
+          <input type="date" id="novo-data" min="1900-01-01" max="2099-12-31" required />
+        </div>
+
+        <div class="campo-formulario">
+          <label>Horário</label>
+          <select id="novo-horario" required>
+            <option value="">Selecione o horário</option>
+            <option value="09:00">09:00</option>
+            <option value="10:00">10:00</option>
+            <option value="11:00">11:00</option>
+            <option value="14:00">14:00</option>
+            <option value="15:00">15:00</option>
+            <option value="16:00">16:00</option>
+            <option value="17:00">17:00</option>
+          </select>
+        </div>
+
+        <div class="campo-formulario">
+          <label>Forma de Pagamento</label>
+          <select id="novo-pagamento" required>
+            <option value="">Escolha a forma de pagamento</option>
+            <option value="pix">PIX</option>
+            <option value="cartao">Cartão de Crédito</option>
+            <option value="boleto">Boleto Bancário</option>
+          </select>
+        </div>
+
+        <div class="campo-formulario">
+          <label>Observações (Opcional)</label>
+          <textarea id="novo-obs" rows="3" placeholder="Detalhes adicionais sobre o serviço..."></textarea>
+        </div>
+
+        <button type="submit" class="botao-principal">
+          <i class="ph-bold ph-check-circle"></i> Confirmar e Pagar
+        </button>
+      </form>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="modal-reagendamento">
     <div class="modal-conteudo">
       <header class="modal-cabecalho">
@@ -187,7 +279,7 @@
         </p>
         <div class="campo-formulario">
           <label>Nova Data Sugerida</label>
-          <input type="date" id="reagendamento-data" required />
+          <input type="date" id="reagendamento-data" min="1900-01-01" max="2099-12-31" required />
         </div>
         <div class="campo-formulario">
           <label>Novo Horário</label>

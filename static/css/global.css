@@ -781,6 +781,37 @@ ul {
   /* Cor laranja (era #111) */
 }
 
+/* --- MENU DO USUÁRIO LOGADO --- */
+.user-info-menu {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 10px;
+  margin-bottom: 4px;
+}
+
+.user-info-menu i {
+  font-size: 28px;
+  color: var(--cor-primaria);
+}
+
+.user-info-menu>div {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-weight: 600;
+  color: var(--cor-texto-principal);
+  font-size: 14px;
+}
+
+.user-info-menu small {
+  font-size: 11px;
+  color: var(--cor-texto-secundario);
+  text-transform: uppercase;
+}
+
 /* ============================================= */
 /* --- ESTILOS RESPONSIVOS (MOBILE) --- */
 /* ============================================= */

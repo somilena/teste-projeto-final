@@ -217,11 +217,11 @@ body.dark-mode .item-menu.ativo {
   display: flex;
   flex-direction: column;
   /* Alterado de hidden para auto para permitir rolar a página */
-  overflow-y: auto; 
+  overflow-y: auto;
   background-color: var(--cor-bg-body);
-  
+
   /* ADICIONADO: Espaçamento interno para afastar o conteúdo das bordas */
-  padding: 40px; 
+  padding: 40px;
 }
 
 .topbar-moderna {
@@ -930,11 +930,81 @@ body.dark-mode .status-select-produto {
   box-shadow: 0 0 0 3px rgba(201, 107, 42, 0.1);
 }
 
-/* --- DESPESAS ATRASADAS --- */
+/* --- CORES DE STATUS FINANCEIRO --- */
+/* Despesas/Receitas Atrasadas - Vermelho */
 .tabela-dados tbody tr.atrasado td,
 .tabela-dados tbody tr.atrasado select {
   color: var(--cor-vermelho) !important;
   font-weight: 600;
+  background: rgba(245, 54, 92, 0.1);
+}
+
+/* Despesas/Receitas Pagas - Verde */
+.tabela-dados tbody tr.pago td,
+.tabela-dados tbody tr.pago select {
+  color: var(--cor-verde) !important;
+  font-weight: 600;
+  background: rgba(45, 206, 137, 0.1);
+}
+
+/* Despesas/Receitas A Pagar - Amarelo */
+.tabela-dados tbody tr.a-pagar td,
+.tabela-dados tbody tr.a-pagar select {
+  color: #ffa940 !important;
+  font-weight: 600;
+  background: rgba(255, 169, 64, 0.1);
+}
+
+/* --- BADGES DE STATUS --- */
+.badge-status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-status.pago {
+  background: rgba(45, 206, 137, 0.15);
+  color: var(--cor-verde);
+  border: 1px solid rgba(45, 206, 137, 0.3);
+}
+
+.badge-status.confirmado {
+  background: rgba(45, 206, 137, 0.15);
+  color: var(--cor-verde);
+  border: 1px solid rgba(45, 206, 137, 0.3);
+}
+
+.badge-status.pendente {
+  background: rgba(255, 169, 64, 0.15);
+  color: #ffa940;
+  border: 1px solid rgba(255, 169, 64, 0.3);
+}
+
+/* --- BADGES DE ATIVIDADE DOS CLIENTES --- */
+.badge-atividade {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-right: 6px;
+  margin-top: 2px;
+}
+
+.badge-atividade.loja {
+  background: rgba(100, 149, 237, 0.15);
+  color: #6495ed;
+  border: 1px solid rgba(100, 149, 237, 0.3);
+}
+
+.badge-atividade.agendamento {
+  background: rgba(255, 140, 0, 0.15);
+  color: #ff8c00;
+  border: 1px solid rgba(255, 140, 0, 0.3);
 }
 
 /* --- ALERTA --- */
@@ -974,7 +1044,8 @@ body.dark-mode .status-select-produto {
 /* --- ALERTAS --- */
 /* Atualizando o estilo antigo para o visual suave do HTML */
 #alerta-contas-atrasadas {
-  display: none; /* O JS muda para flex */
+  display: none;
+  /* O JS muda para flex */
   background-color: rgba(255, 107, 107, 0.15);
   border: 1px solid #ff6b6b;
   color: #ff6b6b;
@@ -983,7 +1054,8 @@ body.dark-mode .status-select-produto {
   margin-bottom: 25px;
   align-items: center;
   gap: 12px;
-  margin-top: 0; /* Reset */
+  margin-top: 0;
+  /* Reset */
 }
 
 #alerta-contas-atrasadas i {
@@ -1015,7 +1087,8 @@ body.dark-mode .status-select-produto {
 }
 
 #data-hoje-extenso {
-  color: var(--cor-primaria); /* Substitui --cor-acento-principal */
+  color: var(--cor-primaria);
+  /* Substitui --cor-acento-principal */
   font-size: 14px;
   font-weight: 600;
 }
@@ -1115,7 +1188,8 @@ body.dark-mode .status-select-produto {
 
 #aviso-imagem-atual {
   color: var(--cor-text-muted);
-  display: none; /* JS controla a exibição */
+  display: none;
+  /* JS controla a exibição */
 }
 
 .container-botoes {
@@ -1125,7 +1199,8 @@ body.dark-mode .status-select-produto {
 }
 
 #btn-cancelar-galeria {
-  display: none; /* JS controla a exibição */
+  display: none;
+  /* JS controla a exibição */
   background-color: var(--cor-borda);
 }
 
@@ -1149,9 +1224,17 @@ body.dark-mode .status-select-produto {
   flex: 1;
 }
 
-.w-120 { width: 120px; }
-.w-100 { width: 100px; }
-.w-80 { width: 80px; }
+.w-120 {
+  width: 120px;
+}
+
+.w-100 {
+  width: 100px;
+}
+
+.w-80 {
+  width: 80px;
+}
 
 .titulo-separador {
   font-size: 16px;
@@ -1175,17 +1258,20 @@ body.dark-mode .status-select-produto {
 
 /* --- Cores Padrão (Modo Claro) --- */
 .tipo-gravacao {
-  background-color: #e0f7fa; /* Azul claro */
+  background-color: #e0f7fa;
+  /* Azul claro */
   color: #007bb2;
 }
 
 .tipo-mixagem {
-  background-color: #fce4ec; /* Rosa claro */
+  background-color: #fce4ec;
+  /* Rosa claro */
   color: #ad1457;
 }
 
 .tipo-reuniao {
-  background-color: #fffde7; /* Amarelo claro */
+  background-color: #fffde7;
+  /* Amarelo claro */
   color: #fbc02d;
 }
 

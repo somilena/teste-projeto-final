@@ -1,7 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import sqlite3
+from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
+app.secret_key = 'prodcumaru_secret_key_2025'  # Mude para uma chave secreta forte em produção
 
 def get_db():
     conn = sqlite3.connect("db_prodcumaru.db")
@@ -30,18 +33,391 @@ def galeria():
 
 @app.route("/login-cliente")
 def login_cliente():
+    # Verifica se usuário já está logado na sessão Flask
+    # Se estiver, redireciona direto para o portal
+    if 'cliente_id' in session:
+        return redirect(url_for('portal'))
+    
     # Página de login/cadastro do cliente
     return render_template("login/login-cliente.html")
 
 @app.route("/portal")
 def portal():
     # Área logada do cliente (Meus Agendamentos)
-    # Futuramente aqui você buscará os dados do cliente no banco
+    if 'cliente_id' not in session:
+        return redirect(url_for('login_cliente'))
     return render_template("portal-cliente/portal-cliente.html")
 
+# API - Login Cliente
+@app.route("/api/login-cliente", methods=['POST'])
+def api_login_cliente():
+    data = request.json
+    email = data.get('email')
+    senha = data.get('senha')
+    
+    conn = get_db()
+    
+    # Busca em clientes físicos
+    cliente = conn.execute(
+        "SELECT * FROM tb_clientes_fisico WHERE email = ?",
+        (email,)
+    ).fetchone()
+    
+    # Se não encontrar em físico, busca em jurídico
+    if not cliente:
+        cliente = conn.execute(
+            "SELECT * FROM tb_clientes_juridicos WHERE email = ?",
+            (email,)
+        ).fetchone()
+        tipo_cliente = 'juridico' if cliente else None
+    else:
+        tipo_cliente = 'fisico'
+    
+    conn.close()
+    
+    if cliente and cliente['senha'] == senha:  # Comparação direta (trocar por hash em produção)
+        # Cria sessão
+        if tipo_cliente == 'fisico':
+            session['cliente_id'] = cliente['id_clientes_fisico']
+            session['cliente_nome'] = cliente['nome']
+            session['cliente_email'] = cliente['email']
+            session['cliente_tipo'] = 'fisico'
+        else:
+            session['cliente_id'] = cliente['id_clientes_juridicos']
+            session['cliente_nome'] = cliente['razao_social']
+            session['cliente_email'] = cliente['email']
+            session['cliente_tipo'] = 'juridico'
+        
+        return jsonify({
+            'success': True,
+            'user': {
+                'id': session['cliente_id'],
+                'nome': session['cliente_nome'],
+                'email': session['cliente_email']
+            }
+        })
+    else:
+        return jsonify({'success': False, 'message': 'Email ou senha incorretos'}), 401
+
+# API - Logout Cliente
+@app.route("/api/logout-cliente", methods=['POST'])
+def api_logout_cliente():
+    # Limpa toda a sessão
+    session.clear()
+    return jsonify({'success': True, 'message': 'Logout realizado com sucesso'})
+
+# API - Cadastro Cliente
+@app.route("/api/cadastro-cliente", methods=['POST'])
+def api_cadastro_cliente():
+    data = request.json
+    tipo_pessoa = data.get('tipo_pessoa')
+    email = data.get('email', '').strip()
+    
+    conn = get_db()
+    
+    try:
+        # --- VALIDAÇÃO DE DATA DE NASCIMENTO (para PF) ---
+        if tipo_pessoa == 'pf':
+            data_nasc = data.get('data_nasc', '')
+            if data_nasc:
+                from datetime import datetime as dt
+                try:
+                    data_obj = dt.strptime(data_nasc, '%Y-%m-%d')
+                    ano = data_obj.year
+                    ano_atual = dt.now().year
+                    if ano < 1900 or ano > ano_atual - 18:
+                        conn.close()
+                        return jsonify({'success': False, 'message': f'Data de nascimento inválida! Deve estar entre 1900 e {ano_atual - 18}'}), 400
+                except:
+                    conn.close()
+                    return jsonify({'success': False, 'message': 'Formato de data inválido'}), 400
+
+        # --- VALIDAÇÕES DE DUPLICATA ---
+        
+        # Verifica email duplicado em ambas as tabelas
+        cliente_pf = conn.execute("SELECT id_clientes_fisico FROM tb_clientes_fisico WHERE email = ?", (email,)).fetchone()
+        cliente_pj = conn.execute("SELECT id_clientes_juridicos FROM tb_clientes_juridicos WHERE email = ?", (email,)).fetchone()
+        
+        if cliente_pf or cliente_pj:
+            conn.close()
+            return jsonify({'success': False, 'message': 'Este email já está cadastrado no sistema'}), 400
+        
+        if tipo_pessoa == 'pf':
+            cpf = data.get('cpf', '').strip()
+            
+            # Verifica CPF duplicado
+            cliente_cpf = conn.execute("SELECT id_clientes_fisico FROM tb_clientes_fisico WHERE cpf = ?", (cpf,)).fetchone()
+            if cliente_cpf:
+                conn.close()
+                return jsonify({'success': False, 'message': 'Este CPF já está cadastrado no sistema'}), 400
+            
+            # Cliente Físico
+            conn.execute('''
+                INSERT INTO tb_clientes_fisico 
+                (nome, cpf, data_nasc, email, tel_cel, cep, logradouro, numero, bairro, cidade, estado, senha, data_cad)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                data.get('nome'),
+                cpf,
+                data.get('data_nasc'),
+                email,
+                data.get('telefone'),
+                data.get('cep'),
+                data.get('logradouro'),
+                data.get('numero'),
+                data.get('bairro'),
+                data.get('cidade'),
+                data.get('estado'),
+                data.get('senha'),
+                datetime.now().strftime('%Y-%m-%d')
+            ))
+            
+            # Cria contrato inicial para o cliente
+            conn.execute('''
+                INSERT INTO tb_contratos (cliente_ass, titulo_doc, arquivo)
+                VALUES (?, ?, ?)
+            ''', (
+                data.get('nome'),
+                'Termo de Adesão - Cadastro Site',
+                'contrato_cadastro_' + datetime.now().strftime('%Y%m%d%H%M%S') + '.pdf'
+            ))
+            
+        else:
+            cnpj = data.get('cnpj', '').strip()
+            
+            # Verifica CNPJ duplicado
+            cliente_cnpj = conn.execute("SELECT id_clientes_juridicos FROM tb_clientes_juridicos WHERE cnpj = ?", (cnpj,)).fetchone()
+            if cliente_cnpj:
+                conn.close()
+                return jsonify({'success': False, 'message': 'Este CNPJ já está cadastrado no sistema'}), 400
+            
+            # Cliente Jurídico
+            conn.execute('''
+                INSERT INTO tb_clientes_juridicos 
+                (razao_social, cnpj, email, tel_cel, cep, logradouro, numero, bairro, cidade, estado, senha, data_cad)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                data.get('razao_social'),
+                cnpj,
+                email,
+                data.get('telefone'),
+                data.get('cep'),
+                data.get('logradouro'),
+                data.get('numero'),
+                data.get('bairro'),
+                data.get('cidade'),
+                data.get('estado'),
+                data.get('senha'),
+                datetime.now().strftime('%Y-%m-%d')
+            ))
+            
+            # Cria contrato inicial para o cliente
+            conn.execute('''
+                INSERT INTO tb_contratos (cliente_ass, titulo_doc, arquivo)
+                VALUES (?, ?, ?)
+            ''', (
+                data.get('razao_social'),
+                'Termo de Adesão - Cadastro Site',
+                'contrato_cadastro_' + datetime.now().strftime('%Y%m%d%H%M%S') + '.pdf'
+            ))
+        
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({'success': True, 'message': 'Cadastro realizado com sucesso!'})
+    
+    except Exception as e:
+        conn.close()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+# API - Logout
+@app.route("/api/logout", methods=['POST'])
+def api_logout():
+    session.clear()
+    return jsonify({'success': True})
+
 # ==========================================
-# 3. ROTA DE AGENDAMENTO (Pública)
+# 3. API DE AGENDAMENTO PÚBLICO (site)
 # ==========================================
+
+@app.route("/api/agendamento-publico", methods=['POST'])
+def api_agendamento_publico():
+    """API para salvar agendamento feito no site"""
+    data = request.json
+    
+    conn = get_db()
+    try:
+        # Busca se já existe cliente com este email
+        cliente_id = None
+        tipo_cliente = 'PF'
+        
+        # Tenta encontrar em PF
+        pf = conn.execute(
+            "SELECT id_clientes_fisico, nome FROM tb_clientes_fisico WHERE email = ?",
+            (data.get('email'),)
+        ).fetchone()
+        
+        if pf:
+            cliente_id = pf['id_clientes_fisico']
+            nome = pf['nome']
+        else:
+            # Tenta encontrar em PJ
+            pj = conn.execute(
+                "SELECT id_clientes_juridicos, razao_social FROM tb_clientes_juridicos WHERE email = ?",
+                (data.get('email'),)
+            ).fetchone()
+            
+            if pj:
+                cliente_id = pj['id_clientes_juridicos']
+                nome = pj['razao_social']
+                tipo_cliente = 'PJ'
+            else:
+                # Cliente novo - não cadastrado ainda
+                cliente_id = 0
+                nome = data.get('nome')
+        
+        # Insere o agendamento
+        conn.execute('''
+            INSERT INTO tb_reg_agendamentos 
+            (id_cliente, nome, email, tel_cel, horario, data_agend, tipo_cliente, servico, status, obs, valor_total, forma_pagamento, status_pagamento)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Agendado', ?, ?, ?, 'Pendente')
+        ''', (
+            cliente_id,
+            nome,
+            data.get('email'),
+            data.get('telefone', ''),
+            data.get('horario', '00:00'),
+            data.get('data'),
+            tipo_cliente,
+            data.get('servico'),
+            data.get('observacao', ''),
+            data.get('valor', 0.0),
+            data.get('forma_pagamento', 'Não informado')
+        ))
+        
+        conn.commit()
+        agendamento_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+        conn.close()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Agendamento realizado com sucesso!',
+            'id': agendamento_id
+        })
+        
+    except Exception as e:
+        conn.close()
+        return jsonify({
+            'success': False,
+            'message': f'Erro ao criar agendamento: {str(e)}'
+        }), 500
+
+# ==========================================
+# 4. API DE PEDIDOS (loja)
+# ==========================================
+
+@app.route("/api/pedido", methods=['POST'])
+def api_pedido():
+    """API para salvar pedido da loja"""
+    data = request.json
+    
+    conn = get_db()
+    try:
+        # Busca se já existe cliente com este email
+        cliente_id = None
+        
+        pf = conn.execute(
+            "SELECT id_clientes_fisico FROM tb_clientes_fisico WHERE email = ?",
+            (data.get('email'),)
+        ).fetchone()
+        
+        if pf:
+            cliente_id = pf['id_clientes_fisico']
+        else:
+            pj = conn.execute(
+                "SELECT id_clientes_juridicos FROM tb_clientes_juridicos WHERE email = ?",
+                (data.get('email'),)
+            ).fetchone()
+            if pj:
+                cliente_id = pj['id_clientes_juridicos']
+        
+        # Insere o pedido
+        conn.execute('''
+            INSERT INTO tb_pedido 
+            (id_clientes, data_pedido, nome, cpf, cnpj, cep, logradouro, numero, bairro, complemento, cidade, estado, tel_cel, email, observacao, subtotal, frete, valor_total)
+            VALUES (?, date('now'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            cliente_id,
+            data.get('nome'),
+            data.get('cpf', ''),
+            data.get('cnpj', ''),
+            data.get('cep'),
+            data.get('logradouro'),
+            data.get('numero'),
+            data.get('bairro'),
+            data.get('complemento', ''),
+            data.get('cidade'),
+            data.get('estado'),
+            data.get('telefone'),
+            data.get('email'),
+            data.get('observacao', ''),
+            data.get('subtotal', 0.0),
+            data.get('frete', 0.0),
+            data.get('total', 0.0)
+        ))
+        
+        pedido_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+        
+        # Insere os itens do pedido
+        produtos = data.get('produtos', [])
+        for produto in produtos:
+            conn.execute('''
+                INSERT INTO tb_itens_pedido 
+                (id_pedido, id_produto, quantidade, preco_unitario, subtotal)
+                VALUES (?, ?, ?, ?, ?)
+            ''', (
+                pedido_id,
+                produto.get('id'),
+                produto.get('quantidade'),
+                produto.get('preco'),
+                produto.get('preco') * produto.get('quantidade')
+            ))
+            
+            # Atualiza estoque
+            conn.execute('''
+                UPDATE tb_produto 
+                SET estoque = estoque - ?
+                WHERE id_produto = ?
+            ''', (produto.get('quantidade'), produto.get('id')))
+        
+        # Registra na tabela financeira
+        conn.execute('''
+            INSERT INTO tb_financas 
+            (tipo, nome, cliente_ass, valor_total, data_emissao, data_vencimento, status, obs)
+            VALUES ('Receita', 'Pedido Loja #' || ?, ?, ?, date('now'), date('now'), 'Pendente', ?)
+        ''', (
+            pedido_id,
+            data.get('nome'),
+            data.get('total', 0.0),
+            data.get('forma_pagamento', 'Não informado')
+        ))
+        
+        conn.commit()
+        conn.close()
+        
+        return jsonify({
+            'success': True,
+            'message': 'Pedido realizado com sucesso!',
+            'numero_pedido': pedido_id
+        })
+        
+    except Exception as e:
+        conn.close()
+        return jsonify({
+            'success': False,
+            'message': f'Erro ao criar pedido: {str(e)}'
+        }), 500
 
 @app.route("/agendar_publico", methods=['POST'])
 def agendar_publico():
@@ -187,3 +563,210 @@ con.close()
 # conn.close()
 
 # ==========================================
+# APIS PARA INTEGRAÇÃO COM BANCO DE DADOS
+# ==========================================
+
+# API - Buscar agendamentos do cliente logado
+@app.route("/api/meus-agendamentos", methods=['GET'])
+def api_meus_agendamentos():
+    if 'cliente_id' not in session:
+        return jsonify({'success': False, 'message': 'Não autorizado'}), 401
+    
+    conn = get_db()
+    agendamentos = conn.execute(
+        """SELECT * FROM tb_reg_agendamentos 
+           WHERE id_cliente = ? 
+           ORDER BY data_agend DESC""",
+        (session['cliente_id'],)
+    ).fetchall()
+    conn.close()
+    
+    lista = []
+    for ag in agendamentos:
+        lista.append({
+            'id': ag['id_reg_agendamentos'],
+            'servico': ag['servico'],
+            'data': ag['data_agend'] + ' às ' + ag['horario'],
+            'status': ag['status'],
+            'valor': ag['valor_total'],
+            'pagamento': ag['forma_pagamento'],
+            'observacoes': ag['obs']
+        })
+    
+    return jsonify({'success': True, 'agendamentos': lista})
+
+# API - Criar agendamento (cliente logado)
+@app.route("/api/agendamentos", methods=['POST'])
+def api_criar_agendamento_cliente():
+    if 'cliente_id' not in session:
+        return jsonify({'success': False, 'message': 'Não autorizado'}), 401
+    data = request.json or {}
+    # Validações de data/horário
+    data_agend = data.get('data')
+    horario = data.get('horario', '00:00')
+    servico = data.get('servico')
+    if not data_agend or not servico:
+        return jsonify({'success': False, 'message': 'Data e serviço são obrigatórios'}), 400
+    try:
+        # Data futura e formato válido
+        dt_data = datetime.strptime(data_agend, '%Y-%m-%d')
+        if dt_data.date() < datetime.now().date():
+            return jsonify({'success': False, 'message': 'Data não pode ser no passado'}), 400
+    except Exception:
+        return jsonify({'success': False, 'message': 'Formato de data inválido (YYYY-MM-DD)'}), 400
+
+    conn = get_db()
+    try:
+        # Verifica conflito básico (mesmo cliente, mesma data/horário)
+        conflito = conn.execute(
+            """
+            SELECT 1 FROM tb_reg_agendamentos 
+            WHERE id_cliente = ? AND data_agend = ? AND horario = ?
+            """,
+            (session['cliente_id'], data_agend, horario)
+        ).fetchone()
+        if conflito:
+            conn.close()
+            return jsonify({'success': False, 'message': 'Já existe um agendamento nesse horário'}), 409
+
+        # Dados do cliente
+        if session.get('cliente_tipo') == 'fisico':
+            cli = conn.execute("SELECT nome, email, tel_cel FROM tb_clientes_fisico WHERE id_clientes_fisico = ?", (session['cliente_id'],)).fetchone()
+            tipo_cli = 'PF'
+        else:
+            cli = conn.execute("SELECT razao_social as nome, email, tel_cel FROM tb_clientes_juridicos WHERE id_clientes_juridicos = ?", (session['cliente_id'],)).fetchone()
+            tipo_cli = 'PJ'
+
+        conn.execute(
+            """
+            INSERT INTO tb_reg_agendamentos 
+            (id_cliente, nome, email, tel_cel, horario, data_agend, tipo_cliente, servico, status, obs, valor_total, forma_pagamento, status_pagamento)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Agendado', ?, ?, ?, 'Pendente')
+            """,
+            (
+                session['cliente_id'],
+                cli['nome'],
+                cli['email'],
+                cli['tel_cel'],
+                horario,
+                data_agend,
+                tipo_cli,
+                servico,
+                data.get('observacao', ''),
+                float(data.get('valor', 0.0)),
+                data.get('forma_pagamento', 'Não informado')
+            )
+        )
+        conn.commit()
+        ag_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+        conn.close()
+        return jsonify({'success': True, 'id': ag_id})
+    except Exception as e:
+        conn.close()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+# API - Buscar pedidos do cliente logado
+@app.route("/api/meus-pedidos", methods=['GET'])
+def api_meus_pedidos():
+    if 'cliente_id' not in session:
+        return jsonify({'success': False, 'message': 'Não autorizado'}), 401
+    
+    conn = get_db()
+    pedidos = conn.execute(
+        """SELECT * FROM tb_pedido 
+           WHERE id_clientes = ? 
+           ORDER BY data_pedido DESC""",
+        (session['cliente_id'],)
+    ).fetchall()
+    conn.close()
+    
+    lista = []
+    for p in pedidos:
+        lista.append({
+            'id': p['id_pedido'],
+            'data': p['data_pedido'],
+            'valor': p['valor_total'],
+            'status': 'Pago',  # Pode adicionar coluna status na tabela depois
+            'nome': p['nome'],
+            'endereco': f"{p['logradouro']}, {p['numero']} - {p['bairro']}, {p['cidade']}/{p['estado']}"
+        })
+    
+    return jsonify({'success': True, 'pedidos': lista})
+
+# ==========================================
+# 7. API - Meus Contratos (portal)
+# ==========================================
+
+@app.route("/api/meus-contratos", methods=['GET'])
+def api_meus_contratos():
+    if 'cliente_id' not in session:
+        return jsonify({'success': False, 'message': 'Não autorizado'}), 401
+
+    conn = get_db()
+    try:
+        # Determina nome do cliente conforme tipo (PF/PJ)
+        if session.get('cliente_tipo') == 'fisico':
+            cli = conn.execute(
+                "SELECT nome as nome FROM tb_clientes_fisico WHERE id_clientes_fisico = ?",
+                (session['cliente_id'],)
+            ).fetchone()
+        else:
+            cli = conn.execute(
+                "SELECT razao_social as nome FROM tb_clientes_juridicos WHERE id_clientes_juridicos = ?",
+                (session['cliente_id'],)
+            ).fetchone()
+
+        nome_cliente = cli['nome'] if cli else None
+        if not nome_cliente:
+            conn.close()
+            return jsonify({'success': False, 'message': 'Cliente não encontrado'}), 404
+
+        contratos = conn.execute(
+            "SELECT id_contratos, cliente_ass, titulo_doc, arquivo FROM tb_contratos WHERE cliente_ass = ? ORDER BY id_contratos DESC",
+            (nome_cliente,)
+        ).fetchall()
+        conn.close()
+
+        return jsonify({
+            'success': True,
+            'contratos': [
+                {
+                    'id': c['id_contratos'],
+                    'cliente': c['cliente_ass'],
+                    'titulo': c['titulo_doc'],
+                    'arquivo': c['arquivo']
+                } for c in contratos
+            ]
+        })
+    except Exception as e:
+        conn.close()
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+# ==========================================
+# 8. API - Verificar se pode avaliar (deve ter comprado)
+# ==========================================
+
+@app.route("/api/pode-avaliar", methods=['GET'])
+def api_pode_avaliar():
+    """Verifica se o cliente logado tem pelo menos um pedido."""
+    if 'cliente_id' not in session:
+        return jsonify({'success': False, 'pode_avaliar': False, 'message': 'Faça login para avaliar'}), 401
+    
+    conn = get_db()
+    pedido = conn.execute(
+        """SELECT id_pedido FROM tb_pedido 
+           WHERE id_clientes = ? 
+           LIMIT 1""",
+        (session['cliente_id'],)
+    ).fetchone()
+    conn.close()
+    
+    pode_avaliar = pedido is not None
+    
+    if pode_avaliar:
+        return jsonify({'success': True, 'pode_avaliar': True, 'message': 'Você pode avaliar este produto'})
+    else:
+        return jsonify({'success': False, 'pode_avaliar': False, 'message': 'Apenas clientes que realizaram compras podem avaliar'}), 403
+
+if __name__ == "__main__":
+    app.run(debug=False, port=5000)

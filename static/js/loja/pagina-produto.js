@@ -226,6 +226,60 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
+    // Verificar se pode avaliar quando abre a aba de avaliações
+    function verificarPermissaoAvaliacao() {
+        fetch('/api/pode-avaliar')
+            .then(res => res.json())
+            .then(data => {
+                const blockedMsg = document.getElementById('avaliacao-bloqueada');
+                const reviewForm = document.querySelector('.review-form');
+                const starInputs = document.querySelectorAll(".star-rating-input i");
+                const formInputs = document.querySelectorAll('.review-form input, .review-form textarea, .review-form button');
+
+                if (data.pode_avaliar) {
+                    if (blockedMsg) blockedMsg.style.display = 'none';
+                    if (reviewForm) {
+                        reviewForm.style.opacity = '1';
+                        formInputs.forEach(inp => inp.disabled = false);
+                    }
+                    starInputs.forEach(s => s.style.cursor = 'pointer');
+                } else {
+                    if (blockedMsg) blockedMsg.style.display = 'block';
+                    if (reviewForm) {
+                        reviewForm.style.opacity = '0.6';
+                        formInputs.forEach(inp => inp.disabled = true);
+                    }
+                    starInputs.forEach(s => s.style.cursor = 'not-allowed');
+                }
+            })
+            .catch(err => {
+                console.log('Usuário não logado - formulário de avaliação desabilitado');
+                const blockedMsg = document.getElementById('avaliacao-bloqueada');
+                const reviewForm = document.querySelector('.review-form');
+                const formInputs = document.querySelectorAll('.review-form input, .review-form textarea, .review-form button');
+
+                if (blockedMsg) blockedMsg.style.display = 'block';
+                if (blockedMsg) blockedMsg.innerHTML = '<p style="margin: 0; color: #856404;"><i class="fas fa-sign-in-alt"></i> <strong>Faça login para avaliar este produto.</strong></p>';
+
+                if (reviewForm) {
+                    reviewForm.style.opacity = '0.6';
+                    formInputs.forEach(inp => inp.disabled = true);
+                }
+            });
+    }
+
+    // Chamar verificação quando aba de avaliações é clicada
+    const avaliacoesTab = document.querySelector('[data-tab="tab-avaliacoes"]');
+    if (avaliacoesTab) {
+        avaliacoesTab.addEventListener('click', verificarPermissaoAvaliacao);
+    }
+
+    // Também chamar na inicialização se a aba já está ativa
+    const avaliacoesContent = document.getElementById('tab-avaliacoes');
+    if (avaliacoesContent && avaliacoesContent.classList.contains('active')) {
+        verificarPermissaoAvaliacao();
+    }
+
     const lightbox = document.getElementById("image-lightbox");
     const openBtn = document.getElementById("open-lightbox");
     const closeBtn = document.getElementById("lightbox-close");
@@ -272,48 +326,62 @@ document.addEventListener("DOMContentLoaded", () => {
         reviewForm.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            // Pega valores
-            const ratingVal = document.getElementById("rating").value || 5;
-            const commentVal = document.getElementById("comment").value;
-            const authorVal = document.getElementById("author").value;
+            // Verifica se pode avaliar antes de enviar
+            fetch('/api/pode-avaliar')
+                .then(res => res.json())
+                .then(data => {
+                    if (!data.pode_avaliar) {
+                        alert('Você precisa realizar uma compra para avaliar este produto.');
+                        return;
+                    }
 
-            // Remove aviso "Não há avaliações"
-            const noReviewMsg = reviewList.querySelector(".no-reviews");
-            if (noReviewMsg) {
-                noReviewMsg.remove();
-            }
+                    // Pega valores
+                    const ratingVal = document.getElementById("rating").value || 5;
+                    const commentVal = document.getElementById("comment").value;
+                    const authorVal = document.getElementById("author").value;
 
-            // Gera estrelas
-            let starsHtml = "";
-            for (let i = 1; i <= 5; i++) {
-                if (i <= ratingVal) starsHtml += '<i class="fas fa-star"></i>';
-                else starsHtml += '<i class="far fa-star"></i>';
-            }
+                    // Remove aviso "Não há avaliações"
+                    const noReviewMsg = reviewList.querySelector(".no-reviews");
+                    if (noReviewMsg) {
+                        noReviewMsg.remove();
+                    }
 
-            // Cria novo item
-            const newReview = document.createElement("div");
-            newReview.className = "review-item";
-            newReview.innerHTML = `
-                <div class="review-item-main">
-                    <div class="review-avatar"><i class="fas fa-user-circle"></i></div>
-                    <div class="review-content">
-                        <div class="review-meta">
-                            <span class="review-author">${authorVal}</span>
-                            <div class="star-rating">${starsHtml}</div>
+                    // Gera estrelas
+                    let starsHtml = "";
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= ratingVal) starsHtml += '<i class="fas fa-star"></i>';
+                        else starsHtml += '<i class="far fa-star"></i>';
+                    }
+
+                    // Cria novo item
+                    const newReview = document.createElement("div");
+                    newReview.className = "review-item";
+                    newReview.innerHTML = `
+                        <div class="review-item-main">
+                            <div class="review-avatar"><i class="fas fa-user-circle"></i></div>
+                            <div class="review-content">
+                                <div class="review-meta">
+                                    <span class="review-author">${authorVal}</span>
+                                    <div class="star-rating">${starsHtml}</div>
+                                </div>
+                                <div class="review-text"><p>${commentVal}</p></div>
+                            </div>
                         </div>
-                        <div class="review-text"><p>${commentVal}</p></div>
-                    </div>
-                </div>
-            `;
+                    `;
 
-            reviewList.prepend(newReview);
-            reviewForm.reset();
-            starInputs.forEach(s => {
-                s.classList.remove("fas");
-                s.classList.add("far");
-            });
+                    reviewList.prepend(newReview);
+                    reviewForm.reset();
+                    starInputs.forEach(s => {
+                        s.classList.remove("fas");
+                        s.classList.add("far");
+                    });
 
-            alert("Obrigado pela sua avaliação!");
+                    alert("Obrigado pela sua avaliação!");
+                })
+                .catch(err => {
+                    alert('Erro ao validar permissão de avaliação. Tente novamente.');
+                    console.error(err);
+                });
         });
     }
 });

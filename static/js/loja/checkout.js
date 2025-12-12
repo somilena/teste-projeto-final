@@ -1,6 +1,11 @@
+console.log('🚀 checkout.js carregado!');
+
 document.addEventListener("DOMContentLoaded", () => {
+    console.log('✅ DOMContentLoaded disparado');
+
     // 1. Carrega carrinho
     let cart = JSON.parse(localStorage.getItem("epent_cart")) || [];
+    console.log('🛒 Carrinho carregado:', cart.length, 'itens');
     let shippingCost = 0; // Variável global de frete
 
     // Chamada inicial para verificar se já existe usuário logado
@@ -9,59 +14,158 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================
     // --- LÓGICA DE USUÁRIO (CENÁRIOS A, B e C) ---
     // =========================================================
-    
+
     function checkUserStatus() {
         // Tenta pegar o usuário do localStorage (salvo no login)
         const userData = JSON.parse(localStorage.getItem("prodcumaru_user"));
-        
+
         const passwordBox = document.querySelector(".portal-access-box");
         const loginRow = document.querySelector(".checkout-login-row");
-        
+        const billingSection = document.querySelector(".billing-details-col");
+
         if (userData) {
             console.log("Usuário logado identificado:", userData.nome);
 
             // 1. Preencher campos automaticamente
-            if(document.getElementById('full-name')) document.getElementById('full-name').value = userData.nome || "";
-            if(document.getElementById('email')) document.getElementById('email').value = userData.email || "";
-            if(document.getElementById('phone')) document.getElementById('phone').value = userData.telefone || "";
-            
+            if (document.getElementById('full-name')) document.getElementById('full-name').value = userData.nome || "";
+            if (document.getElementById('email')) document.getElementById('email').value = userData.email || "";
+            if (document.getElementById('phone')) document.getElementById('phone').value = userData.telefone || "";
+
             // Se tiver endereço salvo:
-            if(userData.endereco) {
-                 if(document.getElementById('postcode')) document.getElementById('postcode').value = userData.endereco.cep || "";
-                 if(document.getElementById('address-1')) document.getElementById('address-1').value = userData.endereco.rua || "";
-                 if(document.getElementById('address-number')) document.getElementById('address-number').value = userData.endereco.numero || "";
-                 
-                 // Disparar o evento 'blur' do CEP para calcular frete automaticamente
-                 if(document.getElementById('postcode') && document.getElementById('postcode').value) {
-                     document.getElementById('postcode').dispatchEvent(new Event('blur'));
-                 }
+            if (userData.endereco) {
+                if (document.getElementById('postcode')) document.getElementById('postcode').value = userData.endereco.cep || "";
+                if (document.getElementById('address-1')) document.getElementById('address-1').value = userData.endereco.rua || "";
+                if (document.getElementById('address-number')) document.getElementById('address-number').value = userData.endereco.numero || "";
+                if (document.getElementById('address-district')) document.getElementById('address-district').value = userData.endereco.bairro || "";
+                if (document.getElementById('city')) document.getElementById('city').value = userData.endereco.cidade || "";
+                if (document.getElementById('state')) document.getElementById('state').value = userData.endereco.estado || "";
+
+                // Disparar o evento 'blur' do CEP para calcular frete automaticamente
+                if (document.getElementById('postcode') && document.getElementById('postcode').value) {
+                    document.getElementById('postcode').dispatchEvent(new Event('blur'));
+                }
             }
 
             // 2. Esconder seção de criar senha (já tem conta)
             if (passwordBox) passwordBox.style.display = "none";
-            
+
             // 3. Remover a obrigatoriedade dos campos de senha
             const passInput = document.getElementById('account-password');
             const confirmInput = document.getElementById('account-password-confirm');
-            if(passInput) passInput.removeAttribute('required');
-            if(confirmInput) confirmInput.removeAttribute('required');
+            if (passInput) passInput.removeAttribute('required');
+            if (confirmInput) confirmInput.removeAttribute('required');
 
-            // 4. Esconder link de login e seletor PF/PJ (assumindo PF por padrão ou dados salvos)
+            // 4. Esconder link de login e seletor PF/PJ
             if (loginRow) loginRow.style.display = "none";
 
-        } else {
-            // Cenário C: Novo Usuário
-            if (passwordBox) passwordBox.style.display = "block";
-        }
-    }
+            // 4.1 Se o usuário tem tipo salvo, aplicar PF/PJ
+            if (userData.tipo && typeof userData.tipo === 'string') {
+                const tipoNormalizado = userData.tipo.toLowerCase();
+                if (tipoNormalizado === 'pj' || tipoNormalizado === 'juridica' || tipoNormalizado === 'juridico') {
+                    setPersonType('pj');
+                } else {
+                    setPersonType('pf');
+                }
+            }
 
-    // Evento para abrir o modal de login (Cenário B)
-    const loginLink = document.querySelector(".login-link-checkout");
-    if (loginLink) {
-        loginLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            abrirModalLoginCheckout(); 
-        });
+            // 5. NOVO: Adicionar resumo do usuário e ocultar formulário
+            if (billingSection) {
+                // Criar card de resumo do usuário
+                const userSummaryCard = document.createElement('div');
+                userSummaryCard.className = 'user-summary-card';
+                userSummaryCard.innerHTML = `
+                    <div class="user-summary-header">
+                        <i class="fas fa-user-check"></i>
+                        <div>
+                            <h3>Olá, ${userData.nome}!</h3>
+                            <p>Seus dados estão salvos</p>
+                        </div>
+                    </div>
+                    <div class="user-summary-info">
+                        <div class="info-row">
+                            <i class="fas fa-envelope"></i>
+                            <span>${userData.email}</span>
+                        </div>
+                        ${userData.telefone ? `
+                        <div class="info-row">
+                            <i class="fas fa-phone"></i>
+                            <span>${userData.telefone}</span>
+                        </div>
+                        ` : ''}
+                        ${userData.endereco ? `
+                        <div class="info-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${userData.endereco.rua}, ${userData.endereco.numero} - ${userData.endereco.cidade}/${userData.endereco.estado}</span>
+                        </div>
+                        ` : ''}
+                    </div>
+                    <button type="button" class="btn-edit-data" onclick="toggleBillingForm()">
+                        <i class="fas fa-edit"></i> Alterar dados
+                    </button>
+                `;
+
+                // Inserir o card antes do formulário
+                const formFields = billingSection.querySelectorAll('.form-field, .form-row');
+                billingSection.insertBefore(userSummaryCard, billingSection.children[1]);
+
+                // Ocultar todos os campos do formulário, mantendo loginRow e senha escondidos sempre
+                formFields.forEach(field => {
+                    if (!field.classList.contains('user-summary-card')) {
+                        field.style.display = 'none';
+                        // Remove required de campos ocultos
+                        const inputs = field.querySelectorAll('input, select, textarea');
+                        inputs.forEach(input => input.removeAttribute('required'));
+                    }
+                });
+                if (loginRow) loginRow.style.display = 'none';
+                if (passwordBox) passwordBox.style.display = 'none';
+
+                // Criar função global para toggle
+                window.toggleBillingForm = function () {
+                    const isHidden = formFields[0].style.display === 'none';
+                    formFields.forEach(field => {
+                        if (!field.classList.contains('user-summary-card')) {
+                            field.style.display = isHidden ? 'block' : 'none';
+
+                            // Se está mostrando, adiciona required nos campos importantes
+                            if (isHidden) {
+                                const inputs = field.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
+                                inputs.forEach(input => {
+                                    // Adiciona required exceto para campos opcionais
+                                    if (input.id !== 'address-2') { // complemento é opcional
+                                        input.setAttribute('required', 'required');
+                                    }
+                                });
+                            } else {
+                                // Se está ocultando, remove required
+                                const inputs = field.querySelectorAll('input, select, textarea');
+                                inputs.forEach(input => input.removeAttribute('required'));
+                            }
+                        }
+                    });
+                    // Garantir que login e senha continuem ocultos
+                    if (loginRow) loginRow.style.display = 'none';
+                    if (passwordBox) passwordBox.style.display = 'none';
+
+                    const btnEdit = document.querySelector('.btn-edit-data');
+                    if (btnEdit) {
+                        btnEdit.innerHTML = isHidden ?
+                            '<i class="fas fa-check"></i> Confirmar alterações' :
+                            '<i class="fas fa-edit"></i> Alterar dados';
+                    }
+                };
+            }
+
+        } else {
+            // Cenário C: Novo Usuário - adiciona required nos campos de senha
+            if (passwordBox) {
+                passwordBox.style.display = "block";
+                const passwordField = document.getElementById('account-password');
+                const confirmPasswordField = document.getElementById('account-password-confirm');
+                if (passwordField) passwordField.setAttribute('required', 'required');
+                if (confirmPasswordField) confirmPasswordField.setAttribute('required', 'required');
+            }
+        }
     }
 
     // =========================================================
@@ -70,10 +174,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnPF = document.getElementById('btn-pf');
     const btnPJ = document.getElementById('btn-pj');
     const inputType = document.getElementById('person-type');
-    
+
     const labelName = document.getElementById('label-name');
     const inputName = document.getElementById('full-name');
-    
+
     const labelDoc = document.getElementById('label-doc');
     const inputDoc = document.getElementById('doc-number');
     const errorDoc = document.getElementById('doc-error');
@@ -83,10 +187,10 @@ document.addEventListener("DOMContentLoaded", () => {
             btnPF.classList.add('active');
             btnPJ.classList.remove('active');
             inputType.value = 'pf';
-            
+
             labelName.innerHTML = 'Nome Completo <span>*</span>';
             inputName.placeholder = 'Digite seu nome completo';
-            
+
             labelDoc.innerHTML = 'CPF <span>*</span>';
             inputDoc.placeholder = '000.000.000-00';
             inputDoc.maxLength = 14;
@@ -95,16 +199,16 @@ document.addEventListener("DOMContentLoaded", () => {
             btnPJ.classList.add('active');
             btnPF.classList.remove('active');
             inputType.value = 'pj';
-            
+
             labelName.innerHTML = 'Razão Social <span>*</span>';
             inputName.placeholder = 'Razão Social da Empresa';
-            
+
             labelDoc.innerHTML = 'CNPJ <span>*</span>';
             inputDoc.placeholder = '00.000.000/0000-00';
             inputDoc.maxLength = 18;
             errorDoc.innerText = "CNPJ inválido";
         }
-        
+
         // Limpa campo e erro ao trocar
         inputDoc.value = '';
         errorDoc.style.display = 'none';
@@ -163,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (cnpj.length != 14) return false;
         // Validação simples de tamanho e dígitos repetidos
         if (/^(\d)\1+$/.test(cnpj)) return false;
-        
+
         // Algoritmo de validação
         let tamanho = cnpj.length - 2
         let numeros = cnpj.substring(0, tamanho);
@@ -230,9 +334,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 v = v.replace(/(\d{3})(\d)/, "$1.$2");
                 v = v.replace(/(\d{3})(\d)/, "$1.$2");
                 v = v.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-                
+
                 e.target.value = v;
-                
+
                 if (v.length === 14) validateDocumentField();
                 else {
                     inputDoc.style.borderColor = "#333";
@@ -245,9 +349,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 v = v.replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3");
                 v = v.replace(/\.(\d{3})(\d)/, ".$1/$2");
                 v = v.replace(/(\d{4})(\d)/, "$1-$2");
-                
+
                 e.target.value = v;
-                
+
                 if (v.length === 18) validateDocumentField();
                 else {
                     inputDoc.style.borderColor = "#333";
@@ -255,7 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
         });
-        
+
         inputDoc.addEventListener('blur', () => {
             if (inputDoc.value.length > 0) validateDocumentField();
         });
@@ -266,7 +370,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================
     const cepInput = document.getElementById("postcode");
     const shippingElement = document.getElementById("order-shipping");
-    
+
     if (cepInput) {
         cepInput.addEventListener("blur", async () => {
             const cep = cepInput.value.replace(/\D/g, "");
@@ -275,7 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 try {
                     const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
                     const data = await response.json();
-                    
+
                     if (!data.erro) {
                         // Preenche endereço
                         if (document.getElementById("address-1")) document.getElementById("address-1").value = data.logradouro;
@@ -283,7 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (document.getElementById("city")) document.getElementById("city").value = data.localidade;
                         if (document.getElementById("state")) document.getElementById("state").value = data.uf;
                         if (document.getElementById("address-number")) document.getElementById("address-number").focus();
-                        
+
                         // Simulação de frete fixo
                         shippingCost = 25.00;
                         if (shippingElement) shippingElement.innerText = `R$ ${shippingCost.toFixed(2).replace('.', ',')}`;
@@ -320,9 +424,9 @@ document.addEventListener("DOMContentLoaded", () => {
             cart.forEach((item) => {
                 const itemTotal = item.price * item.qty;
                 itemsTotal += itemTotal;
-                
+
                 const variantText = item.variant ? ` - ${item.variant}` : '';
-                
+
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>
@@ -346,7 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateOrderTotal() {
         let itemsTotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
         let finalTotal = itemsTotal + shippingCost;
-        
+
         if (orderTotalElement) orderTotalElement.textContent = `R$ ${finalTotal.toFixed(2).replace(".", ",")}`;
 
         if (installmentsSelect) {
@@ -383,7 +487,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateReqStatus(element, isValid) {
-        if(!element) return;
+        if (!element) return;
         if (isValid) {
             element.classList.remove("invalid");
             element.classList.add("valid");
@@ -398,12 +502,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // =========================================================
     // --- PAGAMENTO E SUBMIT DO PEDIDO (CORRIGIDO) ---
     // =========================================================
-    
+
     // Toggle Visual Cartão/Pix
     const radiosPayment = document.querySelectorAll('input[name="payment_method"]');
     const detailsCard = document.getElementById("details-card");
     const detailsPix = document.getElementById("details-pix");
     const cardInputs = detailsCard ? detailsCard.querySelectorAll('input[type="text"]') : [];
+
+    // Inicial: nenhum pagamento selecionado, esconde cartão e remove required
+    if (detailsCard) detailsCard.style.display = "none";
+    cardInputs.forEach(input => input.removeAttribute("required"));
+    if (detailsPix) detailsPix.style.display = "none";
 
     if (radiosPayment.length > 0) {
         radiosPayment.forEach(r => {
@@ -435,89 +544,211 @@ document.addEventListener("DOMContentLoaded", () => {
     const checkoutForm = document.querySelector(".checkout-form");
     const successModal = document.getElementById("success-modal");
 
+    console.log('🔍 Procurando formulário .checkout-form:', checkoutForm ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
+    console.log('🔍 Procurando modal #success-modal:', successModal ? 'ENCONTRADO' : 'NÃO ENCONTRADO');
+
     if (checkoutForm) {
+        console.log('✅ Registrando evento de submit no formulário');
         checkoutForm.addEventListener("submit", async (e) => {
             e.preventDefault();
+            console.log('=== INICIANDO CHECKOUT ===');
 
-            // 1. Validar CPF/CNPJ
-            if (!validateDocumentField()) {
-                alert("Documento inválido. Verifique o CPF/CNPJ.");
-                inputDoc.focus();
+            // Verifica se usuário está logado
+            const userData = JSON.parse(localStorage.getItem("prodcumaru_user"));
+            console.log('👤 Usuário logado:', userData ? 'SIM' : 'NÃO');
+
+            // Log de campos obrigatórios visíveis
+            const requiredFields = checkoutForm.querySelectorAll('[required]');
+            console.log('📋 Total de campos obrigatórios:', requiredFields.length);
+            if (requiredFields.length > 0) {
+                console.log('⚠️ Campos obrigatórios encontrados:');
+                requiredFields.forEach(field => {
+                    const isVisible = field.offsetParent !== null;
+                    console.log(`  - ${field.id || field.name}: ${isVisible ? 'VISÍVEL' : 'OCULTO'} - valor: "${field.value}"`);
+                });
+            }
+
+            // 1. Validar CPF/CNPJ apenas se usuário NÃO está logado
+            if (!userData) {
+                if (!validateDocumentField()) {
+                    alert("Documento inválido. Verifique o CPF/CNPJ.");
+                    inputDoc.focus();
+                    return;
+                }
+                console.log('✓ CPF/CNPJ válido');
+            } else {
+                console.log('✓ Usuário logado - validação de documento pulada');
+            }
+
+            // 2. Montar dados REAIS do pedido
+            const metodoPagamentoRadio = document.querySelector('input[name="payment_method"]:checked');
+            if (!metodoPagamentoRadio) {
+                alert("Selecione uma forma de pagamento (Cartão ou Pix)");
                 return;
             }
+            console.log('✓ Forma de pagamento selecionada');
+            const nomePagamento = metodoPagamentoRadio.nextElementSibling.innerText.trim();
 
-            // 2. Montar dados REAIS do pedido (ANTES DO TRY/CATCH)
-            const metodoPagamentoRadio = document.querySelector('input[name="payment_method"]:checked');
-            const nomePagamento = metodoPagamentoRadio ? metodoPagamentoRadio.nextElementSibling.innerText.trim() : "Pagamento Padrão";
-            
             const itemsSubtotal = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
             const totalFinal = itemsSubtotal + shippingCost;
-            
-            // Variável usada no emailJS e modal
-            const dadosDoPedido = {
-                cliente: document.getElementById('full-name').value,
-                email: document.getElementById('email').value,
-                numero: Math.floor(Math.random() * 100000).toString(),
-                produtos: cart.map(item => ({
-                    nome: item.title,
-                    quantidade: item.qty,
-                    preco: item.price
-                })),
-                subtotal: itemsSubtotal,
-                frete: shippingCost,
-                total: totalFinal,
-                pagamento: nomePagamento,
-                endereco: `${document.getElementById('address-1').value}, ${document.getElementById('address-number').value} - ${document.getElementById('address-district').value}, ${document.getElementById('city').value}/${document.getElementById('state').value}`,
-                data: new Date().toLocaleDateString('pt-BR')
-            };
 
-            // 3. Tentar Backend (Se existir) ou Fallback
-            const formData = {
-                cliente: {
-                    nome: dadosDoPedido.cliente,
-                    email: dadosDoPedido.email,
-                    cpf_cnpj: document.getElementById('doc-number').value,
+            const tipoPessoa = document.getElementById('person-type') ? document.getElementById('person-type').value : 'pf';
+
+            // Dados do pedido - usa dados do usuário logado se disponível, senão pega do formulário
+            let dadosPedido;
+
+            if (userData) {
+                console.log('✓ Usando dados do usuário logado');
+                dadosPedido = {
+                    nome: userData.nome,
+                    email: userData.email,
+                    telefone: userData.telefone || '',
+                    cpf: userData.cpf || '',
+                    cnpj: userData.cnpj || '',
+                    cep: userData.endereco?.cep || '',
+                    logradouro: userData.endereco?.rua || '',
+                    numero: userData.endereco?.numero || '',
+                    bairro: userData.endereco?.bairro || '',
+                    complemento: userData.endereco?.complemento || '',
+                    cidade: userData.endereco?.cidade || '',
+                    estado: userData.endereco?.estado || '',
+                    observacao: nomePagamento,
+                    subtotal: itemsSubtotal,
+                    frete: shippingCost,
+                    total: totalFinal,
+                    forma_pagamento: nomePagamento,
+                    produtos: cart.map(item => ({
+                        id: item.id,
+                        nome: item.title,
+                        quantidade: item.qty,
+                        preco: item.price
+                    }))
+                };
+            } else {
+                console.log('✓ Usando dados do formulário (novo usuário)');
+                dadosPedido = {
+                    nome: document.getElementById('full-name').value,
+                    email: document.getElementById('email').value,
                     telefone: document.getElementById('phone').value,
-                    senha: document.getElementById('account-password') ? document.getElementById('account-password').value : null 
-                },
-                pedido: {
-                     itens: cart,
-                     total: totalFinal
-                }
-            };
-
-            try {
-                // Tenta conectar ao backend (vai falhar se não estiver rodando o Flask)
-                const url = formData.cliente.senha ? '/api/checkout/novo-cadastro' : '/api/checkout/finalizar';
-                
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    if(result.user_token) {
-                        localStorage.setItem("prodcumaru_user", JSON.stringify(result.user_data));
-                    }
-                } else {
-                    throw new Error("Backend não respondeu ou erro 500");
-                }
-            } catch (error) {
-                console.log("Modo Offline/Frontend: Usando fallback (EmailJS e Modal)");
-                // Erro esperado se não tiver backend rodando. O fluxo segue normal para o usuário.
+                    cpf: tipoPessoa === 'pf' ? document.getElementById('doc-number').value : '',
+                    cnpj: tipoPessoa === 'pj' ? document.getElementById('doc-number').value : '',
+                    cep: document.getElementById('postcode').value,
+                    logradouro: document.getElementById('address-1').value,
+                    numero: document.getElementById('address-number').value,
+                    bairro: document.getElementById('address-district').value,
+                    complemento: document.getElementById('address-2') ? document.getElementById('address-2').value : '',
+                    cidade: document.getElementById('city').value,
+                    estado: document.getElementById('state').value,
+                    observacao: nomePagamento,
+                    subtotal: itemsSubtotal,
+                    frete: shippingCost,
+                    total: totalFinal,
+                    forma_pagamento: nomePagamento,
+                    produtos: cart.map(item => ({
+                        id: item.id,
+                        nome: item.title,
+                        quantidade: item.qty,
+                        preco: item.price
+                    }))
+                };
             }
 
-            // 4. Finalização (Sucesso Visual)
-            enviarConfirmacaoCompra(dadosDoPedido);
+            // Desabilita botão para evitar duplo clique
+            const btnSubmit = checkoutForm.querySelector('button[type="submit"]');
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.textContent = "Processando...";
+            }
 
-            if (successModal) {
-                if (document.getElementById("modal-user-email"))
-                    document.getElementById("modal-user-email").textContent = dadosDoPedido.email;
+            console.log('📦 Dados do pedido:', dadosPedido);
 
-                successModal.classList.add("open");
-                localStorage.removeItem("epent_cart"); // Limpa carrinho
+            try {
+                // 3. Envia para o backend
+                console.log('📡 Enviando para /api/pedido...');
+                const response = await fetch('/api/pedido', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosPedido)
+                });
+
+                console.log('📥 Resposta recebida:', response.status, response.statusText);
+
+                // Tenta ler JSON; se falhar, lança texto da resposta
+                let resultado;
+                try {
+                    resultado = await response.json();
+                    console.log('📋 Resultado JSON:', resultado);
+                } catch (err) {
+                    console.error('❌ Erro ao parsear JSON:', err);
+                    const texto = await response.text();
+                    console.error('📄 Resposta em texto:', texto);
+                    throw new Error(texto || 'Erro desconhecido ao processar pedido');
+                }
+
+                console.log('🔍 Verificando resposta:', { ok: response.ok, status: response.status, resultado });
+
+                if (resultado.success) {
+                    console.log('✅ PEDIDO APROVADO! Número:', resultado.numero_pedido);
+
+                    // Limpa carrinho
+                    localStorage.removeItem("epent_cart");
+
+                    // Mostra modal de sucesso
+                    console.log('🎉 Tentando abrir modal...');
+                    const modalElement = document.getElementById("success-modal");
+                    console.log('📍 Elemento modal encontrado:', modalElement);
+
+                    if (modalElement) {
+                        // Preenche email no modal se existir
+                        const emailElement = document.getElementById("modal-user-email");
+                        if (emailElement) {
+                            emailElement.textContent = dadosPedido.email;
+                        }
+
+                        // Adiciona classe open
+                        modalElement.classList.add("open");
+                        console.log('✓ Classe "open" adicionada:', modalElement.classList.contains('open'));
+                        console.log('✓ Classes do modal:', modalElement.className);
+
+                        // Envia e-mail de confirmação em background
+                        const dadosDoEmail = {
+                            cliente: dadosPedido.nome,
+                            email: dadosPedido.email,
+                            numero: resultado.numero_pedido,
+                            produtos: cart.map(item => ({
+                                nome: item.title,
+                                quantidade: item.qty,
+                                preco: item.price
+                            })),
+                            subtotal: itemsSubtotal,
+                            frete: shippingCost,
+                            total: totalFinal,
+                            pagamento: nomePagamento,
+                            endereco: `${dadosPedido.logradouro}, ${dadosPedido.numero} - ${dadosPedido.bairro}, ${dadosPedido.cidade}/${dadosPedido.estado}`,
+                            data: new Date().toLocaleDateString('pt-BR')
+                        };
+                        enviarConfirmacaoCompra(dadosDoEmail);
+
+                    } else {
+                        console.error('❌ Modal #success-modal NÃO encontrado no DOM!');
+                        alert('Pedido realizado com sucesso! Número: ' + resultado.numero_pedido);
+                    }
+
+                } else {
+                    console.error('❌ Pedido rejeitado:', resultado);
+                    alert("Erro ao processar pedido: " + (resultado.message || 'Erro desconhecido'));
+                    if (btnSubmit) {
+                        btnSubmit.disabled = false;
+                        btnSubmit.textContent = "Finalizar Pedido";
+                    }
+                }
+            } catch (error) {
+                console.error("❌ ERRO CRÍTICO:", error);
+                alert("Erro ao processar pedido: " + error.message);
+                if (btnSubmit) {
+                    btnSubmit.disabled = false;
+                    btnSubmit.textContent = "Finalizar Pedido";
+                }
             }
         });
     }
@@ -536,7 +767,7 @@ function enviarConfirmacaoCompra(pedido) {
     // 1. Gerar o HTML da lista de produtos (Linhas da Tabela)
     let produtosHTML = "";
 
-    if(pedido.produtos && Array.isArray(pedido.produtos)) {
+    if (pedido.produtos && Array.isArray(pedido.produtos)) {
         pedido.produtos.forEach(prod => {
             produtosHTML += `
                 <tr>
@@ -564,18 +795,18 @@ function enviarConfirmacaoCompra(pedido) {
     };
 
     // 3. Configurações dos IDs
-    const SERVICE_ID = "service_uxchflv"; 
-    
-    // ID do Template para o ADMINISTRADOR (ProdCumaru)
-    const TEMPLATE_ID_ADM = "template_o9o56ce"; 
-    
-    // ID do Template para o CLIENTE (Você precisa criar este no painel e colar o ID aqui)
-    // Exemplo: "template_xyz123"
-    const TEMPLATE_ID_CLIENTE = "COLOQUE_O_ID_DO_NOVO_TEMPLATE_AQUI"; 
+    const SERVICE_ID = window.EMAILJS_SERVICE_ID || "service_uxchflv";
+
+    // Template para o ADMINISTRADOR e para o CLIENTE (ambos usando template_o9o56ce)
+    const TEMPLATE_ID_ADM = window.EMAILJS_TEMPLATE_ID_ADMIN || "template_o9o56ce";
+    const TEMPLATE_ID_CLIENTE = window.EMAILJS_TEMPLATE_ID_CLIENTE || "template_o9o56ce";
 
     // Verifica se o emailjs foi carregado
     if (typeof emailjs !== 'undefined') {
-        
+        if (window.EMAILJS_PUBLIC_KEY) {
+            emailjs.init({ publicKey: window.EMAILJS_PUBLIC_KEY });
+        }
+
         // --- ENVIO 1: Para o Administrador ---
         emailjs.send(SERVICE_ID, TEMPLATE_ID_ADM, templateParams)
             .then(function (response) {
@@ -586,7 +817,7 @@ function enviarConfirmacaoCompra(pedido) {
 
         // --- ENVIO 2: Para o Cliente ---
         // Só envia se tivermos o ID do novo template configurado
-        if (TEMPLATE_ID_CLIENTE !== "COLOQUE_O_ID_DO_NOVO_TEMPLATE_AQUI") {
+        if (TEMPLATE_ID_CLIENTE && TEMPLATE_ID_CLIENTE !== "COLOQUE_O_ID_DO_NOVO_TEMPLATE_AQUI") {
             emailjs.send(SERVICE_ID, TEMPLATE_ID_CLIENTE, templateParams)
                 .then(function (response) {
                     console.log('E-mail Cliente enviado com sucesso!');
@@ -594,7 +825,7 @@ function enviarConfirmacaoCompra(pedido) {
                     console.error('Erro ao enviar e-mail Cliente:', error);
                 });
         } else {
-            console.warn("ID do template do cliente não configurado no código.");
+            console.warn("Template de cliente não configurado (EMAILJS_TEMPLATE_ID_CLIENTE). Apenas email do ADM será enviado.");
         }
 
     } else {

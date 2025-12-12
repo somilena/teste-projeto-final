@@ -12,7 +12,19 @@
     <link rel="stylesheet" href="/static/css/loja/loja.css" />
     <link rel="stylesheet" href="/static/css/loja/checkout.css" />
 
-    <link rel="icon" href="/img/logo-icon.png" />
+    <link rel="icon" href="/static/img/icon/logo-icon.png" />
+
+    <!-- EmailJS: envio de e-mails ao concluir compra -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    <script>
+        window.EMAILJS_PUBLIC_KEY = "goVdFclsaAUdwx1uQ"; // já usada em login-cliente.js
+        window.EMAILJS_SERVICE_ID = "service_uxchflv"; // usado em checkout.js
+        window.EMAILJS_TEMPLATE_ID_ADMIN = "template_o9o56ce"; // usado em checkout.js (adm)
+        window.EMAILJS_TEMPLATE_ID_CLIENTE = "template_o9o56ce"; // confirmação para cliente
+        if (typeof emailjs !== "undefined" && window.EMAILJS_PUBLIC_KEY) {
+            emailjs.init({ publicKey: window.EMAILJS_PUBLIC_KEY });
+        }
+    </script>
 </head>
 
 <body>
@@ -50,9 +62,11 @@
                             <input type="hidden" id="person-type" value="pf">
                         </div>
 
-                        <a href="/login-cliente" class="login-link-checkout">
-                            Já tem cadastro? <strong>Faça login</strong> para efetuar a compra
+                        <span class="texto-ja-tem">Já tem cadastro? </span>
+                        <a href="/login-cliente?next=/checkout" class="login-link-checkout">
+                            <strong>Faça login</strong>
                         </a>
+                        <span class="texto-ja-tem"> para efetuar a compra</span>
                     </div>
 
                     <div class="form-field">
@@ -122,12 +136,11 @@
                         <div class="form-row">
                             <div class="form-field">
                                 <label for="account-password">Crie uma Senha <span>*</span></label>
-                                <input type="password" id="account-password" placeholder="Digite sua senha" required />
+                                <input type="password" id="account-password" placeholder="Digite sua senha" />
                             </div>
                             <div class="form-field">
                                 <label for="account-password-confirm">Confirmar Senha <span>*</span></label>
-                                <input type="password" id="account-password-confirm" placeholder="Repita a senha"
-                                    required />
+                                <input type="password" id="account-password-confirm" placeholder="Confirme sua senha" />
                             </div>
                         </div>
 
@@ -252,7 +265,7 @@
                 </div>
             </div>
 
-            <a href="/login-cliente" class="btn-access-portal">
+            <a href="/portal-cliente" class="btn-access-portal">
                 <i class="fas fa-user"></i> ACESSAR PORTAL DO CLIENTE
             </a>
 
@@ -280,24 +293,7 @@
         </div>
     </div>
 
-    <script>
-        function abrirModalLoginCheckout() {
-            document.getElementById('login-modal-checkout').classList.add('open');
-        }
-        function fecharModalLogin() {
-            document.getElementById('login-modal-checkout').classList.remove('open');
-        }
-
-        document.getElementById('form-login-rapido').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const mockUser = { nome: "Cliente Teste", email: document.getElementById('quick-email').value };
-            localStorage.setItem("prodcumaru_user", JSON.stringify(mockUser));
-
-            fecharModalLogin();
-            alert("Login realizado! Seus dados foram carregados.");
-            location.reload();
-        });
-    </script>
+    <!-- Modal de login rápido desabilitado: login agora redireciona para /login-cliente -->
 
     <script src="/static/js/loja/checkout.js"></script>
     <script src="/static/js/loja/loja.js"></script>

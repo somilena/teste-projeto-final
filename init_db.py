@@ -217,36 +217,61 @@ def init_db():
     ''')
 
     # ==============================================================================
-    # 2. INSERÇÃO DE DADOS DE TESTE (PARA O DASHBOARD FUNCIONAR)
+    # 2. INSERÇÃO DE DADOS DE TESTE - COMENTADO (Use apenas dados reais)
     # ==============================================================================
     
-    print("Inserindo dados de teste...")
+    print("Pulando dados de teste - use apenas dados reais do site")
 
-    # Cliente Físico
-    cur.execute('''
-        INSERT INTO tb_clientes_fisico (nome, email, tel_cel, data_nasc, cep, logradouro, numero, bairro, cidade, estado, senha)
-        VALUES ('João Silva', 'joao@email.com', '6199999999', '1990-01-01', '70000000', 'Rua A', '10', 'Asa Sul', 'Brasília', 'DF', '123')
-    ''')
+    # Cliente Físico de exemplo - COMENTADO
+    # cur.execute('''
+    #     INSERT INTO tb_clientes_fisico (nome, email, tel_cel, data_nasc, cep, logradouro, numero, bairro, cidade, estado, senha)
+    #     VALUES ('João Silva', 'joao@email.com', '6199999999', '1990-01-01', '70000000', 'Rua A', '10', 'Asa Sul', 'Brasília', 'DF', '123')
+    # ''')
 
-    # Finanças (Receita e Despesa)
-    cur.execute("INSERT INTO tb_financas (tipo, nome, valor_total, data_emissao, data_vencimento, status) VALUES ('Receita', 'Podcast João', 550.00, '2025-10-25', '2025-10-25', 'Pago')")
-    cur.execute("INSERT INTO tb_financas (tipo, nome, valor_total, data_emissao, data_vencimento, status) VALUES ('Despesa', 'Energia Elétrica', 200.00, '2025-10-10', '2025-10-15', 'Pago')")
+    # Finanças de exemplo - COMENTADO
+    # cur.execute("INSERT INTO tb_financas (tipo, nome, valor_total, data_emissao, data_vencimento, status) VALUES ('Receita', 'Podcast João', 550.00, '2025-10-25', '2025-10-25', 'Pago')")
+    # cur.execute("INSERT INTO tb_financas (tipo, nome, valor_total, data_emissao, data_vencimento, status) VALUES ('Despesa', 'Energia Elétrica', 200.00, '2025-10-10', '2025-10-15', 'Pago')")
 
-    # Agendamentos
-    cur.execute('''
-        INSERT INTO tb_reg_agendamentos (id_cliente, nome, email, tel_cel, horario, data_agend, tipo_cliente, servico, status, valor_total, forma_pagamento, status_pagamento) 
-        VALUES (1, 'João Silva', 'joao@email.com', '6199999999', '14:00', '2025-10-25', 'Fisica', 'Cumaru Standard', 'Confirmado', '550.00', 'Pix', 'Aprovado')
-    ''')
+    # Agendamentos de exemplo - COMENTADO
+    # cur.execute('''
+    #     INSERT INTO tb_reg_agendamentos (id_cliente, nome, email, tel_cel, horario, data_agend, tipo_cliente, servico, status, valor_total, forma_pagamento, status_pagamento) 
+    #     VALUES (1, 'João Silva', 'joao@email.com', '6199999999', '14:00', '2025-10-25', 'Fisica', 'Cumaru Standard', 'Confirmado', '550.00', 'Pix', 'Aprovado')
+    # ''')
 
     # Serviços (Para o site carregar)
     cur.execute("INSERT INTO tb_servicos (nome_servicos, preco, duracao_minutos, categoria) VALUES ('CUMARU Básico', '350.00', '60', 'podcast')")
     cur.execute("INSERT INTO tb_servicos (nome_servicos, preco, duracao_minutos, categoria) VALUES ('CUMARU Standard', '550.00', '60', 'podcast')")
     cur.execute("INSERT INTO tb_servicos (nome_servicos, preco, duracao_minutos, categoria) VALUES ('CUMARU Premium', '900.00', '60', 'podcast')")
     
-    # Funcionário (Admin)
+    # Funcionários (Usuários padrão do sistema)
+    # Nível 1: Administrador
     cur.execute('''
         INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
         VALUES ('Admin Master', '000.000.000-00', 'Gerente', 'admin@prodcumaru.com', '6199999999', '2025-01-01', 'admin', 'admin123', '1', 'Ativo')
+    ''')
+    
+    # Nível 2: Editor
+    cur.execute('''
+        INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
+        VALUES ('Editor Padrão', '111.111.111-11', 'Editor', 'editor@prodcumaru.com', '6199999999', '2025-01-01', 'editor', 'editor123', '2', 'Ativo')
+    ''')
+    
+    # Nível 3: RH
+    cur.execute('''
+        INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
+        VALUES ('RH Padrão', '222.222.222-22', 'RH', 'rh@prodcumaru.com', '6199999999', '2025-01-01', 'rh', 'rh123', '3', 'Ativo')
+    ''')
+    
+    # Nível 4: Jurídico
+    cur.execute('''
+        INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
+        VALUES ('Jurídico Padrão', '333.333.333-33', 'Jurídico', 'juridico@prodcumaru.com', '6199999999', '2025-01-01', 'juridico', 'juridico123', '4', 'Ativo')
+    ''')
+    
+    # Nível 5: Contabilidade
+    cur.execute('''
+        INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
+        VALUES ('Contabilidade Padrão', '444.444.444-44', 'Contabilidade', 'contabilidade@prodcumaru.com', '6199999999', '2025-01-01', 'contabilidade', 'contabilidade123', '5', 'Ativo')
     ''')
 
     con.commit()

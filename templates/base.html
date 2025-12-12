@@ -53,16 +53,45 @@
             <a href="#" class="login-trigger" aria-label="Login">
               <i class="fas fa-user"></i>
             </a>
-            <div class="submenu-login">
-              <span class="submenu-login-titulo">FAZER LOGIN</span>
-              <ul>
-                <li>
-                  <a href="{{ url_for('login_cliente') }}">
-                    <i class="fas fa-headphones"></i>
-                    <span>Portal do Cliente</span>
-                  </a>
-                </li>
-              </ul>
+            <div class="submenu-login" id="user-menu-dropdown">
+              <!-- Menu para usuário NÃO logado (padrão) -->
+              <div id="menu-nao-logado">
+                <span class="submenu-login-titulo">FAZER LOGIN</span>
+                <ul>
+                  <li>
+                    <a href="{{ url_for('login_cliente') }}">
+                      <i class="fas fa-headphones"></i>
+                      <span>Portal do Cliente</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Menu para usuário LOGADO (oculto por padrão) -->
+              <div id="menu-logado" style="display: none;">
+                <div class="user-info-menu">
+                  <i class="fas fa-user-circle"></i>
+                  <div>
+                    <span class="user-name" id="header-user-name">Usuário</span>
+                    <small>Logado</small>
+                  </div>
+                </div>
+                <hr style="margin: 8px 0; opacity: 0.2;">
+                <ul>
+                  <li>
+                    <a href="{{ url_for('portal') }}">
+                      <i class="fas fa-home"></i>
+                      <span>Portal do Cliente</span>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" onclick="logoutUsuario(); return false;">
+                      <i class="fas fa-sign-out-alt"></i>
+                      <span>Sair</span>
+                    </a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>

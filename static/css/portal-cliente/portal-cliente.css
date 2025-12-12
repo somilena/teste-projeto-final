@@ -78,7 +78,7 @@ body {
   gap: 12px;
   margin-bottom: 40px;
   font-weight: 700;
-  font-size: 22px;
+  font-size: 16px;
   color: var(--cor-primaria);
   letter-spacing: -0.5px;
 }
@@ -228,6 +228,34 @@ body.dark-mode .nav-item.ativo {
   transition: background 0.3s, border-color 0.3s;
 }
 
+.topbar-moderna .header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.btn-voltar-home {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--cor-bg-hover);
+  color: var(--cor-primaria);
+  font-size: 22px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid var(--cor-borda);
+}
+
+.btn-voltar-home:hover {
+  background: var(--cor-primaria);
+  color: white;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(201, 107, 42, 0.2);
+}
+
 .topbar-moderna h2 {
   font-size: 24px;
   font-weight: 600;
@@ -258,6 +286,18 @@ body.dark-mode .nav-item.ativo {
   overflow-y: auto;
 }
 
+.oculto {
+  display: none;
+}
+
+.input-arquivo-oculto {
+  display: none;
+}
+
+.campo-desabilitado {
+  opacity: 0.5;
+}
+
 /* --- BANNER (Laranja sempre) --- */
 .header-banner {
   background: linear-gradient(135deg,
@@ -266,50 +306,26 @@ body.dark-mode .nav-item.ativo {
       #c96b2a 100%);
   /* Laranja vivo com gradiente suave */
   border-radius: 20px;
-  padding: 40px;
+  padding: 50px;
   color: #fff;
   /* Sempre branco no banner */
   box-shadow: 0 12px 32px rgba(245, 166, 35, 0.25);
   margin-bottom: 40px;
   position: relative;
   overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 40px;
 }
 
-.header-banner::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-  animation: pulse 8s ease-in-out infinite;
-}
-
-@keyframes pulse {
-
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 0.5;
-  }
-
-  50% {
-    transform: scale(1.1);
-    opacity: 0.8;
-  }
-}
-
-/* No dark mode, o banner fica um pouco mais sóbrio */
-body.dark-mode .header-banner {
-  background: linear-gradient(135deg, #c96b2a 0%, #a0501a 50%, #8a4015 100%);
-  border: 1px solid var(--cor-borda);
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+.header-info {
+  flex: 1;
 }
 
 .header-info h1 {
   font-size: 32px;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   color: #fff;
   font-weight: 700;
   letter-spacing: -0.5px;
@@ -323,52 +339,58 @@ body.dark-mode .header-banner {
   font-weight: 400;
   position: relative;
   z-index: 1;
+  line-height: 1.6;
+}
+
+.header-actions {
+  position: relative;
+  z-index: 1;
 }
 
 .btn-novo-agendamento {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
-  color: var(--cor-primaria);
+  background: #2d2d2d;
+  color: #ffffff;
   text-decoration: none;
-  padding: 14px 32px;
-  border-radius: 50px;
-  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
   font-size: 13px;
   font-family: "Inter", sans-serif;
-  display: none;
+  display: flex;
   align-items: center;
-  gap: 10px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-  letter-spacing: 0.5px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  cursor: pointer;
+  gap: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: none;
+  cursor: pointer !important;
   text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .btn-novo-agendamento i {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 16px;
 }
 
 body.dark-mode .btn-novo-agendamento {
-  background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
-  color: #fff;
-  border-color: rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  color: #2d2d2d;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
 }
 
 .btn-novo-agendamento:hover {
-  transform: translateY(-3px) scale(1.02);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-  text-decoration: none;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  background: #1a1a1a;
+  cursor: pointer !important;
 }
 
 body.dark-mode .btn-novo-agendamento:hover {
-  background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  background: #f0f0f0;
+  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.3);
 }
 
 .btn-novo-agendamento:active {
-  transform: translateY(-1px) scale(0.98);
+  transform: translateY(0px);
 }
 
 /* --- LISTA DE AGENDAMENTOS --- */
@@ -378,6 +400,16 @@ body.dark-mode .btn-novo-agendamento:hover {
   border: 1px solid var(--cor-borda);
   overflow: hidden;
   box-shadow: var(--sombra-card);
+}
+
+.lista-compras-container {
+  background-color: var(--cor-bg-card);
+  border-radius: 12px;
+  border: 1px solid var(--cor-borda);
+  overflow: hidden;
+  box-shadow: var(--sombra-card);
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
 .list-header-row {
@@ -391,6 +423,54 @@ body.dark-mode .btn-novo-agendamento:hover {
   text-transform: uppercase;
   font-weight: 700;
   letter-spacing: 1px;
+}
+
+.lista-compras-container .list-header-row {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+.compra-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  padding: 20px 25px;
+  border-bottom: 1px solid var(--cor-borda);
+  align-items: center;
+  transition: background 0.2s;
+  background-color: var(--cor-bg-card);
+}
+
+.compra-row:last-child {
+  border-bottom: none;
+}
+
+.compra-row:hover {
+  background-color: var(--cor-bg-hover);
+}
+
+.compra-info {
+  color: var(--cor-text-main);
+  font-size: 14px;
+}
+
+.compra-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-acao {
+  background: none;
+  border: none;
+  color: var(--cor-primaria);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: all 0.2s;
+  font-size: 16px;
+}
+
+.btn-acao:hover {
+  background-color: rgba(201, 107, 42, 0.1);
+  color: #ff8c00;
 }
 
 .agendamento-row {
@@ -579,6 +659,10 @@ body.dark-mode .btn-novo-agendamento:hover {
   backdrop-filter: blur(5px);
 }
 
+.modal-visivel {
+  display: flex;
+}
+
 .modal-conteudo {
   background: var(--cor-bg-card);
   padding: 30px;
@@ -587,6 +671,19 @@ body.dark-mode .btn-novo-agendamento:hover {
   width: 400px;
   color: var(--cor-text-main);
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-largo {
+  max-width: 600px;
+  width: 90%;
+}
+
+.aviso-lista-vazia {
+  padding: 30px;
+  text-align: center;
+  color: var(--cor-text-muted);
 }
 
 .modal-cabecalho {

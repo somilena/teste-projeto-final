@@ -40,3 +40,47 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+/* ============================================= */
+/* --- MENU DE USUÁRIO LOGADO NA NAVBAR --- */
+/* ============================================= */
+function checkUserLoggedInNavbar() {
+  const userData = JSON.parse(localStorage.getItem("prodcumaru_user"));
+  const menuNaoLogado = document.getElementById("menu-nao-logado");
+  const menuLogado = document.getElementById("menu-logado");
+  const headerUserName = document.getElementById("header-user-name");
+
+  if (userData) {
+    // Usuário está logado
+    if (menuNaoLogado) menuNaoLogado.style.display = "none";
+    if (menuLogado) menuLogado.style.display = "block";
+    if (headerUserName) headerUserName.textContent = userData.nome || "Usuário";
+    console.log("✅ Usuário logado na navbar:", userData.nome);
+  } else {
+    // Usuário não está logado
+    if (menuNaoLogado) menuNaoLogado.style.display = "block";
+    if (menuLogado) menuLogado.style.display = "none";
+  }
+}
+
+// Função para logout
+window.logoutUsuario = async function () {
+  try {
+    // Chama API de logout para limpar sessão do servidor
+    await fetch('/api/logout-cliente', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+  } catch (error) {
+    console.log('Erro ao fazer logout no servidor:', error);
+  }
+
+  // Limpa localStorage
+  localStorage.removeItem("prodcumaru_user");
+  localStorage.removeItem("prodcumaru_pedidos");
+  localStorage.removeItem("prodcumaru_agendamentos");
+  window.location.href = "/";
+};
+
+// Executar ao carregar a página
+document.addEventListener("DOMContentLoaded", checkUserLoggedInNavbar);

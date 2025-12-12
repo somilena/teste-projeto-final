@@ -2,7 +2,133 @@
 /* 1. LÓGICA DE FILTRAGEM (BOTÕES) */
 /* ================================================================= */
 
+function checkUserStatusServicos() {
+  const userData = JSON.parse(localStorage.getItem("prodcumaru_user"));
+  const loginPrompt = document.getElementById("login-prompt-servicos");
+  const userSummaryCard = document.getElementById("user-summary-card-servicos");
+  const tabsPessoa = document.getElementById("tabs-pessoa-servicos");
+  const areaSenha = document.querySelector(".area-senha-cadastro");
+
+  const nomeInput = document.getElementById("nome-cliente");
+  const emailInput = document.getElementById("email-cliente");
+  const telefoneInput = document.getElementById("telefone-cliente");
+  const cpfInput = document.getElementById("cpf-cliente");
+
+  if (userData) {
+    console.log("✅ Usuário logado identificado:", userData.nome);
+
+    // Preenche campos automaticamente
+    if (nomeInput) nomeInput.value = userData.nome || "";
+    if (emailInput) emailInput.value = userData.email || "";
+    if (telefoneInput) telefoneInput.value = userData.telefone || "";
+    if (cpfInput) cpfInput.value = userData.cpf || "";
+
+    // Cria card resumo
+    if (userSummaryCard) {
+      userSummaryCard.style.display = "block";
+      userSummaryCard.innerHTML = `
+        <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%); padding: 20px; border-radius: 12px; border-left: 4px solid var(--accent); margin-bottom: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="color: var(--accent); margin: 0; font-size: 16px;">📋 Seus Dados</h4>
+            <button type="button" onclick="toggleFormServicos()" style="background: none; border: 1px solid var(--accent); color: var(--accent); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">
+              ✏️ Alterar
+            </button>
+          </div>
+          <div style="display: grid; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fas fa-user" style="color: var(--accent); width: 16px;"></i>
+              <span style="color: var(--white);">${userData.nome}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fas fa-envelope" style="color: var(--accent); width: 16px;"></i>
+              <span style="color: var(--muted); font-size: 14px;">${userData.email}</span>
+            </div>
+            ${userData.telefone ? `
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fas fa-phone" style="color: var(--accent); width: 16px;"></i>
+              <span style="color: var(--muted); font-size: 14px;">${userData.telefone}</span>
+            </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // Oculta elementos desnecessários para usuário logado
+    const formGroups = document.querySelectorAll('.form-group');
+    formGroups.forEach(group => {
+      const label = group.querySelector('label');
+      if (label && (label.textContent.includes('Nome') || label.textContent.includes('CPF') ||
+        label.textContent.includes('E-mail') || label.textContent.includes('Telefone'))) {
+        group.style.display = 'none';
+        // Remove required dos campos ocultos
+        const inputs = group.querySelectorAll('input');
+        inputs.forEach(input => input.removeAttribute('required'));
+      }
+    });
+
+    if (tabsPessoa) {
+      tabsPessoa.style.display = 'none';
+      // Remove required dos campos de PF/PJ
+      const inputs = tabsPessoa.querySelectorAll('input');
+      inputs.forEach(input => input.removeAttribute('required'));
+    }
+
+    if (areaSenha) {
+      areaSenha.style.display = 'none';
+      // Remove required dos campos de senha
+      const senhaInputs = areaSenha.querySelectorAll('input[type="password"]');
+      senhaInputs.forEach(input => input.removeAttribute('required'));
+    }
+
+    if (loginPrompt) loginPrompt.style.display = 'none';
+
+  } else {
+    // Usuário não logado - mostra prompt de login
+    console.log("ℹ️ Usuário não logado");
+    if (loginPrompt) loginPrompt.style.display = 'block';
+    if (userSummaryCard) userSummaryCard.style.display = 'none';
+  }
+}
+
+// Função global para alternar exibição do formulário
+window.toggleFormServicos = function () {
+  const formGroups = document.querySelectorAll('.form-group');
+  const isHidden = formGroups[0].style.display === 'none';
+
+  formGroups.forEach(group => {
+    const label = group.querySelector('label');
+    if (label && (label.textContent.includes('Nome') || label.textContent.includes('CPF') ||
+      label.textContent.includes('E-mail') || label.textContent.includes('Telefone'))) {
+      group.style.display = isHidden ? 'block' : 'none';
+
+      // Adiciona/Remove required baseado em visibilidade
+      const inputs = group.querySelectorAll('input');
+      inputs.forEach(input => {
+        if (isHidden) {
+          input.setAttribute('required', 'required');
+        } else {
+          input.removeAttribute('required');
+        }
+      });
+    }
+  });
+
+  const tabsPessoa = document.getElementById("tabs-pessoa-servicos");
+  const areaSenha = document.querySelector(".area-senha-cadastro");
+
+  if (tabsPessoa) {
+    tabsPessoa.style.display = 'none'; // Sempre oculto para usuário logado
+  }
+  if (areaSenha) {
+    areaSenha.style.display = 'none'; // Sempre oculto para usuário logado
+  }
+};
+
 document.addEventListener("DOMContentLoaded", () => {
+  // Verifica se usuário está logado e preenche dados automaticamente
+  checkUserStatusServicos();
+
   const botoesFiltro = document.querySelectorAll(".filtro-btn");
   const cartoesServico = document.querySelectorAll(".cartao-servico");
 
@@ -324,23 +450,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* --- Lógica de Envio e Cadastro (Simulação de Backend) --- */
   const formAgendamento = document.getElementById("form-agendamento");
+  console.log("📋 Formulário encontrado:", formAgendamento ? "✅ SIM" : "❌ NÃO");
 
   if (formAgendamento) {
-    formAgendamento.addEventListener("submit", (e) => {
+    formAgendamento.addEventListener("submit", async (e) => {
       e.preventDefault();
+      console.log("✅ Submit do formulário acionado!");
+
+      // Verifica se usuário está logado
+      const userData = JSON.parse(localStorage.getItem("prodcumaru_user"));
+
+      console.log("🚀 Iniciando submit do agendamento...");
+      console.log("👤 Dados do usuário:", userData);
 
       // 1. Coleta os dados
       const nomeInput = document.getElementById("nome-cliente");
       const emailInput = document.getElementById("email-cliente");
       const telefoneInput = document.getElementById("telefone-cliente");
 
-      // --- NOVA VERIFICAÇÃO DE SENHA ---
+      // --- NOVA VERIFICAÇÃO DE SENHA (Pula se usuário já está logado) ---
       const senhaInput = document.getElementById("senha-cliente");
-      const confirmaSenhaInput = document.getElementById(
-        "confirma-senha-cliente"
-      );
+      const confirmaSenhaInput = document.getElementById("confirma-senha-cliente");
 
-      if (senhaInput && confirmaSenhaInput) {
+      if (!userData && senhaInput && confirmaSenhaInput) {
         const senha = senhaInput.value;
         const confirmaSenha = confirmaSenhaInput.value;
 
@@ -352,73 +484,143 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // 2. Cria o objeto do Usuário (para login)
-      const nome = nomeInput ? nomeInput.value : "Cliente";
-      const email = emailInput ? emailInput.value : "";
+      // 2. Coleta os dados do agendamento - usa localStorage se disponível
+      let nome, email, telefone;
 
-      const novoUsuario = {
-        nome: nome,
-        email: email,
-        tipo: inputTipoPessoa ? inputTipoPessoa.value : "pf",
-        // (outros campos...)
-      };
-
-      // 3. Salva Usuário no "Banco de Dados" (LocalStorage)
-      let usuarios =
-        JSON.parse(localStorage.getItem("prodcumaru_usuarios")) || [];
-
-      // Verifica se email já existe
-      const usuarioExistente = usuarios.find((u) => u.email === email);
-      if (usuarioExistente) {
-        alert(
-          "Este e-mail já possui cadastro! O agendamento será vinculado à sua conta existente."
-        );
+      if (userData) {
+        // Usuário logado: usa dados do localStorage
+        nome = userData.nome || "Cliente";
+        email = userData.email || "";
+        telefone = userData.telefone || "";
+        console.log("✅ Usando dados do localStorage");
       } else {
-        usuarios.push(novoUsuario);
-        localStorage.setItem("prodcumaru_usuarios", JSON.stringify(usuarios));
+        // Usuário não logado: usa dados do formulário
+        nome = nomeInput ? nomeInput.value : "Cliente";
+        email = emailInput ? emailInput.value : "";
+        telefone = telefoneInput ? telefoneInput.value : "";
+        console.log("📝 Usando dados do formulário");
+
+        // Valida campos obrigatórios para não-logados
+        if (!nome || !email || !telefone) {
+          alert("Por favor, preencha seu nome, email e telefone!");
+          return;
+        }
       }
 
-      // 4. Salva o Agendamento
-      let agendamentos =
-        JSON.parse(localStorage.getItem("prodcumaru_agendamentos")) || [];
-      const novoAgendamento = {
-        id: Date.now(),
-        clienteEmail: email,
-        servico: resumoServico ? resumoServico.textContent : "Serviço",
-        data: resumoData ? resumoData.textContent : "",
-        valor: resumoValor ? resumoValor.textContent : "",
-        status: "Confirmado",
-        dataCriacao: new Date().toLocaleDateString(),
-      };
-      agendamentos.push(novoAgendamento);
-      localStorage.setItem(
-        "prodcumaru_agendamentos",
-        JSON.stringify(agendamentos)
-      );
+      const servico = resumoServico ? resumoServico.textContent : "Serviço";
+      const data = resumoData ? resumoData.textContent : "";
+      const valor = resumoValor ? resumoValor.textContent.replace(/[^\d,]/g, '').replace(',', '.') : "0";
 
-      // 5. Sucesso: Mostrar Tela de Confirmação
+      console.log("📦 Dados a enviar:", { nome, email, telefone, servico, data, valor });
 
-      // Esconde o formulário/grid
-      document.querySelector(".container-agendamento-completo").style.display =
-        "none";
+      // Valida se foi selecionado serviço e data
+      if (!servico || servico === "Serviço" || !data) {
+        alert("Por favor, selecione um serviço e uma data!");
+        return;
+      }
 
-      // Preenche o email na mensagem de sucesso
-      document.getElementById("email-confirmacao-texto").textContent = email;
+      // 3. Pega método de pagamento selecionado
+      const metodoPagamento = inputMetodoPagamento ? inputMetodoPagamento.value : "Não informado";
 
-      // Mostra a tela de sucesso
-      document.getElementById("tela-confirmacao").style.display = "block";
+      // Desabilita o botão de submit para evitar duplo clique
+      const btnSubmit = formAgendamento.querySelector('button[type="submit"]');
+      if (btnSubmit) {
+        btnSubmit.disabled = true;
+        btnSubmit.textContent = "Processando...";
+      }
 
-      // Scroll para o topo para o cliente ver a mensagem
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      try {
+        // 4. Envia para o backend
+        const response = await fetch('/api/agendamento-publico', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nome: nome,
+            email: email,
+            telefone: telefone,
+            servico: servico,
+            data: data,
+            valor: valor,
+            forma_pagamento: metodoPagamento,
+            observacao: ''
+          })
+        });
 
-      // (Opcional) Simula o login automático no SessionStorage para facilitar
-      sessionStorage.setItem("usuario_logado", JSON.stringify(novoUsuario));
-      localStorage.setItem("usuario_logado_demo", JSON.stringify(novoUsuario));
+        const resultado = await response.json();
+        console.log("✅ Resposta do servidor:", resultado);
 
-      // Salva também a senha (em produção, isso seria feito no backend)
-      if (senhaInput && senhaInput.value) {
-        novoUsuario.senha = senhaInput.value;
-        novoUsuario.telefone = telefoneInput ? telefoneInput.value : "";
+        if (resultado.success) {
+          console.log("🎉 Agendamento criado com sucesso!");
+          // 5. Salva também no localStorage para o portal-cliente funcionar offline
+          let agendamentos = JSON.parse(localStorage.getItem("prodcumaru_agendamentos")) || [];
+          const novoAgendamento = {
+            id: resultado.id,
+            clienteEmail: email,
+            servico: servico,
+            data: data,
+            valor: "R$ " + valor,
+            status: "Confirmado",
+            dataCriacao: new Date().toLocaleDateString(),
+          };
+          agendamentos.push(novoAgendamento);
+          localStorage.setItem("prodcumaru_agendamentos", JSON.stringify(agendamentos));
+
+          // 6. Sucesso: Mostrar Tela de Confirmação
+          const containerAgendamento = document.querySelector(".container-agendamento-completo");
+          const telaConfirmacao = document.getElementById("tela-confirmacao");
+          const emailConfirmacao = document.getElementById("email-confirmacao-texto");
+
+          if (containerAgendamento) containerAgendamento.style.display = "none";
+          if (emailConfirmacao) emailConfirmacao.textContent = email;
+          if (telaConfirmacao) telaConfirmacao.style.display = "block";
+
+          window.scrollTo({ top: 0, behavior: "smooth" });
+
+          // 7. Envia e-mail de confirmação ao cliente via EmailJS (se configurado)
+          try {
+            if (typeof emailjs !== 'undefined') {
+              const SERVICE_ID = window.EMAILJS_SERVICE_ID || 'service_uxchflv';
+              const TEMPLATE_ID = window.EMAILJS_TEMPLATE_ID_AGENDAMENTO_CLIENTE || 'template_hk0zoyo';
+              const params = {
+                user_email: email,
+                cliente: nome,
+                servico: servico,
+                data: data,
+                valor: typeof valor === 'number' ? valor.toFixed(2) : valor
+              };
+              if (TEMPLATE_ID !== 'COLOQUE_O_ID_DO_TEMPLATE_AGENDAMENTO') {
+                if (window.EMAILJS_PUBLIC_KEY) {
+                  try { emailjs.init({ publicKey: window.EMAILJS_PUBLIC_KEY }); } catch (e) { }
+                }
+                emailjs.send(SERVICE_ID, TEMPLATE_ID, params)
+                  .then(() => console.log('📧 Email de agendamento enviado ao cliente'),
+                    (err) => console.warn('Falha ao enviar email de agendamento:', err));
+              } else {
+                console.warn('Template de agendamento do cliente não configurado (EMAILJS_TEMPLATE_ID_AGENDAMENTO_CLIENTE).');
+              }
+            } else {
+              console.warn('EmailJS indisponível nesta página.');
+            }
+          } catch (mailErr) {
+            console.warn('Erro ao tentar enviar email de agendamento:', mailErr);
+          }
+
+        } else {
+          console.error("❌ Erro no servidor:", resultado.message);
+          alert("Erro ao criar agendamento: " + resultado.message);
+          if (btnSubmit) {
+            btnSubmit.disabled = false;
+            btnSubmit.textContent = "Confirmar e Pagar";
+          }
+        }
+
+      } catch (error) {
+        console.error('❌ Erro ao enviar agendamento:', error);
+        alert("Erro ao processar agendamento. Verifique o console para detalhes.\n\nErro: " + error.message);
+        if (btnSubmit) {
+          btnSubmit.disabled = false;
+          btnSubmit.textContent = "Confirmar e Pagar";
+        }
       }
     });
   }

@@ -4,9 +4,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistema de Gestão Audiovisual (SGA)</title>
-  <link rel="icon" href="/assets/img/sga-staff.png">
-  <link rel="stylesheet" href="/static/css/gestao/gestao.css" />
+  <title>Gestão - ProdCumaru</title>
+  <link rel="icon" href="/static/img/icon/sga-staff.png">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <link rel="stylesheet" href="/static/css/gestao/gestao.css">
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
 
@@ -14,35 +16,35 @@
   <div class="container-principal">
     <aside class="barra-lateral">
       <div class="logo-sistema">
-        <i class="ph-fill ph-waveform"></i>
+        <img src="/static/img/icon/sga-staff.png" alt="SGA Staff">
         <span>SGA</span>
       </div>
       <nav class="menu-navegacao">
         <ul>
-          <li class="item-menu ativo" data-pagina="visao-geral">
+          <li class="item-menu ativo" id="item-visao-geral" data-pagina="visao-geral">
             <a href="#"><i class="ph-fill ph-house"></i><span>Visão Geral</span></a>
           </li>
 
-          <li class="item-menu" data-pagina="agendamentos">
+          <li class="item-menu" id="item-agendamentos" data-pagina="agendamentos">
             <a href="#"><i class="ph-fill ph-calendar-check"></i><span>Agendamentos</span></a>
           </li>
-          <li class="item-menu" data-pagina="receitas">
+          <li class="item-menu" id="item-receitas" data-pagina="receitas">
             <a href="#"><i class="ph-fill ph-chart-line-up"></i><span>Receitas</span></a>
           </li>
-          <li class="item-menu" data-pagina="despesas">
+          <li class="item-menu" id="item-despesas" data-pagina="despesas">
             <a href="#"><i class="ph-fill ph-chart-line-down"></i><span>Despesas</span></a>
           </li>
-          <li class="item-menu" data-pagina="clientes">
+          <li class="item-menu" id="item-clientes" data-pagina="clientes">
             <a href="#"><i class="ph-fill ph-users"></i><span>Clientes</span></a>
           </li>
-          <li class="item-menu" data-pagina="funcionarios">
+          <li class="item-menu" id="item-funcionarios" data-pagina="funcionarios">
             <a href="#"><i class="ph-fill ph-identification-card"></i><span>Funcionários</span></a>
           </li>
-          <li class="item-menu" data-pagina="contratos">
+          <li class="item-menu" id="item-contratos" data-pagina="contratos">
             <a href="#"><i class="ph-fill ph-files"></i><span>Contratos</span></a>
           </li>
 
-          <li class="item-menu" data-pagina="editar-site">
+          <li class="item-menu" id="item-editar-site" data-pagina="editar-site">
             <a href="#"><i class="ph-fill ph-pencil-simple-line"></i><span>Editar Site</span></a>
           </li>
         </ul>
@@ -100,22 +102,47 @@
             <span>Novo Agendamento</span>
           </button>
         </header>
-        <div class="container-calendario">
-          <div class="calendario-header">
-            <button id="mes-anterior">&lt;</button>
-            <h2 id="mes-ano-atual">Outubro 2025</h2>
-            <button id="mes-seguinte">&gt;</button>
+
+        <!-- Abas -->
+        <div class="abas-agendamento"
+          style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--cor-borda);">
+          <button class="aba-btn aba-ativa" data-aba="calendario"
+            style="padding: 12px 24px; background: none; border: none; color: var(--cor-text-muted); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s;">
+            📅 Calendário
+          </button>
+          <button class="aba-btn" data-aba="lista"
+            style="padding: 12px 24px; background: none; border: none; color: var(--cor-text-muted); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s;">
+            📋 Lista Completa
+          </button>
+        </div>
+
+        <!-- Conteúdo Aba Calendário -->
+        <div id="aba-calendario-conteudo" class="aba-conteudo">
+          <div class="container-calendario">
+            <div class="calendario-header">
+              <button id="mes-anterior">&lt;</button>
+              <h2 id="mes-ano-atual">Outubro 2025</h2>
+              <button id="mes-seguinte">&gt;</button>
+            </div>
+            <div class="calendario-dias-semana">
+              <div>Dom</div>
+              <div>Seg</div>
+              <div>Ter</div>
+              <div>Qua</div>
+              <div>Qui</div>
+              <div>Sex</div>
+              <div>Sáb</div>
+            </div>
+            <div class="calendario-grid-dias">
+            </div>
           </div>
-          <div class="calendario-dias-semana">
-            <div>Dom</div>
-            <div>Seg</div>
-            <div>Ter</div>
-            <div>Qua</div>
-            <div>Qui</div>
-            <div>Sex</div>
-            <div>Sáb</div>
-          </div>
-          <div class="calendario-grid-dias">
+        </div>
+
+        <!-- Conteúdo Aba Lista -->
+        <div id="aba-lista-conteudo" class="aba-conteudo" style="display: none;">
+          <h3 style="color: var(--cor-text-main); margin-bottom: 15px; font-size: 18px;">📋 Todos os Agendamentos</h3>
+          <div id="lista-agendamentos-completa" style="display: grid; gap: 10px;">
+            <!-- Será preenchido via JavaScript -->
           </div>
         </div>
       </section>
@@ -124,63 +151,142 @@
         <header class="cabecalho-secao">
           <h1>Receitas</h1>
         </header>
-        <form class="formulario-secao" id="form-nova-receita">
-          <div class="campo-formulario">
-            <label for="receita-origem">Origem da Receita</label>
-            <input type="text" id="receita-origem" placeholder="Ex: Gravação EP Banda " required />
-          </div>
-          <div class="campo-formulario">
-            <label for="receita-cliente">Cliente Associado</label>
-            <input type="text" id="receita-cliente" placeholder="Nome do cliente" required />
-          </div>
-          <div class="campo-formulario">
-            <label for="receita-data-emissao">Data Emissão</label>
-            <input type="date" id="receita-data-emissao" required />
-          </div>
-          <div class="campo-formulario">
-            <label for="receita-data-agendada">Data Agendada</label>
-            <input type="date" id="receita-data-agendada" />
-          </div>
-          <div class="campo-formulario">
-            <label for="receita-obs">Obs (Opcional)</label>
-            <input type="text" id="receita-obs" placeholder="Detalhes extras..." />
-          </div>
-          <div class="campo-formulario">
-            <label for="receita-valor">Valor</label>
-            <input type="number" step="0.01" id="receita-valor" placeholder="1200.00" required />
-          </div>
-          <button type="submit" class="botao-principal">
-            <i class="ph-fill ph-plus-circle"></i>
-            <span>Adicionar Receita</span>
-          </button>
-        </form>
 
-        <div class="barra-busca">
-          <i class="ph-fill ph-magnifying-glass icone-busca"></i>
-          <input type="text" id="busca-receita" placeholder="Buscar por origem ou cliente..." class="input-busca">
+        <!-- Abas de Receitas -->
+        <div class="abas-receitas"
+          style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--cor-borda);">
+          <button class="aba-receita-btn aba-ativa" data-aba="compras-loja"
+            style="padding: 12px 24px; background: none; border: none; color: var(--cor-text-muted); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s;">
+            🛒 Compras da Loja
+          </button>
+          <button class="aba-receita-btn" data-aba="agendamentos-site"
+            style="padding: 12px 24px; background: none; border: none; color: var(--cor-text-muted); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s;">
+            📅 Agendamentos do Site
+          </button>
+          <button class="aba-receita-btn" data-aba="manual"
+            style="padding: 12px 24px; background: none; border: none; color: var(--cor-text-muted); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s;">
+            ✏️ Outras Receitas
+          </button>
         </div>
 
-        <table class="tabela-dados" id="tabela-receitas">
-          <thead>
-            <tr>
-              <th>Origem</th>
-              <th>Cliente</th>
-              <th>Data Emissão</th>
-              <th>Data Agendada</th>
-              <th>Obs</th>
-              <th>Valor (R$)</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-          <tfoot>
-            <tr>
-              <td colspan="5">Total</td>
-              <td id="receita-total">R$ 0,00</td>
-              <td></td>
-            </tr>
-          </tfoot>
-        </table>
+        <!-- Conteúdo: Compras da Loja -->
+        <div id="aba-compras-loja-conteudo" class="conteudo-aba" style="display: block;">
+          <div class="barra-busca">
+            <i class="ph-fill ph-magnifying-glass icone-busca"></i>
+            <input type="text" id="busca-compras-loja" placeholder="Buscar por cliente ou pedido..."
+              class="input-busca">
+          </div>
+
+          <table class="tabela-dados" id="tabela-compras-loja">
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th>Data</th>
+                <th>Valor (R$)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">Total</td>
+                <td id="total-compras-loja">R$ 0.00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Conteúdo: Agendamentos do Site -->
+        <div id="aba-agendamentos-site-conteudo" class="conteudo-aba" style="display: none;">
+          <div class="barra-busca">
+            <i class="ph-fill ph-magnifying-glass icone-busca"></i>
+            <input type="text" id="busca-agendamentos-receita" placeholder="Buscar por cliente ou serviço..."
+              class="input-busca">
+          </div>
+
+          <table class="tabela-dados" id="tabela-agendamentos-receita">
+            <thead>
+              <tr>
+                <th>Serviço</th>
+                <th>Cliente</th>
+                <th>Data</th>
+                <th>Valor (R$)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="3">Total</td>
+                <td id="total-agendamentos-receita">R$ 0.00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Conteúdo: Receitas Manuais -->
+        <div id="aba-manual-conteudo" class="conteudo-aba" style="display: none;">
+          <form class="formulario-secao" id="form-nova-receita">
+            <div class="campo-formulario">
+              <label for="receita-origem">Origem da Receita</label>
+              <input type="text" id="receita-origem" placeholder="Ex: Gravação EP Banda " required />
+            </div>
+            <div class="campo-formulario">
+              <label for="receita-cliente">Cliente Associado</label>
+              <input type="text" id="receita-cliente" placeholder="Nome do cliente" required />
+            </div>
+            <div class="campo-formulario">
+              <label for="receita-data-emissao">Data Emissão</label>
+              <input type="date" id="receita-data-emissao" min="1900-01-01" max="2099-12-31" required />
+            </div>
+            <div class="campo-formulario">
+              <label for="receita-data-agendada">Data Agendada</label>
+              <input type="date" id="receita-data-agendada" min="1900-01-01" max="2099-12-31" />
+            </div>
+            <div class="campo-formulario">
+              <label for="receita-obs">Obs (Opcional)</label>
+              <input type="text" id="receita-obs" placeholder="Detalhes extras..." />
+            </div>
+            <div class="campo-formulario">
+              <label for="receita-valor">Valor</label>
+              <input type="number" step="0.01" id="receita-valor" placeholder="1200.00" required />
+            </div>
+            <button type="submit" class="botao-principal">
+              <i class="ph-fill ph-plus-circle"></i>
+              <span>Adicionar Receita</span>
+            </button>
+          </form>
+
+          <div class="barra-busca">
+            <i class="ph-fill ph-magnifying-glass icone-busca"></i>
+            <input type="text" id="busca-receita" placeholder="Buscar por origem ou cliente..." class="input-busca">
+          </div>
+
+          <table class="tabela-dados" id="tabela-receitas">
+            <thead>
+              <tr>
+                <th>Origem</th>
+                <th>Cliente</th>
+                <th>Data Emissão</th>
+                <th>Data Agendada</th>
+                <th>Obs</th>
+                <th>Valor (R$)</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot>
+              <tr>
+                <td colspan="5">Total</td>
+                <td id="receita-total">R$ 0,00</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
       </section>
 
       <section id="secao-despesas" class="pagina-conteudo">
@@ -194,11 +300,11 @@
           </div>
           <div class="campo-formulario">
             <label for="despesa-data-emissao">Data Emissão</label>
-            <input type="date" id="despesa-data-emissao" required />
+            <input type="date" id="despesa-data-emissao" min="1900-01-01" max="2099-12-31" required />
           </div>
           <div class="campo-formulario">
             <label for="despesa-data-vencimento">Data Vencimento</label>
-            <input type="date" id="despesa-data-vencimento" />
+            <input type="date" id="despesa-data-vencimento" min="1900-01-01" max="2099-12-31" />
           </div>
           <div class="campo-formulario">
             <label for="despesa-obs">Obs (Opcional)</label>
@@ -309,37 +415,87 @@
 
       <section id="secao-contratos" class="pagina-conteudo">
         <header class="cabecalho-secao">
-          <h1>Contratos de Clientes</h1>
+          <h1>Contratos</h1>
         </header>
-        <form class="formulario-secao" id="form-novo-contrato">
-          <div class="campo-formulario">
-            <label for="contrato-cliente">Cliente Associado</label>
-            <input type="text" id="contrato-cliente" placeholder="Nome do Cliente" required />
-          </div>
-          <div class="campo-formulario">
-            <label for="contrato-titulo">Título do Documento</label>
-            <input type="text" id="contrato-titulo" placeholder="Ex: Contrato Gravação EP" required />
-          </div>
-          <div class="campo-formulario">
-            <label for="contrato-arquivo">Arquivo (PDF)</label>
-            <input type="file" id="contrato-arquivo" accept=".pdf" required />
-          </div>
-          <button type="submit" class="botao-principal">
-            <i class="ph-fill ph-upload-simple"></i>
-            <span>Salvar Contrato</span>
+
+        <!-- Abas -->
+        <div class="abas-contratos"
+          style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid var(--cor-borda);">
+          <button class="aba-contrato-btn aba-ativa" data-aba="clientes"
+            style="padding: 12px 24px; background: none; border: none; color: var(--cor-text-muted); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s;">
+            👥 Contratos de Clientes
           </button>
-        </form>
-        <table class="tabela-dados" id="tabela-contratos">
-          <thead>
-            <tr>
-              <th>Título</th>
-              <th>Cliente</th>
-              <th>Data Upload</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+          <button class="aba-contrato-btn" data-aba="funcionarios"
+            style="padding: 12px 24px; background: none; border: none; color: var(--cor-text-muted); font-weight: 600; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.3s;">
+            👔 Contratos de Funcionários
+          </button>
+        </div>
+
+        <!-- Aba Contratos de Clientes -->
+        <div id="aba-contratos-clientes" class="aba-contrato-conteudo">
+          <form class="formulario-secao" id="form-novo-contrato-cliente">
+            <div class="campo-formulario">
+              <label for="contrato-cliente">Cliente Associado</label>
+              <input type="text" id="contrato-cliente" placeholder="Nome do Cliente" required />
+            </div>
+            <div class="campo-formulario">
+              <label for="contrato-titulo">Título do Documento</label>
+              <input type="text" id="contrato-titulo" placeholder="Ex: Contrato Gravação EP" required />
+            </div>
+            <div class="campo-formulario">
+              <label for="contrato-arquivo">Arquivo (PDF)</label>
+              <input type="file" id="contrato-arquivo" accept=".pdf" required />
+            </div>
+            <button type="submit" class="botao-principal">
+              <i class="ph-fill ph-upload-simple"></i>
+              <span>Salvar Contrato</span>
+            </button>
+          </form>
+          <table class="tabela-dados" id="tabela-contratos-clientes">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Cliente</th>
+                <th>Data Upload</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+
+        <!-- Aba Contratos de Funcionários -->
+        <div id="aba-contratos-funcionarios" class="aba-contrato-conteudo" style="display: none;">
+          <form class="formulario-secao" id="form-novo-contrato-funcionario">
+            <div class="campo-formulario">
+              <label for="contrato-funcionario">Funcionário Associado</label>
+              <input type="text" id="contrato-funcionario" placeholder="Nome do Funcionário" required />
+            </div>
+            <div class="campo-formulario">
+              <label for="contrato-titulo-func">Título do Documento</label>
+              <input type="text" id="contrato-titulo-func" placeholder="Ex: Contrato de Trabalho CLT" required />
+            </div>
+            <div class="campo-formulario">
+              <label for="contrato-arquivo-func">Arquivo (PDF)</label>
+              <input type="file" id="contrato-arquivo-func" accept=".pdf" required />
+            </div>
+            <button type="submit" class="botao-principal">
+              <i class="ph-fill ph-upload-simple"></i>
+              <span>Salvar Contrato</span>
+            </button>
+          </form>
+          <table class="tabela-dados" id="tabela-contratos-funcionarios">
+            <thead>
+              <tr>
+                <th>Título</th>
+                <th>Funcionário</th>
+                <th>Data Upload</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </section>
 
       <section id="secao-editar-site" class="pagina-conteudo">
@@ -685,7 +841,7 @@
         </div>
         <div class="campo-formulario">
           <label for="agendamento-data">Data</label>
-          <input type="date" id="agendamento-data" required />
+          <input type="date" id="agendamento-data" min="1900-01-01" max="2099-12-31" required />
         </div>
         <div class="campo-formulario">
           <label for="agendamento-obs">Obs</label>
@@ -759,6 +915,18 @@
         </div>
 
         <div class="campo-formulario">
+          <label for="funcionario-nivel">Nível de Acesso</label>
+          <select id="funcionario-nivel" required>
+            <option value="" disabled selected>Selecione o nível de acesso</option>
+            <option value="adm">Administrador (Acesso Total)</option>
+            <option value="editor">Editor (Editar Site)</option>
+            <option value="rh">RH (Funcionários e Contratos)</option>
+            <option value="juridico">Jurídico (Contratos de Clientes)</option>
+            <option value="contabilidade">Contabilidade (Receitas e Despesas)</option>
+          </select>
+        </div>
+
+        <div class="campo-formulario">
           <label for="funcionario-email">Email</label>
           <input type="email" id="funcionario-email" required />
         </div>
@@ -825,7 +993,17 @@
             </div>
             <div class="flex-1">
               <label for="edit-cliente-nascimento">Data de Nascimento</label>
-              <input type="date" id="edit-cliente-nascimento">
+              <input type="date" id="edit-cliente-nascimento" min="1900-01-01">
+              <script>
+                (function () {
+                  const input = document.getElementById('edit-cliente-nascimento');
+                  if (input) {
+                    const anoAtual = new Date().getFullYear();
+                    const maxAno = anoAtual - 18;
+                    input.max = maxAno + '-12-31';
+                  }
+                })();
+              </script>
             </div>
           </div>
         </div>
@@ -918,7 +1096,17 @@
           </div>
           <div class="flex-1">
             <label for="novo-cliente-nascimento">Data de Nascimento *</label>
-            <input type="date" id="novo-cliente-nascimento" required>
+            <input type="date" id="novo-cliente-nascimento" min="1900-01-01" required>
+            <script>
+              (function () {
+                const input = document.getElementById('novo-cliente-nascimento');
+                if (input) {
+                  const anoAtual = new Date().getFullYear();
+                  const maxAno = anoAtual - 18;
+                  input.max = maxAno + '-12-31';
+                }
+              })();
+            </script>
           </div>
         </div>
 
@@ -986,6 +1174,27 @@
     </div>
   </div>
 
+  <script id="bootstrap-data" type="application/json">
+    {{ {
+      "nivelUsuario": (nivel_usuario if nivel_usuario is not none else none),
+      "permissoes": ["dashboard", "receitas", "despesas", "agendamentos", "pedidos", "clientes", "contratos", "funcionarios", "editar_site"] if nivel_usuario == 'adm' else (permissoes or []),
+      "dadosIniciais": {
+        "receitas": (receitas or []),
+        "despesas": (despesas or []),
+        "agendamentos": (agendamentos or []),
+        "pedidos": (pedidos or []),
+        "clientes": (clientes or [])
+      }
+    } | tojson }}
+  </script>
+  <script>
+    // Lê os dados gerados no server e expõe no window
+    const bootstrapEl = document.getElementById('bootstrap-data');
+    const bootstrapData = bootstrapEl ? JSON.parse(bootstrapEl.textContent) : {};
+    window.nivelUsuario = bootstrapData.nivelUsuario;
+    window.permissoes = bootstrapData.permissoes;
+    window.dadosIniciais = bootstrapData.dadosIniciais;
+  </script>
   <script src="/static/js/gestao/gestao.js"></script>
 </body>
 

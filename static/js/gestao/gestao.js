@@ -1,7 +1,52 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   // =================================================================
-  // 0. LÓGICA DE TEMA (CLARO/ESCURO)
+  // 0. SISTEMA DE PERMISSÕES
+  // =================================================================
+  const permissoesEfetivas = Array.isArray(window.permissoes) ? window.permissoes : [];
+  const nivelUsuario = typeof window.nivelUsuario === 'string' ? window.nivelUsuario : null;
+
+  // Fallback somente para ADM: se vier vazio, aplica todas as permissões
+  if (nivelUsuario === 'adm' && permissoesEfetivas.length === 0) {
+    console.warn('⚠️ Sem permissões para ADM. Aplicando todas por fallback.');
+    permissoesEfetivas.push('dashboard', 'receitas', 'despesas', 'agendamentos', 'pedidos', 'clientes', 'contratos', 'funcionarios', 'editar_site');
+  }
+
+  // DEBUG
+  console.log('🔍 DEBUG Permissões:', { permissoes: permissoesEfetivas, nivelUsuario });
+
+  // Função para verificar permissão
+  function temPermissao(secao) {
+    return permissoesEfetivas.includes(secao);
+  }
+
+  // Oculta seções do menu que o usuário não tem permissão
+  const itensMenuOcultos = {
+    'receitas': 'item-receitas',
+    'despesas': 'item-despesas',
+    'agendamentos': 'item-agendamentos',
+    'pedidos': 'item-pedidos',
+    'clientes': 'item-clientes',
+    'contratos': 'item-contratos',
+    'funcionarios': 'item-funcionarios',
+    'editar_site': 'item-editar-site'
+  };
+
+  // Para admin, não ocultamos nada
+  if (nivelUsuario !== 'adm') {
+    Object.entries(itensMenuOcultos).forEach(([permissao, id]) => {
+      const elemento = document.getElementById(id);
+      if (elemento && !temPermissao(permissao)) {
+        console.log(`❌ Ocultando: ${id} (permissão: ${permissao})`);
+        elemento.style.display = 'none';
+      } else {
+        console.log(`✅ Mostrando: ${id} (permissão: ${permissao})`);
+      }
+    });
+  }
+
+  // =================================================================
+  // 1. LÓGICA DE TEMA (CLARO/ESCURO)
   // =================================================================
   const btnTema = document.getElementById("btn-tema-toggle");
   const body = document.body;
@@ -43,7 +88,16 @@ document.addEventListener("DOMContentLoaded", () => {
   itensMenu.forEach((item) => {
     item.addEventListener("click", (evento) => {
       evento.preventDefault();
-      const paginaAlvoID = item.getAttribute("data-pagina");
+      let paginaAlvoID = item.getAttribute("data-pagina");
+      // Mapear ids de página para chaves de permissão (trocar '-' por '_')
+      const chavePermissao = paginaAlvoID.replace(/-/g, '_');
+
+      // Verifica permissão antes de navegar
+      if (paginaAlvoID !== "visao-geral" && nivelUsuario !== 'adm' && !temPermissao(chavePermissao)) {
+        console.warn(`Acesso negado à seção: ${paginaAlvoID}`);
+        alert("Você não tem permissão para acessar esta seção.");
+        return;
+      }
 
       // Atualiza Menu (Visual do item ativo na esquerda)
       itensMenu.forEach((i) => i.classList.remove("ativo"));
@@ -145,20 +199,235 @@ document.addEventListener("DOMContentLoaded", () => {
   let dataExibida = new Date();
   let dataSelecionada = null;
 
-  let agendamentos = [
-    {
-      data: new Date(), // Hoje
-      titulo: "Reunião de Pauta",
-      tipo: "reuniao",
-      obs: "Discutir novos projetos."
-    },
-    {
-      data: new Date(2025, 9, 25),
-      titulo: "Gravação 'Podcast X'",
-      tipo: "gravacao",
-      obs: "Trazer equipamentos extras."
+  // Carrega agendamentos do backend se disponível
+  let agendamentos = [];
+  if (window.dadosIniciais && window.dadosIniciais.agendamentos) {
+    console.log('📦 Dados brutos de agendamentos:', window.dadosIniciais.agendamentos);
+
+    agendamentos = window.dadosIniciais.agendamentos.map(a => {
+      // data_agend está no formato YYYY-MM-DD e horario pode ser "10:00" ou "10:00:00"
+      const dataStr = a.data_agend;
+      const horaStr = a.horario || '00:00';
+      const dataCompleta = new Date(dataStr + 'T' + horaStr);
+
+      console.log(`  Processando: ${a.nome} - data_agend: "${dataStr}", horario: "${horaStr}", Date criado: ${dataCompleta}`);
+
+      return {
+        data: dataCompleta,
+        titulo: a.nome || a.nome_cliente || 'Agendamento',
+        tipo: a.servico || a.tipo_servico || 'reuniao',
+        obs: a.obs || a.observacoes || `Email: ${a.email} | Telefone: ${a.tel_cel}`,
+        id: a.id_reg_agendamentos || null
+      };
+    });
+    console.log(`✅ ${agendamentos.length} agendamentos carregados do banco de dados`);
+    agendamentos.forEach(a => console.log(`  📍 ${a.titulo} em ${a.data.toLocaleDateString('pt-BR')} às ${a.data.toLocaleTimeString('pt-BR')}`));
+
+    // Renderiza lista completa de agendamentos
+    renderizarListaAgendamentos();
+  } else {
+    console.warn('⚠️ Nenhum dado inicial de agendamentos encontrado');
+    // Tentar carregar via API de gestão
+    (async () => {
+      try {
+        const resp = await fetch('/api/agendamentos');
+        const json = await resp.json();
+        if (json.success && Array.isArray(json.agendamentos)) {
+          agendamentos = json.agendamentos.map(a => {
+            const dataStr = a.data_agend || a.data;
+            const horaStr = a.horario || '00:00';
+            const dataCompleta = new Date(dataStr + 'T' + horaStr);
+            return {
+              data: dataCompleta,
+              titulo: a.nome || 'Agendamento',
+              tipo: a.servico || 'reuniao',
+              obs: a.obs || `Email: ${a.email} | Telefone: ${a.tel_cel}`,
+              id: a.id_reg_agendamentos || null
+            };
+          });
+          renderizarListaAgendamentos();
+          renderizarCalendario();
+        }
+      } catch (e) {
+        console.error('Erro ao carregar agendamentos da gestão:', e);
+      }
+    })();
+  }
+
+  function renderizarListaAgendamentos() {
+    const listaContainer = document.getElementById('lista-agendamentos-completa');
+    if (!listaContainer) return;
+
+    if (agendamentos.length === 0) {
+      listaContainer.innerHTML = '<p style="color: var(--muted);">Nenhum agendamento cadastrado.</p>';
+      return;
     }
-  ];
+
+    // Ordena por data (mais próximo primeiro)
+    const agendamentosOrdenados = [...agendamentos].sort((a, b) => a.data - b.data);
+
+    listaContainer.innerHTML = agendamentosOrdenados.map((ag, index) => `
+      <div style="background: var(--bg); padding: 15px; border-radius: 8px; border-left: 4px solid var(--accent);">
+        <div style="display: flex; justify-content: space-between; align-items: start;">
+          <div>
+            <strong style="color: var(--white); font-size: 16px;">${ag.titulo}</strong>
+            <p style="color: var(--muted); margin: 5px 0; font-size: 14px;">
+              📅 ${ag.data.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+              às ${ag.data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+            </p>
+            <p style="color: var(--muted); font-size: 13px; margin-top: 8px;">
+              <strong>Tipo:</strong> ${ag.tipo} ${ag.obs ? `<br><strong>Obs:</strong> ${ag.obs}` : ''}
+            </p>
+          </div>
+          <button onclick="irParaDataAgendamento(${index})" 
+                  style="background: var(--accent); color: var(--dark); border: none; padding: 8px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold;">
+            Ver no Calendário
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Função global para ir para a data do agendamento
+  window.irParaDataAgendamento = function (index) {
+    const agendamento = agendamentos[index];
+    if (!agendamento) return;
+
+    // Ajusta o calendário para o mês do agendamento
+    dataExibida = new Date(agendamento.data);
+    dataSelecionada = new Date(agendamento.data);
+    renderizarCalendario();
+
+    // Muda para a aba do calendário
+    const abaCalendario = document.querySelector('.aba-btn[data-aba="calendario"]');
+    if (abaCalendario) abaCalendario.click();
+
+    // Scroll suave para o calendário
+    setTimeout(() => {
+      document.querySelector('.container-calendario')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  };
+
+  // Controle das abas de agendamento
+  const abasBtns = document.querySelectorAll('.aba-btn');
+  abasBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const abaAlvo = btn.dataset.aba;
+
+      // Remove classe ativa de todos os botões
+      abasBtns.forEach(b => {
+        b.classList.remove('aba-ativa');
+        b.style.color = 'var(--cor-text-muted)';
+        b.style.borderBottomColor = 'transparent';
+      });
+
+      // Adiciona classe ativa no botão clicado
+      btn.classList.add('aba-ativa');
+      btn.style.color = 'var(--cor-primaria)';
+      btn.style.borderBottomColor = 'var(--cor-primaria)';
+
+      // Esconde todos os conteúdos
+      document.querySelectorAll('.aba-conteudo').forEach(conteudo => {
+        conteudo.style.display = 'none';
+      });
+
+      // Mostra o conteúdo da aba selecionada
+      const conteudoAlvo = document.getElementById(`aba-${abaAlvo}-conteudo`);
+      if (conteudoAlvo) conteudoAlvo.style.display = 'block';
+    });
+  });
+
+  // Controle das abas de receitas (Compras/Agendamentos/Manual)
+  const abasReceitasBtns = document.querySelectorAll('.aba-receita-btn');
+  abasReceitasBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const abaAlvo = btn.dataset.aba;
+
+      // Remove classe ativa de todos os botões
+      abasReceitasBtns.forEach(b => {
+        b.classList.remove('aba-ativa');
+        b.style.color = 'var(--cor-text-muted)';
+        b.style.borderBottomColor = 'transparent';
+      });
+
+      // Adiciona classe ativa no botão clicado
+      btn.classList.add('aba-ativa');
+      btn.style.color = 'var(--cor-primaria)';
+      btn.style.borderBottomColor = 'var(--cor-primaria)';
+
+      // Esconde todos os conteúdos de receitas
+      document.querySelectorAll('#secao-receitas .conteudo-aba').forEach(conteudo => {
+        conteudo.style.display = 'none';
+      });
+
+      // Mostra o conteúdo da aba selecionada
+      const conteudoAlvo = document.getElementById(`aba-${abaAlvo}-conteudo`);
+      if (conteudoAlvo) conteudoAlvo.style.display = 'block';
+    });
+  });
+
+  // Controle das abas de contratos (Clientes/Funcionários)
+  const abasContratosBtns = document.querySelectorAll('.aba-contrato-btn');
+  abasContratosBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const abaAlvo = btn.dataset.aba;
+
+      // Remove classe ativa de todos os botões
+      abasContratosBtns.forEach(b => {
+        b.classList.remove('aba-ativa');
+        b.style.color = 'var(--cor-text-muted)';
+        b.style.borderBottomColor = 'transparent';
+      });
+
+      // Adiciona classe ativa no botão clicado
+      btn.classList.add('aba-ativa');
+      btn.style.color = 'var(--cor-primaria)';
+      btn.style.borderBottomColor = 'var(--cor-primaria)';
+
+      // Esconde todos os conteúdos
+      document.querySelectorAll('.aba-contrato-conteudo').forEach(conteudo => {
+        conteudo.style.display = 'none';
+      });
+
+      // Mostra o conteúdo da aba selecionada
+      const conteudoAlvo = document.getElementById(`aba-contratos-${abaAlvo}`);
+      if (conteudoAlvo) conteudoAlvo.style.display = 'block';
+    });
+  });
+
+  // =============================
+  // Funcionários - carregar lista
+  // =============================
+  async function carregarFuncionariosGestao() {
+    try {
+      const resp = await fetch('/api/funcionarios');
+      const json = await resp.json();
+      if (json.success) {
+        const lista = json.funcionarios || [];
+        const cont = document.getElementById('lista-funcionarios');
+        if (cont) {
+          cont.innerHTML = lista.map(f => `
+            <div class="func-row">
+              <span>${f.nome}</span>
+              <span>${f.email}</span>
+              <span>${f.cargo || ''}</span>
+              <span>${f.status}</span>
+            </div>
+          `).join('');
+        }
+      }
+    } catch (e) {
+      console.error('Erro ao carregar funcionários:', e);
+    }
+  }
+
+  // Quando entrar na aba funcionários, carregar
+  const itemFunc = document.getElementById('item-funcionarios');
+  if (itemFunc) {
+    itemFunc.addEventListener('click', () => {
+      if (temPermissao('funcionarios')) carregarFuncionariosGestao();
+    });
+  }
 
   const abrirModalAgendamento = () => {
     if (dataSelecionada) {
@@ -257,6 +526,9 @@ document.addEventListener("DOMContentLoaded", () => {
       if (isMesmoDia(dataCompleta, hoje)) diaEl.classList.add("hoje");
       if (isMesmoDia(dataCompleta, dataSelecionada)) diaEl.classList.add("selecionado");
 
+      // Debug: verifica agendamentos para este dia
+      const agendamentosDoDia = agendamentos.filter(evento => isMesmoDia(evento.data, dataCompleta));
+
       agendamentos.forEach((evento, index) => {
         if (isMesmoDia(evento.data, dataCompleta)) {
           const eventoEl = document.createElement("div");
@@ -268,6 +540,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <button class="apagar-evento" data-index="${index}" title="Apagar evento">&times;</button>
           `;
           diaEl.appendChild(eventoEl);
+          console.log(`📅 Agendamento "${evento.titulo}" adicionado ao dia ${dia}/${mes + 1}/${ano}`);
         }
       });
 
@@ -369,6 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputCpfFunc = document.getElementById("funcionario-cpf");
   const inputEmailFunc = document.getElementById("funcionario-email");
   const inputCargoFunc = document.getElementById("funcionario-cargo");
+  const inputNivelFunc = document.getElementById("funcionario-nivel");
   const inputTelFunc = document.getElementById("funcionario-telefone");
   const inputSenhaFunc = document.getElementById("funcionario-senha");
   const inputConfSenhaFunc = document.getElementById("funcionario-confirmar-senha");
@@ -395,6 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
     inputCpfFunc.value = func.cpf;
     inputEmailFunc.value = func.email;
     inputCargoFunc.value = func.cargo;
+    inputNivelFunc.value = func.nivel || "editor";
     inputTelFunc.value = func.telefone || "";
     inputSenhaFunc.value = "";
     inputConfSenhaFunc.value = "";
@@ -449,6 +724,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const cpf = inputCpfFunc.value;
       const email = inputEmailFunc.value;
       const cargo = inputCargoFunc.value;
+      const nivel = inputNivelFunc.value;
       const telefone = inputTelFunc.value;
       const senha = inputSenhaFunc.value;
       const confirmarSenha = inputConfSenhaFunc.value;
@@ -462,7 +738,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      const dadosFuncionario = { nome, cpf, email, cargo, telefone };
+      const dadosFuncionario = { nome, cpf, email, cargo, nivel, telefone };
 
       if (index !== "") {
         funcionarios[parseInt(index)] = dadosFuncionario;
@@ -470,8 +746,32 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Funcionário atualizado com sucesso!");
       } else {
         if (!senha) { alert("Senha é obrigatória para novos cadastros."); return; }
-        funcionarios.push(dadosFuncionario);
-        if (window.registrarLog) window.registrarLog(`Funcionário cadastrado: ${nome}`);
+
+        // Envia para o servidor
+        const formData = new FormData();
+        formData.append('nome', nome);
+        formData.append('cpf', cpf);
+        formData.append('email', email);
+        formData.append('cargo', cargo);
+        formData.append('nivel', nivel);
+        formData.append('telefone', telefone);
+        formData.append('senha', senha);
+
+        fetch('/gestao/funcionario/novo', {
+          method: 'POST',
+          body: formData
+        })
+          .then(response => {
+            if (response.ok) {
+              location.reload();
+            } else {
+              alert('Erro ao salvar funcionário');
+            }
+          })
+          .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao salvar funcionário');
+          });
       }
 
       atualizarTabelaFuncionarios();
@@ -554,14 +854,42 @@ document.addEventListener("DOMContentLoaded", () => {
   const tabelaDespesaBody = document.querySelector("#tabela-despesas tbody");
   const totalDespesaEl = document.getElementById("despesa-total");
   const inputBuscaDespesa = document.getElementById("busca-despesa");
+
+  // Carrega despesas do backend se disponível
   let despesas = [];
+  if (window.dadosIniciais && window.dadosIniciais.despesas) {
+    despesas = window.dadosIniciais.despesas.map(d => ({
+      nome: d.nome || 'Sem informação',
+      dataEmissao: d.data_emissao || '',
+      dataVencimento: d.data_vencimento || '',
+      valor: parseFloat(d.valor_total || 0),
+      status: d.status || 'Pendente',
+      obs: d.obs || '',
+      id: d.id_financas || null
+    }));
+    console.log(`✅ ${despesas.length} despesas carregadas do banco de dados`);
+  }
 
   const formReceita = document.getElementById("form-nova-receita");
   const tabelaReceitaBody = document.querySelector("#tabela-receitas tbody");
   const totalReceitaEl = document.getElementById("receita-total");
   const faturamentoDashboard = document.getElementById("faturamento-dashboard");
   const inputBuscaReceita = document.getElementById("busca-receita");
+
+  // Carrega receitas do backend se disponível
   let receitas = [];
+  if (window.dadosIniciais && window.dadosIniciais.receitas) {
+    receitas = window.dadosIniciais.receitas.map(r => ({
+      origem: r.nome || r.origem || 'Sem informação',
+      cliente: r.cliente_ass || r.cliente || 'Sem informação',
+      dataEmissao: r.data_emissao || '',
+      dataAgendada: r.data_vencimento || r.data_agendada || '',
+      valor: parseFloat(r.valor_total || 0),
+      obs: r.obs || '',
+      id: r.id_financas || null
+    }));
+    console.log(`✅ ${receitas.length} receitas carregadas do banco de dados`);
+  }
 
   if (formDespesa) {
     formDespesa.addEventListener("submit", (e) => {
@@ -601,11 +929,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (window.registrarLog) window.registrarLog(`Adicionou receita: ${origem} - R$ ${valor}`);
 
       atualizarTabelaReceitas();
+      atualizarTabelaComprasLoja();
+      atualizarTabelaAgendamentosReceita();
       formReceita.reset();
     });
   }
 
+  // Adiciona listeners de busca para as novas tabelas
   if (inputBuscaReceita) inputBuscaReceita.addEventListener("input", atualizarTabelaReceitas);
+  const inputBuscaCompras = document.getElementById("busca-compras-loja");
+  if (inputBuscaCompras) inputBuscaCompras.addEventListener("input", atualizarTabelaComprasLoja);
+  const inputBuscaAgend = document.getElementById("busca-agendamentos-receita");
+  if (inputBuscaAgend) inputBuscaAgend.addEventListener("input", atualizarTabelaAgendamentosReceita);
   if (inputBuscaDespesa) inputBuscaDespesa.addEventListener("input", atualizarTabelaDespesas);
 
   function atualizarTabelaDespesas() {
@@ -631,7 +966,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (termo === "" || textoNome.includes(termo)) {
         totalFiltrado += despesa.valor;
         const linha = document.createElement("tr");
+
+        // Aplica classes de status com cores
         if (despesa.status === 'atrasado') linha.classList.add('atrasado');
+        else if (despesa.status === 'pago') linha.classList.add('pago');
+        else if (despesa.status === 'a_pagar') linha.classList.add('a-pagar');
 
         const selectAPagar = (despesa.status === 'a_pagar') ? 'selected' : '';
         const selectPago = (despesa.status === 'pago') ? 'selected' : '';
@@ -662,6 +1001,82 @@ document.addEventListener("DOMContentLoaded", () => {
     atualizarAlertaAtrasos();
   }
 
+  // Função para renderizar compras da loja
+  function atualizarTabelaComprasLoja() {
+    const tabelaComprasBody = document.querySelector("#tabela-compras-loja tbody");
+    const totalComprasEl = document.getElementById("total-compras-loja");
+    const inputBuscaCompras = document.getElementById("busca-compras-loja");
+
+    if (!tabelaComprasBody) return;
+    tabelaComprasBody.innerHTML = "";
+
+    let totalFiltrado = 0;
+    const termo = inputBuscaCompras ? inputBuscaCompras.value.toLowerCase() : "";
+
+    // Filtra receitas que vêm da loja (origem contém "Pedido")
+    const comprasLoja = receitas.filter(r => r.origem.toLowerCase().includes('pedido'));
+
+    comprasLoja.forEach((receita) => {
+      const textoOrigem = receita.origem.toLowerCase();
+      const textoCliente = receita.cliente.toLowerCase();
+
+      if (termo === "" || textoOrigem.includes(termo) || textoCliente.includes(termo)) {
+        totalFiltrado += receita.valor;
+        const linha = document.createElement("tr");
+        linha.classList.add('pago'); // Pedidos sempre pagos
+
+        linha.innerHTML = `
+          <td>${receita.origem}</td>
+          <td>${receita.cliente}</td>
+          <td>${receita.dataEmissao}</td>
+          <td>R$ ${receita.valor.toFixed(2)}</td>
+          <td><span class="badge-status pago">Pago</span></td>
+        `;
+        tabelaComprasBody.appendChild(linha);
+      }
+    });
+
+    if (totalComprasEl) totalComprasEl.textContent = `R$ ${totalFiltrado.toFixed(2)}`;
+  }
+
+  // Função para renderizar agendamentos do site
+  function atualizarTabelaAgendamentosReceita() {
+    const tabelaAgendBody = document.querySelector("#tabela-agendamentos-receita tbody");
+    const totalAgendEl = document.getElementById("total-agendamentos-receita");
+    const inputBuscaAgend = document.getElementById("busca-agendamentos-receita");
+
+    if (!tabelaAgendBody) return;
+    tabelaAgendBody.innerHTML = "";
+
+    let totalFiltrado = 0;
+    const termo = inputBuscaAgend ? inputBuscaAgend.value.toLowerCase() : "";
+
+    // Filtra receitas que vêm de agendamentos (origem não contém "Pedido")
+    const agendamentosReceita = receitas.filter(r => !r.origem.toLowerCase().includes('pedido'));
+
+    agendamentosReceita.forEach((receita) => {
+      const textoOrigem = receita.origem.toLowerCase();
+      const textoCliente = receita.cliente.toLowerCase();
+
+      if (termo === "" || textoOrigem.includes(termo) || textoCliente.includes(termo)) {
+        totalFiltrado += receita.valor;
+        const linha = document.createElement("tr");
+        linha.classList.add('pago');
+
+        linha.innerHTML = `
+          <td>${receita.origem}</td>
+          <td>${receita.cliente}</td>
+          <td>${receita.dataEmissao}</td>
+          <td>R$ ${receita.valor.toFixed(2)}</td>
+          <td><span class="badge-status pago">Confirmado</span></td>
+        `;
+        tabelaAgendBody.appendChild(linha);
+      }
+    });
+
+    if (totalAgendEl) totalAgendEl.textContent = `R$ ${totalFiltrado.toFixed(2)}`;
+  }
+
   function atualizarTabelaReceitas() {
     if (!tabelaReceitaBody) return;
     tabelaReceitaBody.innerHTML = "";
@@ -670,7 +1085,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let totalGeral = 0;
     const termo = inputBuscaReceita ? inputBuscaReceita.value.toLowerCase() : "";
 
-    receitas.forEach((receita, index) => {
+    // Mostra apenas receitas manuais (não são de pedido nem agendamento)
+    const receitasManuais = receitas.filter(r =>
+      !r.origem.toLowerCase().includes('pedido') &&
+      !r.origem.toLowerCase().includes('agendamento')
+    );
+
+    receitasManuais.forEach((receita, index) => {
       totalGeral += receita.valor;
       const textoOrigem = receita.origem.toLowerCase();
       const textoCliente = receita.cliente.toLowerCase();
@@ -705,20 +1126,43 @@ document.addEventListener("DOMContentLoaded", () => {
         const novoStatus = e.target.value;
         if (despesas[index]) despesas[index].status = novoStatus;
         const linha = e.target.closest('tr');
-        if (novoStatus === 'atrasado') linha.classList.add('atrasado');
-        else linha.classList.remove('atrasado');
-        if (window.registrarLog) window.registrarLog(`Alterou status da despesa "${despesas[index].nome}" para ${novoStatus}`);
 
+        // Remove todas as classes de status antes
+        linha.classList.remove('atrasado', 'pago', 'a-pagar');
+
+        // Adiciona a classe correspondente ao novo status
+        if (novoStatus === 'atrasado') linha.classList.add('atrasado');
+        else if (novoStatus === 'pago') linha.classList.add('pago');
+        else if (novoStatus === 'a_pagar') linha.classList.add('a-pagar');
+
+        if (window.registrarLog) window.registrarLog(`Alterou status da despesa "${despesas[index].nome}" para ${novoStatus}`);
         atualizarAlertaAtrasos();
       }
     });
-    tabelaDespesaBody.addEventListener("click", (e) => {
+    tabelaDespesaBody.addEventListener("click", async (e) => {
       const btn = e.target.closest(".apagar-despesa");
       if (btn) {
         if (confirm("Deseja apagar esta despesa?")) {
           const index = parseInt(btn.dataset.index, 10);
+          const despesa = despesas[index];
+
+          // Se tem ID, deleta do banco
+          if (despesa.id) {
+            try {
+              const response = await fetch(`/gestao/despesa/excluir/${despesa.id}`, {
+                method: 'POST'
+              });
+              if (!response.ok) throw new Error('Erro ao excluir');
+              console.log(`✅ Despesa "${despesa.nome}" excluída do banco de dados`);
+            } catch (error) {
+              console.error('Erro ao excluir despesa:', error);
+              alert('Erro ao excluir despesa do banco de dados');
+              return;
+            }
+          }
+
           despesas.splice(index, 1);
-          if (window.registrarLog) window.registrarLog(`Removeu despesa: ${despesas[index].nome}`);
+          if (window.registrarLog) window.registrarLog(`Removeu despesa: ${despesa.nome}`);
           atualizarTabelaDespesas();
         }
       }
@@ -726,13 +1170,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (tabelaReceitaBody) {
-    tabelaReceitaBody.addEventListener("click", (e) => {
+    tabelaReceitaBody.addEventListener("click", async (e) => {
       const btn = e.target.closest(".apagar-receita");
       if (btn) {
         if (confirm("Deseja apagar esta receita?")) {
           const index = parseInt(btn.dataset.index, 10);
+          const receita = receitas[index];
+
+          // Se tem ID, deleta do banco
+          if (receita.id) {
+            try {
+              const response = await fetch(`/gestao/receita/excluir/${receita.id}`, {
+                method: 'POST'
+              });
+              if (!response.ok) throw new Error('Erro ao excluir');
+              console.log(`✅ Receita "${receita.origem}" excluída do banco de dados`);
+            } catch (error) {
+              console.error('Erro ao excluir receita:', error);
+              alert('Erro ao excluir receita do banco de dados');
+              return;
+            }
+          }
+
           receitas.splice(index, 1);
-          if (window.registrarLog) window.registrarLog(`Removeu receita: ${receitas[index].origem}`);
+          if (window.registrarLog) window.registrarLog(`Removeu receita: ${receita.origem}`);
           atualizarTabelaReceitas();
         }
       }
@@ -1213,27 +1674,45 @@ document.addEventListener("DOMContentLoaded", () => {
   const inputEditUF = document.getElementById("edit-cliente-uf");
   const inputEditSenha = document.getElementById("edit-cliente-senha");
 
-  let listaClientes = [
-    {
-      tipo: "PF",
-      nome: "João Silva",
-      cpf: "123.456.789-00",
-      nascimento: "1990-05-15",
-      email: "joao@email.com",
-      telefone: "(11) 99999-9999",
-      cep: "01001-000", logradouro: "Rua das Flores", numero: "123", bairro: "Centro", cidade: "São Paulo", uf: "SP",
-      senha: "senha123"
-    },
-    {
-      tipo: "PJ",
-      razao: "Empresa Eventos Ltda",
-      cnpj: "12.345.678/0001-99",
-      email: "contato@eventos.com",
-      telefone: "(11) 3030-4040",
-      cep: "20020-020", logradouro: "Av. Paulista", numero: "1000", bairro: "Bela Vista", cidade: "São Paulo", uf: "SP",
-      senha: "empresa123"
-    }
-  ];
+  // Carrega clientes do backend se disponível
+  let listaClientes = [];
+  if (window.dadosIniciais && window.dadosIniciais.clientes) {
+    listaClientes = window.dadosIniciais.clientes.map(c => {
+      if (c.tipo === 'PF') {
+        return {
+          tipo: "PF",
+          nome: c.nome,
+          cpf: c.doc || c.cpf || '',
+          nascimento: c.data_nasc || '',
+          email: c.email,
+          telefone: c.tel_cel || '',
+          cep: c.cep || '',
+          logradouro: c.logradouro || '',
+          numero: c.numero || '',
+          bairro: c.bairro || '',
+          cidade: c.cidade || '',
+          uf: c.estado || '',
+          senha: '***' // Não exibir senha real
+        };
+      } else {
+        return {
+          tipo: "PJ",
+          razao: c.nome,
+          cnpj: c.doc || c.cnpj || '',
+          email: c.email,
+          telefone: c.tel_cel || '',
+          cep: c.cep || '',
+          logradouro: c.logradouro || '',
+          numero: c.numero || '',
+          bairro: c.bairro || '',
+          cidade: c.cidade || '',
+          uf: c.estado || '',
+          senha: '***' // Não exibir senha real
+        };
+      }
+    });
+    console.log(`✅ ${listaClientes.length} clientes carregados do banco de dados`);
+  }
 
   function atualizarTabelaClientes() {
     if (!tabelaClientesBody) return;
@@ -1250,12 +1729,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (termo === "" || textoNome.includes(termo) || textoEmail.includes(termo) || textoDoc.includes(termo)) {
         const linha = document.createElement("tr");
-        const corBadge = cliente.tipo === 'PJ' ? '#d98236' : 'var(--cor-acento-secundario)';
+
+        // Verifica se cliente fez compra na loja
+        const comprouLoja = receitas.some(r =>
+          r.cliente.toLowerCase() === displayNome.toLowerCase() &&
+          r.origem.toLowerCase().includes('pedido')
+        );
+
+        // Verifica se cliente fez agendamento
+        const fezAgendamento = receitas.some(r =>
+          r.cliente.toLowerCase() === displayNome.toLowerCase() &&
+          !r.origem.toLowerCase().includes('pedido')
+        );
+
+        // Cria badges de atividade
+        let badgesAtividade = '';
+        if (comprouLoja) {
+          badgesAtividade += '<span class="badge-atividade loja" title="Comprou na Loja">🛒 Loja</span>';
+        }
+        if (fezAgendamento) {
+          badgesAtividade += '<span class="badge-atividade agendamento" title="Fez Agendamento">📅 Agendou</span>';
+        }
 
         linha.innerHTML = `
             <td>
                 <strong>${displayNome}</strong><br>
                 <small style="color: var(--cor-text-muted); font-size: 12px;">${displayDoc}</small>
+                <div style="margin-top: 4px;">${badgesAtividade}</div>
             </td>
             <td>${cliente.email}</td>
             <td>${cliente.telefone}</td>
@@ -1324,6 +1824,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const index = inputEditIndex.value;
       const tipo = inputEditTipo.value;
+      // Valida data de nascimento se PF
+      if (tipo === "PF" && inputEditNascimento.value) {
+        const partes = inputEditNascimento.value.split('-');
+        const ano = parseInt(partes[0], 10);
+        if (ano < 1900 || ano > new Date().getFullYear() - 18) {
+          alert('❌ Data de nascimento inválida! Você deve ter pelo menos 18 anos e a data deve estar entre 1900 e ' + (new Date().getFullYear() - 18));
+          return;
+        }
+      }
+
 
       const clienteAtualizado = {
         ...listaClientes[index],
@@ -1539,13 +2049,118 @@ document.addEventListener("DOMContentLoaded", () => {
   // Inicializa tabela
   atualizarTabelaClientes();
 
+  // =================================================================
+  // LÓGICA DE CONTRATOS (Clientes e Funcionários)
+  // =================================================================
+
+  let contratos = [];
+  if (window.dadosIniciais && window.dadosIniciais.contratos) {
+    contratos = window.dadosIniciais.contratos.map(c => ({
+      id: c.id_contratos,
+      cliente: c.cliente_ass || 'Sem informação',
+      titulo: c.titulo_doc || 'Contrato',
+      arquivo: c.arquivo || '',
+      tipo: c.cliente_ass && c.cliente_ass.includes('Funcionário') ? 'funcionario' : 'cliente' // Simples heurística
+    }));
+    console.log(`✅ ${contratos.length} contratos carregados do banco de dados`);
+  }
+
+  function renderizarContratosClientes() {
+    const tabelaBody = document.querySelector("#tabela-contratos-clientes tbody");
+    if (!tabelaBody) return;
+
+    tabelaBody.innerHTML = "";
+    const contratosClientes = contratos.filter(c => c.tipo === 'cliente');
+
+    if (contratosClientes.length === 0) {
+      tabelaBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--cor-text-muted);">Nenhum contrato de cliente cadastrado</td></tr>';
+      return;
+    }
+
+    contratosClientes.forEach(contrato => {
+      const linha = document.createElement("tr");
+      linha.innerHTML = `
+        <td>${contrato.titulo}</td>
+        <td>${contrato.cliente}</td>
+        <td>-</td>
+        <td>
+          <button class="botao-acao" onclick="window.open('/static/uploads/contratos/${contrato.arquivo}', '_blank')" title="Visualizar">
+            <i class="ph-fill ph-file-pdf"></i>
+          </button>
+          <button class="botao-acao" onclick="excluirContrato(${contrato.id}, 'cliente')" title="Excluir">
+            <i class="ph-fill ph-trash"></i>
+          </button>
+        </td>
+      `;
+      tabelaBody.appendChild(linha);
+    });
+  }
+
+  function renderizarContratosFuncionarios() {
+    const tabelaBody = document.querySelector("#tabela-contratos-funcionarios tbody");
+    if (!tabelaBody) return;
+
+    tabelaBody.innerHTML = "";
+    const contratosFuncionarios = contratos.filter(c => c.tipo === 'funcionario');
+
+    if (contratosFuncionarios.length === 0) {
+      tabelaBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--cor-text-muted);">Nenhum contrato de funcionário cadastrado</td></tr>';
+      return;
+    }
+
+    contratosFuncionarios.forEach(contrato => {
+      const linha = document.createElement("tr");
+      linha.innerHTML = `
+        <td>${contrato.titulo}</td>
+        <td>${contrato.cliente}</td>
+        <td>-</td>
+        <td>
+          <button class="botao-acao" onclick="window.open('/static/uploads/contratos/${contrato.arquivo}', '_blank')" title="Visualizar">
+            <i class="ph-fill ph-file-pdf"></i>
+          </button>
+          <button class="botao-acao" onclick="excluirContrato(${contrato.id}, 'funcionario')" title="Excluir">
+            <i class="ph-fill ph-trash"></i>
+          </button>
+        </td>
+      `;
+      tabelaBody.appendChild(linha);
+    });
+  }
+
+  window.excluirContrato = function (id, tipo) {
+    if (confirm('Deseja excluir este contrato?')) {
+      // Remove do array local
+      const index = contratos.findIndex(c => c.id === id);
+      if (index !== -1) {
+        contratos.splice(index, 1);
+        console.log(`✅ Contrato ${id} excluído`);
+
+        // Re-renderiza as tabelas
+        renderizarContratosClientes();
+        renderizarContratosFuncionarios();
+      }
+    }
+  };
+
   // --- INICIALIZAÇÕES FINAIS ---
   renderizarLogs();
   atualizarTabelaFuncionarios();
   atualizarTabelaReceitas();
+  atualizarTabelaComprasLoja(); // Renderiza compras da loja
+  atualizarTabelaAgendamentosReceita(); // Renderiza agendamentos como receitas
   atualizarTabelaDespesas();
+  renderizarCalendario(); // Carrega calendário com agendamentos do banco
+  renderizarContratosClientes(); // Carrega contratos de clientes
+  renderizarContratosFuncionarios(); // Carrega contratos de funcionários
   renderizarGaleria();
   renderizarHomeWidgets();
   atualizarWidgetEventosHoje();
   atualizarTabelaClientes();
+
+  // Inicializa primeira aba de receitas como ativa
+  const primeiraAbaReceita = document.querySelector('.aba-receita-btn.aba-ativa');
+  if (primeiraAbaReceita) {
+    primeiraAbaReceita.style.color = 'var(--cor-primaria)';
+    primeiraAbaReceita.style.borderBottomColor = 'var(--cor-primaria)';
+  }
 });

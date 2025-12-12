@@ -8,13 +8,8 @@
   <link rel="icon" href="/static/img/icon/logo-icon.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
-  
+
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script type="text/javascript">
-     (function(){
-        emailjs.init({ publicKey: "goVdFclsaAUdwx1uQ" });
-     })();
-  </script>
 
   <link rel="stylesheet" href="/static/css/login/login-cliente.css" />
 </head>
@@ -24,7 +19,7 @@
     <div class="cartao-autenticacao">
 
       <img src="/static/img/icon/logo-icon.png" alt="Logo Cumaru Produções" class="perfil-avatar" />
-      
+
       <h1 class="titulo-autenticacao">Portal do Cliente</h1>
       <p class="subtitulo-autenticacao" id="subtitulo-login-cadastro">Acesse seus projetos e agendamentos</p>
 
@@ -42,7 +37,7 @@
               <span class="mostrar-senha" data-target="senha-cliente-login"><i class="far fa-eye"></i></span>
             </div>
             <div class="container-esqueci-senha">
-                <a href="#" id="link-esqueci-senha">Esqueceu sua senha?</a>
+              <a href="#" id="link-esqueci-senha">Esqueceu sua senha?</a>
             </div>
           </div>
           <button type="submit" class="botao-autenticacao">Entrar</button>
@@ -67,7 +62,7 @@
         </div>
 
         <form class="formulario-autenticacao">
-          
+
           <div id="campos-pf">
             <div class="campo-formulario-autenticacao">
               <label for="nome-cliente-cadastro">Nome Completo *</label>
@@ -80,11 +75,21 @@
             </div>
             <div class="campo-formulario-autenticacao">
               <label for="nascimento-cliente-cadastro">Data de Nascimento *</label>
-              <input type="date" id="nascimento-cliente-cadastro" required />
+              <input type="date" id="nascimento-cliente-cadastro" min="1900-01-01" required />
+              <script>
+                (function () {
+                  const input = document.getElementById('nascimento-cliente-cadastro');
+                  if (input) {
+                    const anoAtual = new Date().getFullYear();
+                    const maxAno = anoAtual - 18;
+                    input.max = maxAno + '-12-31';
+                  }
+                })();
+              </script>
             </div>
           </div>
 
-          <div id="campos-pj" style="display: none;">
+          <div id="campos-pj">
             <div class="campo-formulario-autenticacao">
               <label for="razao-social-cadastro">Razão Social *</label>
               <input type="text" id="razao-social-cadastro" placeholder="Nome da Empresa" />
@@ -108,14 +113,14 @@
           <div class="campo-formulario-autenticacao">
             <label for="cep-cliente-cadastro">CEP *</label>
             <input type="tel" id="cep-cliente-cadastro" placeholder="00000-000" maxlength="9" required />
-            <span class="feedback-cep" id="feedback-cep" style="display: none; font-size: 12px; color: var(--cor-acento-principal); margin-top: 4px;">Buscando endereço...</span>
+            <span class="feedback-cep" id="feedback-cep">Buscando endereço...</span>
           </div>
-          
+
           <div class="campo-formulario-autenticacao">
             <label for="logradouro-cliente-cadastro">Logradouro (Rua/Av) *</label>
             <input type="text" id="logradouro-cliente-cadastro" placeholder="Rua, Av..." required />
           </div>
-          
+
           <div class="campo-formulario-autenticacao">
             <label for="numero-cliente-cadastro">Número *</label>
             <input type="text" id="numero-cliente-cadastro" placeholder="Nº" required />
@@ -143,23 +148,28 @@
               <span class="mostrar-senha" data-target="senha-cliente-cadastro"><i class="far fa-eye"></i></span>
             </div>
           </div>
-          
+
           <div class="campo-formulario-autenticacao">
             <label for="confirmar-senha-cliente-cadastro">Confirmar Senha *</label>
             <div class="campo-senha">
               <input type="password" id="confirmar-senha-cliente-cadastro" placeholder="Repita a senha" required />
-              <span class="mostrar-senha" data-target="confirmar-senha-cliente-cadastro"><i class="far fa-eye"></i></span>
+              <span class="mostrar-senha" data-target="confirmar-senha-cliente-cadastro"><i
+                  class="far fa-eye"></i></span>
             </div>
           </div>
 
-          <ul class="password-requirements-list" id="password-requirements">
-             <li id="req-length" class="invalid"><i class="fas fa-times-circle"></i> Mínimo 8 e máximo 70 caracteres.</li>
-             <li id="req-upper" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos uma letra maiúscula.</li>
-             <li id="req-lower" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos uma letra minúscula.</li>
-             <li id="req-symbol" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos um símbolo (* ! # $ % & + - / : ; = ? @ \ |).</li>
-             <li id="req-number" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos um número.</li>
+          <ul class="lista-requisitos-senha" id="lista-requisitos-senha">
+            <li id="requisito-tamanho" class="invalid"><i class="fas fa-times-circle"></i> Mínimo 8 e máximo 70
+              caracteres.</li>
+            <li id="requisito-maiuscula" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos uma letra
+              maiúscula.</li>
+            <li id="requisito-minuscula" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos uma letra
+              minúscula.</li>
+            <li id="requisito-simbolo" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos um símbolo (* ! #
+              $ % & + - / : ; = ? @ \ |).</li>
+            <li id="requisito-numero" class="invalid"><i class="fas fa-times-circle"></i> Pelo menos um número.</li>
           </ul>
-          <span id="password-match-error" style="color: #ff5555; font-size: 13px; display: none; margin-top: 10px;">As senhas não coincidem.</span>
+          <span id="erro-senha-confirmacao" class="mensagem-erro-senha">As senhas não coincidem.</span>
 
           <button type="submit" class="botao-autenticacao">
             Criar Conta
@@ -169,7 +179,7 @@
           Já tem uma conta? <a href="#" id="link-ir-login">Faça login aqui</a>
         </p>
         <p class="link-rp">
-          Interessado em participar de programas? 
+          Interessado em participar de programas?
           <a href="https://wa.me/5561992677680" target="_blank">Fale com RP</a>
         </p>
       </div>
@@ -180,14 +190,14 @@
           Digite o e-mail cadastrado e enviaremos um link para você redefinir sua senha.
         </p>
         <form class="formulario-autenticacao">
-            <div class="campo-formulario-autenticacao">
-              <label for="email-recuperacao">Email Cadastrado</label>
-              <input type="email" id="email-recuperacao" placeholder="seu@email.com" required />
-            </div>
-            <button type="submit" class="botao-autenticacao">Enviar Link</button>
+          <div class="campo-formulario-autenticacao">
+            <label for="email-recuperacao">Email Cadastrado</label>
+            <input type="email" id="email-recuperacao" placeholder="seu@email.com" required />
+          </div>
+          <button type="submit" class="botao-autenticacao">Enviar Link</button>
         </form>
         <p class="link-inferior">
-            Lembrou a senha? <a href="#" id="link-voltar-login-rec">Voltar para Login</a>
+          Lembrou a senha? <a href="#" id="link-voltar-login-rec">Voltar para Login</a>
         </p>
       </div>
 
@@ -196,15 +206,16 @@
 
   <div id="modal-sucesso" class="modal-overlay">
     <div class="modal-conteudo">
-        <div class="modal-icone">
-            <i class="fas fa-check"></i>
-        </div>
-        <h3 class="modal-titulo">Cadastro Realizado!</h3>
-        <p class="modal-texto">Sua conta foi criada com sucesso. Enviamos um e-mail de confirmação para você.</p>
-        <button id="btn-fechar-modal" class="botao-autenticacao">Ir para Login</button>
+      <div class="modal-icone">
+        <i class="fas fa-check"></i>
+      </div>
+      <h3 class="modal-titulo">Cadastro Realizado!</h3>
+      <p class="modal-texto">Sua conta foi criada com sucesso. Enviamos um e-mail de confirmação para você.</p>
+      <button id="btn-fechar-modal" class="botao-autenticacao">Ir para Login</button>
     </div>
   </div>
 
   <script src="/static/js/login/login-cliente.js"></script>
 </body>
+
 </html>

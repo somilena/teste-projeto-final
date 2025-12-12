@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- FIM: NOVOS SELETORES DE FEEDBACK ---
 
   // Função para alternar entre login e cadastro (REMOVIDA)
-  
+
   // Event listeners para os links de alternância (REMOVIDOS)
 
   // Lógica para mostrar/esconder senha (lógica idêntica)
@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (radioTipoPJ) {
     radioTipoPJ.addEventListener("change", () => atualizarTipoPessoa("pj"));
   }
-  
+
   // Garante o estado inicial correto (PF)
   if (camposPF) { // Verifica se estamos na página certa
     atualizarTipoPessoa("pf");
@@ -102,8 +102,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (inputTelefone) {
     inputTelefone.addEventListener('input', (e) => {
-      let value = e.target.value.replace(/\D/g, ''); 
-      value = value.substring(0, 11); 
+      let value = e.target.value.replace(/\D/g, '');
+      value = value.substring(0, 11);
       let formattedValue = '';
       if (value.length > 10) {
         formattedValue = value.replace(/^(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cpfPF.addEventListener('input', (e) => {
       let value = e.target.value.replace(/\D/g, ''); // Só números
       value = value.substring(0, 11);
-      
+
       let formattedValue = value;
       if (value.length > 9) {
         formattedValue = value.replace(/^(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
@@ -196,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
           inputCidade.value = data.localidade;
           inputEstado.value = data.uf;
           // Foca no campo "Número", que o usuário deve preencher
-          inputNumero.focus(); 
+          inputNumero.focus();
         }
       } catch (error) {
         alert("Erro ao buscar o CEP. Tente novamente.");
@@ -276,49 +276,49 @@ document.addEventListener("DOMContentLoaded", () => {
   function validarCampoCPF() {
     const valor = cpfPF.value;
     // Só valida se o campo estiver completamente preenchido (14 chars com máscara)
-    if (valor.length === 0) { 
-        cpfPF.classList.remove("invalido");
-        feedbackCPF.classList.remove("visivel");
-        return true; // Campo vazio é "válido" (o 'required' cuida disso no submit)
+    if (valor.length === 0) {
+      cpfPF.classList.remove("invalido");
+      feedbackCPF.classList.remove("visivel");
+      return true; // Campo vazio é "válido" (o 'required' cuida disso no submit)
     }
-    
+
     if (validarCPF(valor)) {
-        // Válido
-        cpfPF.classList.remove("invalido");
-        feedbackCPF.classList.remove("visivel");
-        return true;
+      // Válido
+      cpfPF.classList.remove("invalido");
+      feedbackCPF.classList.remove("visivel");
+      return true;
     } else {
-        // Inválido
-        cpfPF.classList.add("invalido");
-        feedbackCPF.classList.add("visivel");
-        return false;
+      // Inválido
+      cpfPF.classList.add("invalido");
+      feedbackCPF.classList.add("visivel");
+      return false;
     }
   }
 
   function validarCampoCNPJ() {
     const valor = cnpjPJ.value;
     if (valor.length === 0) {
-        cnpjPJ.classList.remove("invalido");
-        feedbackCNPJ.classList.remove("visivel");
-        return true;
+      cnpjPJ.classList.remove("invalido");
+      feedbackCNPJ.classList.remove("visivel");
+      return true;
     }
 
     if (validarCNPJ(valor)) {
-        // Válido
-        cnpjPJ.classList.remove("invalido");
-        feedbackCNPJ.classList.remove("visivel");
-        return true;
+      // Válido
+      cnpjPJ.classList.remove("invalido");
+      feedbackCNPJ.classList.remove("visivel");
+      return true;
     } else {
-        // Inválido
-        cnpjPJ.classList.add("invalido");
-        feedbackCNPJ.classList.add("visivel");
-        return false;
+      // Inválido
+      cnpjPJ.classList.add("invalido");
+      feedbackCNPJ.classList.add("visivel");
+      return false;
     }
   }
-  
+
   // Adiciona os eventos de 'blur' (ao sair do campo)
-  if(cpfPF) cpfPF.addEventListener('blur', validarCampoCPF);
-  if(cnpjPJ) cnpjPJ.addEventListener('blur', validarCampoCNPJ);
+  if (cpfPF) cpfPF.addEventListener('blur', validarCampoCPF);
+  if (cnpjPJ) cnpjPJ.addEventListener('blur', validarCampoCNPJ);
   // --- FIM: FUNÇÕES DE VALIDAÇÃO DE CAMPO (UI) ---
 
   // Lógica para envio de formulário de login (REMOVIDA)
@@ -342,14 +342,14 @@ document.addEventListener("DOMContentLoaded", () => {
           cnpjPJ.focus();
         }
       }
-      
+
       const primeiroCampoInvalido = formCadastro.querySelector(':invalid');
-      
+
       if (!formValido) {
         alert("CPF/CNPJ inválido. Por favor, verifique o campo em vermelho.");
         return;
       }
-      
+
       if (primeiroCampoInvalido) {
         alert("Por favor, preencha todos os campos obrigatórios (*).");
         primeiroCampoInvalido.focus();
@@ -364,6 +364,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Prepara os parâmetros para o template do EmailJS
       const templateParams = {
+        user_email: emailCliente, // To Email no EmailJS
         nome_cliente: nomeCliente,
         email_cliente: emailCliente,
         tipo_cliente: tipoCliente,
@@ -380,24 +381,27 @@ document.addEventListener("DOMContentLoaded", () => {
       submitButton.textContent = 'Enviando...';
 
       // Envia o e-mail usando EmailJS
-      // IMPORTANTE: Substitua pelas suas credenciais do EmailJS
-      emailjs.send('service_6krepp3', 'template_2x1dy0g', templateParams, 'sKNWZz25ssC3juxgY')
+      const SERVICE_ID_CAD = 'service_6krepp3';
+      const TEMPLATE_ID_CAD = 'template_yu4fl7o';
+      const PUBLIC_KEY_CAD = 'sKNWZz25ssC3juxgY';
+
+      emailjs.send(SERVICE_ID_CAD, TEMPLATE_ID_CAD, templateParams, PUBLIC_KEY_CAD)
         .then((response) => {
           console.log('E-mail de confirmação enviado!', response.status, response.text);
-          
+
           // Sucesso - mostra mensagem e redireciona para login
           alert("Cadastro realizado com sucesso! Um e-mail de confirmação foi enviado para " + emailCliente);
-          
+
           // Limpa o formulário (NÃO VOLTA MAIS PARA O LOGIN)
           formCadastro.reset();
           atualizarTipoPessoa("pf");
-          
+
         }, (error) => {
           console.error('Falha no envio do e-mail:', error);
-          
+
           // Ainda assim o cadastro é considerado realizado, mas avisa sobre o e-mail
           alert("Cadastro realizado! (Obs: Houve um erro ao enviar o e-mail de confirmação).");
-          
+
           // Limpa o formulário (NÃO VOLTA MAIS PARA O LOGIN)
           formCadastro.reset();
           atualizarTipoPessoa("pf");

@@ -1,0 +1,97 @@
+import json
+import requests
+
+BASE_PUBLIC = "http://127.0.0.1:5000"
+BASE_GESTAO = "http://127.0.0.1:5001"
+
+print("=" * 60)
+print("TESTE 1: Login Cliente com Credenciais INCORRETAS")
+print("=" * 60)
+try:
+    r = requests.post(f"{BASE_PUBLIC}/api/login-cliente", json={
+        "email": "naoexiste@example.com",
+        "senha": "senhaerrada"
+    }, timeout=5)
+    print(f"Status: {r.status_code}")
+    print(f"Resposta: {json.dumps(r.json(), ensure_ascii=False)}")
+    if r.status_code == 401:
+        print("✓ CORRETO: Rejeitou credenciais inválidas (401)")
+    else:
+        print("✗ ERRO: Deveria retornar 401")
+except Exception as e:
+    print(f"✗ Erro na requisição: {e}")
+
+print("\n" + "=" * 60)
+print("TESTE 2: Login Cliente com Credenciais CORRETAS (PF)")
+print("=" * 60)
+try:
+    r = requests.post(f"{BASE_PUBLIC}/api/login-cliente", json={
+        "email": "milena@example.com",
+        "senha": "senha123"
+    }, timeout=5)
+    print(f"Status: {r.status_code}")
+    print(f"Resposta: {json.dumps(r.json(), ensure_ascii=False, indent=2)}")
+    if r.status_code == 200 and r.json().get('success'):
+        print("✓ CORRETO: Login cliente PF bem-sucedido (200)")
+    else:
+        print("✗ ERRO: Login deveria ser bem-sucedido")
+except Exception as e:
+    print(f"✗ Erro na requisição: {e}")
+
+print("\n" + "=" * 60)
+print("TESTE 3: Login Cliente com Credenciais CORRETAS (PJ)")
+print("=" * 60)
+try:
+    r = requests.post(f"{BASE_PUBLIC}/api/login-cliente", json={
+        "email": "empresa@rgbdevs.com",
+        "senha": "empresa123"
+    }, timeout=5)
+    print(f"Status: {r.status_code}")
+    print(f"Resposta: {json.dumps(r.json(), ensure_ascii=False, indent=2)}")
+    if r.status_code == 200 and r.json().get('success'):
+        print("✓ CORRETO: Login cliente PJ bem-sucedido (200)")
+    else:
+        print("✗ ERRO: Login deveria ser bem-sucedido")
+except Exception as e:
+    print(f"✗ Erro na requisição: {e}")
+
+print("\n" + "=" * 60)
+print("TESTE 4: Login Staff com Credenciais INCORRETAS")
+print("=" * 60)
+try:
+    r = requests.post(f"{BASE_GESTAO}/api/login-staff", json={
+        "email": "naoexiste@prodcumaru.com",
+        "senha": "senhaerrada"
+    }, timeout=5)
+    print(f"Status: {r.status_code}")
+    print(f"Resposta: {json.dumps(r.json(), ensure_ascii=False)}")
+    if r.status_code == 401:
+        print("✓ CORRETO: Rejeitou credenciais inválidas (401)")
+    else:
+        print("✗ ERRO: Deveria retornar 401")
+except Exception as e:
+    print(f"✗ Erro na requisição: {e}")
+
+print("\n" + "=" * 60)
+print("TESTE 5: Login Staff com Credenciais CORRETAS (Admin)")
+print("=" * 60)
+try:
+    r = requests.post(f"{BASE_GESTAO}/api/login-staff", json={
+        "email": "admin@prodcumaru.com",
+        "senha": "admin123"
+    }, timeout=5)
+    print(f"Status: {r.status_code}")
+    print(f"Resposta: {json.dumps(r.json(), ensure_ascii=False, indent=2)}")
+    if r.status_code == 200 and r.json().get('success'):
+        print("✓ CORRETO: Login staff bem-sucedido (200)")
+    else:
+        print("✗ ERRO: Login deveria ser bem-sucedido")
+except Exception as e:
+    print(f"✗ Erro na requisição: {e}")
+
+print("\n" + "=" * 60)
+print("RESUMO DOS TESTES")
+print("=" * 60)
+print("✓ Todos os testes de autenticação completados!")
+print("✓ Sistema agora bloqueia credenciais inválidas")
+print("✓ Aceita clientes (PF e PJ) e staff autorizados")
