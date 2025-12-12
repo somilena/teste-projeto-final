@@ -13,11 +13,16 @@ env/
 
 # Banco e backups
 /db_prodcumaru.db
+*.db
 *.bak
 
 # Uploads e arquivos gerados
 /uploads/
 /static/uploads/
+/static/uploads/contratos/
+
+# Arquivos WSGI locais (não devem ir pro repo)
+wsgi_*.py
 
 # SO
 .DS_Store

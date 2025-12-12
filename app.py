@@ -289,6 +289,16 @@ def api_agendamento_publico():
     
     conn = get_db()
     try:
+        # Converte data do formato brasileiro para ISO (YYYY-MM-DD)
+        data_agend_str = data.get('data', '')
+        if ' às ' in data_agend_str:
+            # Formato: "25/12/2025 às 15:00" -> "2025-12-25"
+            data_parte = data_agend_str.split(' às ')[0]
+            dia, mes, ano = data_parte.split('/')
+            data_agend_iso = f"{ano}-{mes}-{dia}"
+        else:
+            # Fallback
+            data_agend_iso = data_agend_str
         # Busca se já existe cliente com este email
         cliente_id = None
         tipo_cliente = 'PF'
@@ -329,7 +339,7 @@ def api_agendamento_publico():
             data.get('email'),
             data.get('telefone', ''),
             data.get('horario', '00:00'),
-            data.get('data'),
+            data_agend_iso,
             tipo_cliente,
             data.get('servico'),
             data.get('observacao', ''),
@@ -338,7 +348,7 @@ def api_agendamento_publico():
         ))
         
         conn.commit()
-        agendamento_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+        agendamento_id = conn.execute("SELECT lastval()").fetchone()[0]
         conn.close()
         
         return jsonify({
@@ -408,7 +418,7 @@ def api_pedido():
             data.get('total', 0.0)
         ))
         
-        pedido_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+        pedido_id = conn.execute("SELECT lastval()").fetchone()[0]
         
         # Insere os itens do pedido
         produtos = data.get('produtos', [])
@@ -699,7 +709,7 @@ def api_criar_agendamento_cliente():
             )
         )
         conn.commit()
-        ag_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
+        ag_id = conn.execute("SELECT lastval()").fetchone()[0]
         conn.close()
         return jsonify({'success': True, 'id': ag_id})
     except Exception as e:
