@@ -181,3 +181,38 @@ CREATE TABLE tb_produto (
   status VARCHAR(45) NOT NULL,
   data_cad DATE NOT NULL
 );
+
+-- ============================================================================
+-- INSERÇÃO DE DADOS DE TESTE
+-- ============================================================================
+
+-- Serviços (Para o site carregar)
+INSERT INTO tb_servicos (nome_servicos, preco, duracao_minutos, categoria) 
+VALUES ('CUMARU Básico', 350.00, 60, 'podcast');
+
+INSERT INTO tb_servicos (nome_servicos, preco, duracao_minutos, categoria) 
+VALUES ('CUMARU Standard', 550.00, 60, 'podcast');
+
+INSERT INTO tb_servicos (nome_servicos, preco, duracao_minutos, categoria) 
+VALUES ('CUMARU Premium', 900.00, 60, 'podcast');
+
+-- Funcionários (Usuários padrão do sistema)
+-- Nível 1: Administrador
+INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
+VALUES ('Admin Master', '000.000.000-00', 'Gerente', 'admin@prodcumaru.com', '6199999999', CURRENT_DATE, 'admin', 'admin123', '1', 'Ativo');
+
+-- Nível 2: Editor
+INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
+VALUES ('Editor Padrão', '111.111.111-11', 'Editor', 'editor@prodcumaru.com', '6199999999', CURRENT_DATE, 'editor', 'editor123', '2', 'Ativo');
+
+-- Nível 3: RH
+INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
+VALUES ('RH Padrão', '222.222.222-22', 'RH', 'rh@prodcumaru.com', '6199999999', CURRENT_DATE, 'rh', 'rh123', '3', 'Ativo');
+
+-- Nível 4: Jurídico
+INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
+VALUES ('Jurídico Padrão', '333.333.333-33', 'Jurídico', 'juridico@prodcumaru.com', '6199999999', CURRENT_DATE, 'juridico', 'juridico123', '4', 'Ativo');
+
+-- Nível 5: Contabilidade
+INSERT INTO tb_funcionarios (nome, cpf, cargo, email, tel_cel, data_admis, log_aces, senha_aces, nivel_aces, status)
+VALUES ('Contabilidade Padrão', '444.444.444-44', 'Contabilidade', 'contabilidade@prodcumaru.com', '6199999999', CURRENT_DATE, 'contabilidade', 'contabilidade123', '5', 'Ativo');
