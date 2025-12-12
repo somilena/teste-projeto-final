@@ -4,6 +4,119 @@ import sqlite3
 import sys
 import traceback
 from datetime import datetime
+def normalize_date(date_str: str):
+    if not date_str:
+        return None
+    try:
+        # formatos: 'DD/MM/YYYY', 'DD/MM/YYYY às HH:MM', 'YYYY-MM-DD'
+        if 'às' in date_str:
+            date_part = date_str.split('às')[0].strip()
+        else:
+            date_part = date_str.strip()
+        if '-' in date_part and len(date_part) == 10:
+            return date_part
+        d, m, y = date_part.split('/')
+        return f"{y}-{m.zfill(2)}-{d.zfill(2)}"
+    except Exception:
+        return None
+@app.route('/api/agendamentos/criar', methods=['POST'])
+def api_criar_agendamento_publico():
+    try:
+        data = request.get_json(force=True) or {}
+        conn = get_db(); cur = conn.cursor()
+        data_agend_iso = normalize_date(data.get('data_agend'))
+        cur.execute(
+            """
+            INSERT INTO tb_reg_agendamentos
+            (id_cliente, nome, email, tel_cel, horario, data_agend, tipo_cliente, servico, status, obs, valor_total, forma_pagamento, status_pagamento)
+            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            RETURNING id_reg_agendamentos
+            """,
+            (
+                data.get('id_cliente') or 0,
+                data.get('nome'),
+                data.get('email'),
+                data.get('tel_cel'),
+                data.get('horario'),
+                data_agend_iso,
+                data.get('tipo_cliente') or 'fisico',
+                data.get('servico'),
+                data.get('status') or 'Pendente',
+                data.get('obs'),
+                float(data.get('valor_total') or 0),
+                data.get('forma_pagamento') or 'pix',
+                data.get('status_pagamento') or 'Aguardando',
+            )
+        )
+        ag_id = cur.fetchone()[0]
+        conn.commit()
+        return jsonify({'ok': True, 'id': ag_id})
+    except Exception as e:
+        print('ERRO AGENDAMENTO PUBLICO:', e)
+        print(traceback.format_exc())
+        return jsonify({'ok': False, 'error': 'Falha ao criar agendamento'}), 500
+@app.route('/api/pedido/criar', methods=['POST'])
+def api_criar_pedido():
+    try:
+        payload = request.get_json(force=True) or {}
+        pedido = payload.get('pedido') or {}
+        itens = payload.get('itens') or []
+        conn = get_db(); cur = conn.cursor()
+        # Normaliza valores
+        subtotal = float(pedido.get('subtotal') or 0)
+        frete = float(pedido.get('frete') or 0)
+        valor_total = float(pedido.get('valor_total') or (subtotal + frete))
+        estado = (pedido.get('estado') or '').upper()[:2]
+        # Cria pedido
+        cur.execute(
+            """
+            INSERT INTO tb_pedido
+            (id_clientes, data_pedido, nome, cpf, cnpj, cep, logradouro, numero, bairro, complemento, cidade, estado, tel_cel, email, observacao, subtotal, frete, valor_total)
+            VALUES (%s, CURRENT_DATE, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            RETURNING id_pedido
+            """,
+            (
+                pedido.get('id_clientes'),
+                pedido.get('nome'),
+                pedido.get('cpf'),
+                pedido.get('cnpj'),
+                pedido.get('cep'),
+                pedido.get('logradouro'),
+                pedido.get('numero'),
+                pedido.get('bairro'),
+                pedido.get('complemento'),
+                pedido.get('cidade'),
+                estado,
+                pedido.get('tel_cel'),
+                pedido.get('email'),
+                pedido.get('observacao') or '',
+                subtotal,
+                frete,
+                valor_total,
+            )
+        )
+        id_pedido = cur.fetchone()[0]
+        # Itens
+        for it in itens:
+            cur.execute(
+                """
+                INSERT INTO tb_itens_pedido (id_pedido, id_produto, quantidade, preco_unitario, subtotal)
+                VALUES (%s,%s,%s,%s,%s)
+                """,
+                (
+                    id_pedido,
+                    it.get('id_produto'),
+                    int(it.get('quantidade') or 0),
+                    float(it.get('preco_unitario') or 0),
+                    float(it.get('subtotal') or 0),
+                )
+            )
+        conn.commit()
+        return jsonify({'ok': True, 'id_pedido': id_pedido})
+    except Exception as e:
+        print('ERRO PEDIDO:', e)
+        print(traceback.format_exc())
+        return jsonify({'ok': False, 'error': 'Falha ao criar pedido'}), 500
 from werkzeug.security import generate_password_hash, check_password_hash
 try:
     import psycopg2

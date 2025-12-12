@@ -81,7 +81,7 @@ function renderDashboard(data) {
       <li>
         <span>#${p.id_pedido}</span>
         <span>${p.nome}</span>
-        <span>R$ ${(p.valor_total||0).toFixed(2)}</span>
+        <span>R$ ${(p.valor_total || 0).toFixed(2)}</span>
       </li>
     `).join('')
   }
@@ -109,28 +109,28 @@ function renderDashboard(data) {
     `).join('')
   }
 }
-  console.log('btnTopo encontrado:', btnTopo);
-  if (!btnTopo) {
-    console.warn('Botão #btn-topo não encontrado no DOM');
-    return;
+console.log('btnTopo encontrado:', btnTopo);
+if (!btnTopo) {
+  console.warn('Botão #btn-topo não encontrado no DOM');
+  return;
+}
+
+function toggleBtnTopo() {
+  if (window.scrollY > 50) {
+    btnTopo.classList.add('show');
+  } else {
+    btnTopo.classList.remove('show');
   }
+}
 
-  function toggleBtnTopo() {
-    if (window.scrollY > 50) {
-      btnTopo.classList.add('show');
-    } else {
-      btnTopo.classList.remove('show');
-    }
-  }
+window.addEventListener('scroll', toggleBtnTopo);
+btnTopo.addEventListener('click', (e) => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
-  window.addEventListener('scroll', toggleBtnTopo);
-  btnTopo.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  // Estado inicial
-  toggleBtnTopo();
+// Estado inicial
+toggleBtnTopo();
 });
 
 /* ============================================= */
