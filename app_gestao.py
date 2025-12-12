@@ -2,6 +2,20 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 import sqlite3
 import os
 from datetime import datetime
+def normalize_date(date_str: str):
+    if not date_str:
+        return None
+    try:
+        if 'às' in date_str:
+            date_part = date_str.split('às')[0].strip()
+        else:
+            date_part = date_str.strip()
+        if '-' in date_part and len(date_part) == 10:
+            return date_part
+        d, m, y = date_part.split('/')
+        return f"{y}-{m.zfill(2)}-{d.zfill(2)}"
+    except Exception:
+        return None
 from permissoes import verificar_permissao, obter_secoes_permitidas, listar_niveis_disponiveis, NIVEIS, normalizar_nivel
 try:
     import psycopg2
@@ -220,16 +234,18 @@ def row_to_dict(row):
                 if dup_cpf:
                     return jsonify({'success': False, 'message': 'CPF já cadastrado'}), 400
             cur = conn.cursor()
+            # Postgres compat: usar %s e RETURNING
             cur.execute(
                 """
                 INSERT INTO tb_funcionarios (nome, cpf, email, tel_cel, cargo, senha_aces, data_admis, log_aces, nivel_aces, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (%s, %s, %s, %s, %s, %s, CURRENT_DATE, %s, %s, %s)
+                RETURNING id_funcionarios
                 """,
-                (nome, cpf, email, tel, cargo, senha, data_admis, log_aces, nivel, status)
+                (nome, cpf, email, tel, cargo, senha, log_aces, nivel, status)
             )
+            new_id_row = cur.fetchone()
             conn.commit()
-            new_id = cur.lastrowid
-            return jsonify({'success': True, 'id': new_id})
+            return jsonify({'success': True, 'id': new_id_row[0]})
         except Exception as e:
             return jsonify({'success': False, 'message': str(e)}), 500
         finally:
@@ -245,13 +261,11 @@ def row_to_dict(row):
         data = request.get_json() or {}
         cliente_id = data.get('cliente_id')
         servico = data.get('servico')
-        data_agend = data.get('data')
+        data_agend = normalize_date(data.get('data') or '')
         horario = data.get('horario', '00:00')
         if not cliente_id or not servico or not data_agend:
             return jsonify({'success': False, 'message': 'cliente_id, servico e data são obrigatórios'}), 400
-        try:
-            datetime.strptime(data_agend, '%Y-%m-%d')
-        except Exception:
+        if not data_agend:
             return jsonify({'success': False, 'message': 'Formato de data inválido (YYYY-MM-DD)'}), 400
 
         conn = get_db()
@@ -272,15 +286,17 @@ def row_to_dict(row):
                 conn.close()
                 return jsonify({'success': False, 'message': 'Conflito: já existe agendamento nesse horário'}), 409
 
-            conn.execute(
+            cur = conn.cursor()
+            cur.execute(
                 """
                 INSERT INTO tb_reg_agendamentos (id_cliente, nome, email, tel_cel, horario, data_agend, tipo_cliente, servico, status, obs, valor_total, forma_pagamento, status_pagamento)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Agendado', ?, ?, ?, 'Pendente')
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'Agendado', %s, %s, %s, 'Pendente')
+                RETURNING id_reg_agendamentos
                 """,
                 (cli['id'], cli['nome'], cli['email'], cli['tel_cel'], horario, data_agend, cli['tipo'], servico, data.get('obs', ''), float(data.get('valor', 0.0)), data.get('forma_pagamento', 'N/A'))
             )
+            new_id = cur.fetchone()[0]
             conn.commit()
-            new_id = conn.execute("SELECT lastval()").fetchone()[0]
             conn.close()
             return jsonify({'success': True, 'id': new_id})
         except Exception as e:
@@ -617,12 +633,17 @@ def api_create_funcionario():
     try:
         conn = get_db()
         cur = conn.cursor()
-        cur.execute("""
+        # Compatível com Postgres: usar %s e RETURNING ao invés de lastrowid
+        cur.execute(
+            """
             INSERT INTO tb_funcionarios (nome, cpf, email, tel_cel, cargo, senha_aces, data_admis, log_aces, nivel_aces, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (nome, cpf, email, tel, cargo, senha, data_admis, log_aces, nivel, status))
+            VALUES (%s, %s, %s, %s, %s, %s, CURRENT_DATE, %s, %s, %s)
+            RETURNING id_funcionarios
+            """,
+            (nome, cpf, email, tel, cargo, senha, log_aces, nivel, status)
+        )
+        new_id = cur.fetchone()[0]
         conn.commit()
-        new_id = cur.lastrowid
         conn.close()
         return jsonify({"status": "success", "id": new_id})
     except Exception as e:
@@ -688,19 +709,22 @@ def api_update_cliente(cli_id):
     try:
         if tipo == 'PF':
             # Atualiza dados de Pessoa Física, incluindo data de nascimento (data_nasc)
+            nasc = normalize_date(data.get('nascimento', '') or '')
+            uf = (data.get('uf') or '').strip().upper()
             conn.execute("""
                 UPDATE tb_clientes_fisico 
                 SET nome=?, email=?, tel_cel=?, cep=?, logradouro=?, numero=?, bairro=?, cidade=?, estado=?, data_nasc=?
                 WHERE id_clientes_fisico = ?
             """, (data['nome'], data['email'], data.get('tel_cel', data.get('telefone')), data['cep'], data['logradouro'], 
-                  data['numero'], data['bairro'], data['cidade'], data['uf'], data.get('nascimento', ''), cli_id))
+                  data['numero'], data['bairro'], data['cidade'], uf, nasc, cli_id))
         else:
+            uf = (data.get('uf') or '').strip().upper()
             conn.execute("""
                 UPDATE tb_clientes_juridicos 
                 SET razao_social=?, email=?, tel_cel=?, cep=?, logradouro=?, numero=?, bairro=?, cidade=?, estado=?
                 WHERE id_clientes_juridicos = ?
             """, (data['razao'], data['email'], data.get('tel_cel', data.get('telefone')), data['cep'], data['logradouro'], 
-                  data['numero'], data['bairro'], data['cidade'], data['uf'], cli_id))
+                  data['numero'], data['bairro'], data['cidade'], uf, cli_id))
         
         conn.commit()
         conn.close()
