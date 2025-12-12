@@ -660,16 +660,21 @@ def api_criar_agendamento_cliente():
         return jsonify({'success': False, 'message': 'Data e serviço são obrigatórios'}), 400
     
     # Converte data do formato brasileiro para ISO (YYYY-MM-DD)
-    if ' às ' in str(data_agend_raw):
-        # Formato: "25/12/2025 às 15:00" -> "2025-12-25"
-        data_parte = str(data_agend_raw).split(' às ')[0]
-        try:
-            dia, mes, ano = data_parte.split('/')
-            data_agend = f"{ano}-{mes}-{dia}"
-        except:
-            data_agend = data_agend_raw
-    else:
-        data_agend = data_agend_raw
+    data_agend = None
+    if data_agend_raw:
+        if ' às ' in str(data_agend_raw):
+            # Formato: "25/12/2025 às 15:00" -> "2025-12-25"
+            data_parte = str(data_agend_raw).split(' às ')[0]
+            try:
+                dia, mes, ano = data_parte.split('/')
+                data_agend = f"{ano}-{mes}-{dia}"
+            except:
+                data_agend = str(data_agend_raw)
+        else:
+            data_agend = str(data_agend_raw)
+    
+    if not data_agend:
+        return jsonify({'success': False, 'message': 'Data inválida'}), 400
     
     try:
         # Data futura e formato válido
