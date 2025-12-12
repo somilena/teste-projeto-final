@@ -4,6 +4,10 @@ import sqlite3
 import sys
 import traceback
 from datetime import datetime
+
+# App precisa existir antes dos decorators
+app = Flask(__name__, template_folder='templates', static_folder='static')
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'prodcumaru_secret_key_2025')  # Em produção defina FLASK_SECRET_KEY
 def normalize_date(date_str: str):
     if not date_str:
         return None
@@ -123,9 +127,6 @@ try:
     import psycopg2.extras
 except Exception:
     psycopg2 = None
-
-app = Flask(__name__, template_folder='templates', static_folder='static')
-app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'prodcumaru_secret_key_2025')  # Em produção defina FLASK_SECRET_KEY
 
 def get_db():
     """Retorna conexão de banco.
