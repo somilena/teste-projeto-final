@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
 import os
 import sqlite3
+import sys
+import traceback
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 try:
@@ -359,9 +361,13 @@ def api_agendamento_publico():
         
     except Exception as e:
         conn.close()
+        error_msg = str(e) if str(e) else 'Erro desconhecido'
+        tb_str = traceback.format_exc()
+        print(f"ERRO AGENDAMENTO PÚBLICO: {error_msg}", file=sys.stderr)
+        print(tb_str, file=sys.stderr)
         return jsonify({
             'success': False,
-            'message': f'Erro ao criar agendamento: {str(e)}'
+            'message': f'Erro ao criar agendamento: {error_msg}'
         }), 500
 
 # ==========================================
@@ -467,9 +473,13 @@ def api_pedido():
         
     except Exception as e:
         conn.close()
+        error_msg = str(e) if str(e) else 'Erro desconhecido'
+        tb_str = traceback.format_exc()
+        print(f"ERRO PEDIDO: {error_msg}", file=sys.stderr)
+        print(tb_str, file=sys.stderr)
         return jsonify({
             'success': False,
-            'message': f'Erro ao criar pedido: {str(e)}'
+            'message': f'Erro ao criar pedido: {error_msg}'
         }), 500
 
 @app.route("/agendar_publico", methods=['POST'])

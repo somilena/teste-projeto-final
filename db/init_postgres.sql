@@ -10,14 +10,17 @@ CREATE TABLE tb_clientes_fisico (
   data_nasc DATE NOT NULL,
   email VARCHAR(100) NOT NULL,
   tel_cel VARCHAR(45) NOT NULL,
-  data_cad DATE,
+  data_cad DATE DEFAULT CURRENT_DATE,
   cep VARCHAR(20) NOT NULL,
   logradouro VARCHAR(120) NOT NULL,
   numero VARCHAR(20) NOT NULL,
   bairro VARCHAR(80) NOT NULL,
   cidade VARCHAR(80) NOT NULL,
   estado VARCHAR(2) NOT NULL,
-  senha VARCHAR(100) NOT NULL
+  senha VARCHAR(200) NOT NULL,
+  CONSTRAINT uq_clientes_fisico_email UNIQUE (email),
+  CONSTRAINT uq_clientes_fisico_cpf UNIQUE (cpf),
+  CONSTRAINT chk_clientes_fisico_estado CHECK (estado ~ '^[A-Z]{2}$')
 );
 
 -- CLIENTES JURIDICOS
@@ -34,8 +37,11 @@ CREATE TABLE tb_clientes_juridicos (
   bairro VARCHAR(80) NOT NULL,
   cidade VARCHAR(80) NOT NULL,
   estado VARCHAR(2) NOT NULL,
-  senha VARCHAR(100) NOT NULL,
-  data_cad DATE
+  senha VARCHAR(200) NOT NULL,
+  data_cad DATE DEFAULT CURRENT_DATE,
+  CONSTRAINT uq_clientes_juridicos_email UNIQUE (email),
+  CONSTRAINT uq_clientes_juridicos_cnpj UNIQUE (cnpj),
+  CONSTRAINT chk_clientes_juridicos_estado CHECK (estado ~ '^[A-Z]{2}$')
 );
 
 -- CONTEUDO
@@ -44,7 +50,7 @@ CREATE TABLE tb_conteudo (
   id_conteudo SERIAL PRIMARY KEY,
   nome_conteudo VARCHAR(100) NOT NULL,
   conteudo TEXT NOT NULL,
-  data_inclusao DATE NOT NULL,
+  data_inclusao DATE NOT NULL DEFAULT CURRENT_DATE,
   data_exclusao DATE,
   descricao VARCHAR(200)
 );
@@ -66,7 +72,7 @@ CREATE TABLE tb_financas (
   nome VARCHAR(120),
   cliente_ass VARCHAR(120),
   obs VARCHAR(200),
-  data_emissao DATE NOT NULL,
+  data_emissao DATE NOT NULL DEFAULT CURRENT_DATE,
   data_vencimento DATE,
   valor_total NUMERIC(12,2) NOT NULL,
   status VARCHAR(45)
@@ -81,12 +87,16 @@ CREATE TABLE tb_funcionarios (
   cargo VARCHAR(60) NOT NULL,
   email VARCHAR(100) NOT NULL,
   tel_cel VARCHAR(45) NOT NULL,
-  data_admis DATE NOT NULL,
+  data_admis DATE NOT NULL DEFAULT CURRENT_DATE,
   log_aces VARCHAR(45) NOT NULL,
-  senha_aces VARCHAR(100) NOT NULL,
-  nivel_aces VARCHAR(45) NOT NULL,
+  senha_aces VARCHAR(200) NOT NULL,
+  nivel_aces SMALLINT NOT NULL,
   status VARCHAR(45) NOT NULL,
   obs VARCHAR(200)
+  ,CONSTRAINT uq_funcionarios_email UNIQUE (email)
+  ,CONSTRAINT uq_funcionarios_cpf UNIQUE (cpf)
+  ,CONSTRAINT chk_funcionarios_nivel CHECK (nivel_aces BETWEEN 1 AND 5)
+  ,CONSTRAINT chk_funcionarios_status CHECK (status IN ('Ativo','Inativo'))
 );
 
 -- REGISTRO DE AGENDAMENTOS
@@ -106,6 +116,7 @@ CREATE TABLE tb_reg_agendamentos (
   valor_total NUMERIC(12,2) NOT NULL,
   forma_pagamento VARCHAR(45) NOT NULL,
   status_pagamento VARCHAR(45) NOT NULL
+  -- FK para clientes será opcional dependendo do modelo (fisico/juridico)
 );
 
 -- FORMA DE PAGAMENTO
@@ -117,8 +128,8 @@ CREATE TABLE tb_forma_pag (
   debito VARCHAR(45),
   pix VARCHAR(45),
   boleto VARCHAR(45),
-  validade VARCHAR(10) NOT NULL,
-  cvv VARCHAR(10) NOT NULL
+  validade VARCHAR(10),
+  cvv VARCHAR(10)
 );
 
 -- SERVICOS
@@ -130,6 +141,7 @@ CREATE TABLE tb_servicos (
   preco NUMERIC(12,2),
   duracao_minutos INTEGER,
   categoria VARCHAR(45)
+  ,CONSTRAINT uq_servicos_nome UNIQUE (nome_servicos)
 );
 
 -- ITENS PEDIDO
@@ -141,6 +153,9 @@ CREATE TABLE tb_itens_pedido (
   quantidade INTEGER NOT NULL,
   preco_unitario NUMERIC(12,2) NOT NULL,
   subtotal NUMERIC(12,2) NOT NULL
+  ,CONSTRAINT fk_itens_pedido_pedido FOREIGN KEY (id_pedido) REFERENCES tb_pedido(id_pedido) ON DELETE CASCADE
+  ,CONSTRAINT fk_itens_pedido_produto FOREIGN KEY (id_produto) REFERENCES tb_produto(id_produto)
+  ,CONSTRAINT chk_itens_pedido_quantidade CHECK (quantidade > 0)
 );
 
 -- PEDIDO
@@ -148,7 +163,7 @@ DROP TABLE IF EXISTS tb_pedido;
 CREATE TABLE tb_pedido (
   id_pedido SERIAL PRIMARY KEY,
   id_clientes INTEGER,
-  data_pedido DATE NOT NULL,
+  data_pedido DATE NOT NULL DEFAULT CURRENT_DATE,
   nome VARCHAR(120) NOT NULL,
   cpf VARCHAR(20),
   cnpj VARCHAR(20),
@@ -165,6 +180,8 @@ CREATE TABLE tb_pedido (
   subtotal NUMERIC(12,2) NOT NULL,
   frete NUMERIC(12,2) NOT NULL,
   valor_total NUMERIC(12,2) NOT NULL
+  ,CONSTRAINT chk_pedido_estado CHECK (estado ~ '^[A-Z]{2}$')
+  ,CONSTRAINT chk_pedido_valores CHECK (subtotal >= 0 AND frete >= 0 AND valor_total >= 0)
 );
 
 -- PRODUTO
@@ -179,8 +196,16 @@ CREATE TABLE tb_produto (
   preco NUMERIC(12,2) NOT NULL,
   foto_prod VARCHAR(200) NOT NULL,
   status VARCHAR(45) NOT NULL,
-  data_cad DATE NOT NULL
+  data_cad DATE NOT NULL DEFAULT CURRENT_DATE
+  ,CONSTRAINT uq_produto_codigo UNIQUE (codigo)
+  ,CONSTRAINT chk_produto_estoque CHECK (estoque >= 0)
+  ,CONSTRAINT chk_produto_preco CHECK (preco >= 0)
 );
+
+-- Índices para performance em filtros comuns
+CREATE INDEX IF NOT EXISTS idx_produto_nome ON tb_produto (nome_produto);
+CREATE INDEX IF NOT EXISTS idx_pedido_data ON tb_pedido (data_pedido);
+CREATE INDEX IF NOT EXISTS idx_agend_data_status ON tb_reg_agendamentos (data_agend, status);
 
 -- ============================================================================
 -- INSERÇÃO DE DADOS DE TESTE
