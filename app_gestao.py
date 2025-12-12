@@ -6,7 +6,7 @@ from permissoes import verificar_permissao, obter_secoes_permitidas, listar_nive
 
 # Configurações do App
 app = Flask(__name__, template_folder='templates', static_folder='static')
-app.secret_key = 'segredo_sga_cumaru_2025' # Necessário para segurança de sessão
+app.secret_key = os.environ.get('GESTAO_SECRET_KEY', 'segredo_sga_cumaru_2025') # Defina GESTAO_SECRET_KEY em produção
 
 # Configuração de Upload de Arquivos
 UPLOAD_FOLDER = 'static/uploads/contratos'

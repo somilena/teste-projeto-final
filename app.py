@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify, session
+import os
 import sqlite3
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
-app.secret_key = 'prodcumaru_secret_key_2025'  # Mude para uma chave secreta forte em produção
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'prodcumaru_secret_key_2025')  # Em produção defina FLASK_SECRET_KEY
 
 def get_db():
     conn = sqlite3.connect("db_prodcumaru.db")
